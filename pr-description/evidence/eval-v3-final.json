@@ -1,0 +1,2047 @@
+{
+  "evalId": "eval-J1V-2026-11-05T00:02:00",
+  "results": {
+    "version": 3,
+    "timestamp": "2026-11-05T00:02:00.144Z",
+    "prompts": [
+      {
+        "raw": "You are a senior software engineer writing the PR description for a change that is ready for review.\n\n## Task\n\nFill out every PR description field below, in English, using only the User Story and the code diff provided.\n\nIf the User Story is missing or empty, ask the user to provide it and output nothing else.\n\n## Context\n\n- The diff below is the only source of truth about the code change. Do not read files from the workspace.\n- Base every statement on the diff. Do not describe changes that are not in the diff.\n- The business reason comes from the User Story, not from the code.\n\n## Input\n\n### User Story\n\n{{story}}\n\n### Code diff\n\n{{diff}}\n\n## Output\n\nUse exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.\n\n### What is this change?\n\nOne or two sentences, maximum 60 words, summarizing what changed and who it is for.\n\n### Type of change?\n\nSelect ONLY the relevant options from this list and delete the rest:\n\n- Bug fix (non-breaking change which fixes an issue)\n- New feature (non-breaking change which adds functionality)\n- Refactoring (changes to existing code which neither adds nor changes functionality)\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\n- Configuration change\n- This change requires a documentation update\n- Other: unit tests only, documentation changes only, etc.\n\n### Why?\n\nExplain the business reason from the User Story. Do not restate the diff.\n\n### How?\n\nList the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.\n\n### Requires Manual Database Migration?\n\n- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.\n- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.\n- If the diff contains no migration, answer No and include no code block.\n\n### Anything Else?\n\nNotes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write \"None\" if there is nothing.\n\nIf the change is a breaking change, state what breaks and what consumers must do.\n\n## Rules\n\n- Do not include file path citations or IDE links inside SQL or code blocks.\n- Keep SQL blocks as plain text only.\n- Every statement must be traceable to the User Story or the diff.\n",
+        "label": "pr-description\\prompts\\v3-final.md: You are a senior software engineer writing the PR ...",
+        "id": "05bdb546370985eb9bca73fdea87b9473dc16b9eb56df42c66f7c2ab0eff162b",
+        "provider": "Devin SWE-1.7",
+        "metrics": {
+          "score": 5,
+          "testPassCount": 5,
+          "testFailCount": 0,
+          "testErrorCount": 0,
+          "assertPassCount": 35,
+          "assertFailCount": 0,
+          "totalLatencyMs": 42626,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 5,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "namedScores": {
+            "structure": 4,
+            "conciseness": 4,
+            "type-of-change": 6,
+            "migration-decision": 8,
+            "grounding": 8,
+            "why-business": 4,
+            "how-actionable": 6,
+            "no-invention": 8,
+            "backwards-compat": 1,
+            "missing-story": 2,
+            "asks-for-story": 2
+          },
+          "namedScoresCount": {
+            "structure": 4,
+            "conciseness": 4,
+            "type-of-change": 4,
+            "migration-decision": 4,
+            "grounding": 4,
+            "why-business": 4,
+            "how-actionable": 4,
+            "no-invention": 4,
+            "backwards-compat": 1,
+            "missing-story": 1,
+            "asks-for-story": 1
+          },
+          "namedScoreWeights": {
+            "structure": 4,
+            "conciseness": 4,
+            "type-of-change": 6,
+            "migration-decision": 8,
+            "grounding": 8,
+            "why-business": 4,
+            "how-actionable": 6,
+            "no-invention": 8,
+            "backwards-compat": 1,
+            "missing-story": 2,
+            "asks-for-story": 2
+          },
+          "cost": 0
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1,
+            "migration-decision": 1,
+            "grounding": 1,
+            "why-business": 1,
+            "how-actionable": 1,
+            "no-invention": 1
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1.5,
+            "migration-decision": 2,
+            "grounding": 2,
+            "why-business": 1,
+            "how-actionable": 1.5,
+            "no-invention": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "all six fields present, in order, no extra sections",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:hasStructure",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "\"What is this change?\" is 34 words (limit 60)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:conciseWhat",
+                "metric": "conciseness"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "selected: new feature",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:typeOfChange",
+                "metric": "type-of-change",
+                "weight": 1.5
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Yes, with a SQL block containing \"ALTER TABLE\" and no path citations",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:migrationDecision",
+                "metric": "migration-decision",
+                "weight": 2
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "grounded in the diff",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:grounding",
+                "metric": "grounding",
+                "weight": 2
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The \"Why?\" field explains the business reason stated in the User Story (support handling ~400 manual status updates per week, 20-40 minute hand-offs, hours-to-minutes delay), not a restatement of the code change.\n",
+                "threshold": 0.7,
+                "metric": "why-business"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The Why? field restates the user story's business reason, including the 400 weekly updates, 20–40 minute hand-offs, lost emails, and hours-to-minutes delay.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# US-4127 — Update order status from the order detail page\\n\\n## User story\\n\\nAs a customer support agent, I want to set an order's status to \\\"Shipped\\\" from the order detail page, so that I stop emailing the logistics team for every update.\\n\\n## Business context\\n\\nSupport handles roughly 400 status updates per week over email. Each hand-off takes 20–40 minutes and sometimes gets lost between inboxes. Letting agents update the status directly should remove most of that manual work and cut the delay between dispatch and the customer seeing \\\"Shipped\\\" from hours to minutes.\\n\\n## Acceptance criteria\\n\\n- An agent with the Support role can change an order's status to Shipped from the order detail page.\\n- The change records the timestamp of the status update.\\n- The endpoint rejects requests from users without the Support role.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Api/Controllers/OrdersController.cs b/src/Api/Controllers/OrdersController.cs\\nindex 4a1c9f2..b7e3d10 100644\\n--- a/src/Api/Controllers/OrdersController.cs\\n+++ b/src/Api/Controllers/OrdersController.cs\\n@@ -28,6 +28,17 @@ public sealed class OrdersController : ControllerBase\\n         return Ok(order);\\n     }\\n \\n+    [HttpPatch(\\\"{id:int}/status\\\")]\\n+    [Authorize(Roles = \\\"Support\\\")]\\n+    public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateOrderStatusRequest request)\\n+    {\\n+        var updated = await _orderService.UpdateStatusAsync(id, request.Status, HttpContext.RequestAborted);\\n+        return updated ? NoContent() : NotFound();\\n+    }\\n+\\n     [HttpDelete(\\\"{id:int}\\\")]\\n     [Authorize(Roles = \\\"Admin\\\")]\\n     public async Task<IActionResult> Delete(int id)\\ndiff --git a/src/Api/Dtos/UpdateOrderStatusRequest.cs b/src/Api/Dtos/UpdateOrderStatusRequest.cs\\nnew file mode 100644\\nindex 0000000..e69de29\\n--- /dev/null\\n+++ b/src/Api/Dtos/UpdateOrderStatusRequest.cs\\n@@ -0,0 +1,8 @@\\n+using System.ComponentModel.DataAnnotations;\\n+\\n+namespace Shop.Api.Dtos;\\n+\\n+public sealed record UpdateOrderStatusRequest(\\n+    [Required, RegularExpression(\\\"^(Pending|Shipped|Delivered|Cancelled)$\\\")]\\n+    string Status);\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 91b2aa4..c4d5e77 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -64,6 +64,19 @@ public sealed class OrderService : IOrderService\\n         return order;\\n     }\\n \\n+    public async Task<bool> UpdateStatusAsync(int orderId, string status, CancellationToken ct)\\n+    {\\n+        var order = await _repository.FindByIdAsync(orderId, ct);\\n+        if (order is null)\\n+        {\\n+            return false;\\n+        }\\n+\\n+        order.Status = status;\\n+        order.StatusUpdatedAt = DateTime.UtcNow;\\n+        await _repository.SaveChangesAsync(ct);\\n+        return true;\\n+    }\\n+\\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\\nnew file mode 100644\\nindex 0000000..1f7c2d9\\n--- /dev/null\\n+++ b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\\n@@ -0,0 +1,3 @@\\n+-- src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\\n+ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\\n+GO\\ndiff --git a/tests/Orders/OrdersControllerTests.cs b/tests/Orders/OrdersControllerTests.cs\\nindex 77c1e2b..2f9a8d4 100644\\n--- a/tests/Orders/OrdersControllerTests.cs\\n+++ b/tests/Orders/OrdersControllerTests.cs\\n@@ -41,4 +41,18 @@ public sealed class OrdersControllerTests\\n         Assert.IsType<OkObjectResult>(result);\\n     }\\n+\\n+    [Fact]\\n+    public async Task UpdateStatus_ReturnsNoContent_WhenOrderExists()\\n+    {\\n+        var service = new Mock<IOrderService>();\\n+        service.Setup(s => s.UpdateStatusAsync(7, \\\"Shipped\\\", It.IsAny<CancellationToken>()))\\n+               .ReturnsAsync(true);\\n+        var controller = new OrdersController(service.Object);\\n+\\n+        var result = await controller.UpdateStatus(7, new UpdateOrderStatusRequest(\\\"Shipped\\\"));\\n+\\n+        Assert.IsType<NoContentResult>(result);\\n+        service.Verify(s => s.UpdateStatusAsync(7, \\\"Shipped\\\", It.IsAny<CancellationToken>()), Times.Once);\\n+    }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nAdds a PATCH endpoint that lets Support agents update an order status from the order detail page and records the change timestamp, backed by a new DTO, service method, database migration, and unit test.\\n\\n### Type of change\\n\\n- New feature (non-breaking change which adds functionality)\\n\\n### Why?\\n\\nSupport handles roughly 400 order status updates per week over email, with each hand-off taking 20–40 minutes and sometimes getting lost between inboxes. Allowing agents to update the status directly removes most of that manual work and reduces the delay from hours to minutes.\\n\\n### How?\\n\\n- **Database:** Adds a nullable `StatusUpdatedAt datetime2` column to the `Orders` table.\\n- **DTO:** Introduces `UpdateOrderStatusRequest` with a required `Status` field restricted by regular expression to `Pending`, `Shipped`, `Delivered`, or `Cancelled`.\\n- **Controller:** Adds `PATCH /orders/{id}/status` to `OrdersController`, decorated with `[Authorize(Roles = \\\"Support\\\")]`, returning `204 NoContent` on success or `404 NotFound` if the order does not exist.\\n- **Service:** Adds `OrderService.UpdateStatusAsync`, which loads the order, updates `Status`, sets `StatusUpdatedAt` to `DateTime.UtcNow`, and saves changes.\\n- **Tests:** Adds a controller test verifying that an existing order update returns `NoContent` and that the service is called once.\\n\\n### Requires Manual Database Migration?\\n\\nYes.\\n\\n```sql\\nALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\\n```\\n\\n### Anything Else?\\n\\n`StatusUpdatedAt` is nullable, so existing orders will not have a recorded update timestamp until the new endpoint is used. The endpoint is role-limited to `Support`, and the request DTO constrains status values to the four allowed states. The UI or API consumer must call the new `PATCH /orders/{id}/status` endpoint.\\n\\nRubric criterion:\\n\\nThe \\\"Why?\\\" field explains the business reason stated in the User Story (support handling ~400 manual status updates per week, 20-40 minute hand-offs, hours-to-minutes delay), not a restatement of the code change.\\n\\n\\nJSON verdict:\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "Every bullet in \"How?\" names a concrete change that exists in the diff: the PATCH endpoint on OrdersController, the UpdateOrderStatusRequest DTO, the UpdateStatusAsync service method, the StatusUpdatedAt column/migration, and the new controller test. Additional bullets are acceptable when they name a change that is present in the diff. It contains no generic filler such as \"updated the code\" or \"added tests\".\n",
+                "threshold": 0.7,
+                "metric": "how-actionable",
+                "weight": 1.5
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "Every \"How?\" bullet names a concrete, diff-present change with no generic filler.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# US-4127 — Update order status from the order detail page\\n\\n## User story\\n\\nAs a customer support agent, I want to set an order's status to \\\"Shipped\\\" from the order detail page, so that I stop emailing the logistics team for every update.\\n\\n## Business context\\n\\nSupport handles roughly 400 status updates per week over email. Each hand-off takes 20–40 minutes and sometimes gets lost between inboxes. Letting agents update the status directly should remove most of that manual work and cut the delay between dispatch and the customer seeing \\\"Shipped\\\" from hours to minutes.\\n\\n## Acceptance criteria\\n\\n- An agent with the Support role can change an order's status to Shipped from the order detail page.\\n- The change records the timestamp of the status update.\\n- The endpoint rejects requests from users without the Support role.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Api/Controllers/OrdersController.cs b/src/Api/Controllers/OrdersController.cs\\nindex 4a1c9f2..b7e3d10 100644\\n--- a/src/Api/Controllers/OrdersController.cs\\n+++ b/src/Api/Controllers/OrdersController.cs\\n@@ -28,6 +28,17 @@ public sealed class OrdersController : ControllerBase\\n         return Ok(order);\\n     }\\n \\n+    [HttpPatch(\\\"{id:int}/status\\\")]\\n+    [Authorize(Roles = \\\"Support\\\")]\\n+    public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateOrderStatusRequest request)\\n+    {\\n+        var updated = await _orderService.UpdateStatusAsync(id, request.Status, HttpContext.RequestAborted);\\n+        return updated ? NoContent() : NotFound();\\n+    }\\n+\\n     [HttpDelete(\\\"{id:int}\\\")]\\n     [Authorize(Roles = \\\"Admin\\\")]\\n     public async Task<IActionResult> Delete(int id)\\ndiff --git a/src/Api/Dtos/UpdateOrderStatusRequest.cs b/src/Api/Dtos/UpdateOrderStatusRequest.cs\\nnew file mode 100644\\nindex 0000000..e69de29\\n--- /dev/null\\n+++ b/src/Api/Dtos/UpdateOrderStatusRequest.cs\\n@@ -0,0 +1,8 @@\\n+using System.ComponentModel.DataAnnotations;\\n+\\n+namespace Shop.Api.Dtos;\\n+\\n+public sealed record UpdateOrderStatusRequest(\\n+    [Required, RegularExpression(\\\"^(Pending|Shipped|Delivered|Cancelled)$\\\")]\\n+    string Status);\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 91b2aa4..c4d5e77 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -64,6 +64,19 @@ public sealed class OrderService : IOrderService\\n         return order;\\n     }\\n \\n+    public async Task<bool> UpdateStatusAsync(int orderId, string status, CancellationToken ct)\\n+    {\\n+        var order = await _repository.FindByIdAsync(orderId, ct);\\n+        if (order is null)\\n+        {\\n+            return false;\\n+        }\\n+\\n+        order.Status = status;\\n+        order.StatusUpdatedAt = DateTime.UtcNow;\\n+        await _repository.SaveChangesAsync(ct);\\n+        return true;\\n+    }\\n+\\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\\nnew file mode 100644\\nindex 0000000..1f7c2d9\\n--- /dev/null\\n+++ b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\\n@@ -0,0 +1,3 @@\\n+-- src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\\n+ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\\n+GO\\ndiff --git a/tests/Orders/OrdersControllerTests.cs b/tests/Orders/OrdersControllerTests.cs\\nindex 77c1e2b..2f9a8d4 100644\\n--- a/tests/Orders/OrdersControllerTests.cs\\n+++ b/tests/Orders/OrdersControllerTests.cs\\n@@ -41,4 +41,18 @@ public sealed class OrdersControllerTests\\n         Assert.IsType<OkObjectResult>(result);\\n     }\\n+\\n+    [Fact]\\n+    public async Task UpdateStatus_ReturnsNoContent_WhenOrderExists()\\n+    {\\n+        var service = new Mock<IOrderService>();\\n+        service.Setup(s => s.UpdateStatusAsync(7, \\\"Shipped\\\", It.IsAny<CancellationToken>()))\\n+               .ReturnsAsync(true);\\n+        var controller = new OrdersController(service.Object);\\n+\\n+        var result = await controller.UpdateStatus(7, new UpdateOrderStatusRequest(\\\"Shipped\\\"));\\n+\\n+        Assert.IsType<NoContentResult>(result);\\n+        service.Verify(s => s.UpdateStatusAsync(7, \\\"Shipped\\\", It.IsAny<CancellationToken>()), Times.Once);\\n+    }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nAdds a PATCH endpoint that lets Support agents update an order status from the order detail page and records the change timestamp, backed by a new DTO, service method, database migration, and unit test.\\n\\n### Type of change\\n\\n- New feature (non-breaking change which adds functionality)\\n\\n### Why?\\n\\nSupport handles roughly 400 order status updates per week over email, with each hand-off taking 20–40 minutes and sometimes getting lost between inboxes. Allowing agents to update the status directly removes most of that manual work and reduces the delay from hours to minutes.\\n\\n### How?\\n\\n- **Database:** Adds a nullable `StatusUpdatedAt datetime2` column to the `Orders` table.\\n- **DTO:** Introduces `UpdateOrderStatusRequest` with a required `Status` field restricted by regular expression to `Pending`, `Shipped`, `Delivered`, or `Cancelled`.\\n- **Controller:** Adds `PATCH /orders/{id}/status` to `OrdersController`, decorated with `[Authorize(Roles = \\\"Support\\\")]`, returning `204 NoContent` on success or `404 NotFound` if the order does not exist.\\n- **Service:** Adds `OrderService.UpdateStatusAsync`, which loads the order, updates `Status`, sets `StatusUpdatedAt` to `DateTime.UtcNow`, and saves changes.\\n- **Tests:** Adds a controller test verifying that an existing order update returns `NoContent` and that the service is called once.\\n\\n### Requires Manual Database Migration?\\n\\nYes.\\n\\n```sql\\nALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\\n```\\n\\n### Anything Else?\\n\\n`StatusUpdatedAt` is nullable, so existing orders will not have a recorded update timestamp until the new endpoint is used. The endpoint is role-limited to `Support`, and the request DTO constrains status values to the four allowed states. The UI or API consumer must call the new `PATCH /orders/{id}/status` endpoint.\\n\\nRubric criterion:\\n\\nEvery bullet in \\\"How?\\\" names a concrete change that exists in the diff: the PATCH endpoint on OrdersController, the UpdateOrderStatusRequest DTO, the UpdateStatusAsync service method, the StatusUpdatedAt column/migration, and the new controller test. Additional bullets are acceptable when they name a change that is present in the diff. It contains no generic filler such as \\\"updated the code\\\" or \\\"added tests\\\".\\n\\n\\nJSON verdict:\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The description does not claim any change, file, dependency or behaviour that is absent from the diff (for example caching, a message queue, a new configuration key, or an unrelated refactor).\n",
+                "threshold": 0.8,
+                "metric": "no-invention",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The description accurately describes only the endpoint, DTO, service method, migration, and test that appear in the diff, with no unsupported claims.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# US-4127 — Update order status from the order detail page\\n\\n## User story\\n\\nAs a customer support agent, I want to set an order's status to \\\"Shipped\\\" from the order detail page, so that I stop emailing the logistics team for every update.\\n\\n## Business context\\n\\nSupport handles roughly 400 status updates per week over email. Each hand-off takes 20–40 minutes and sometimes gets lost between inboxes. Letting agents update the status directly should remove most of that manual work and cut the delay between dispatch and the customer seeing \\\"Shipped\\\" from hours to minutes.\\n\\n## Acceptance criteria\\n\\n- An agent with the Support role can change an order's status to Shipped from the order detail page.\\n- The change records the timestamp of the status update.\\n- The endpoint rejects requests from users without the Support role.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Api/Controllers/OrdersController.cs b/src/Api/Controllers/OrdersController.cs\\nindex 4a1c9f2..b7e3d10 100644\\n--- a/src/Api/Controllers/OrdersController.cs\\n+++ b/src/Api/Controllers/OrdersController.cs\\n@@ -28,6 +28,17 @@ public sealed class OrdersController : ControllerBase\\n         return Ok(order);\\n     }\\n \\n+    [HttpPatch(\\\"{id:int}/status\\\")]\\n+    [Authorize(Roles = \\\"Support\\\")]\\n+    public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateOrderStatusRequest request)\\n+    {\\n+        var updated = await _orderService.UpdateStatusAsync(id, request.Status, HttpContext.RequestAborted);\\n+        return updated ? NoContent() : NotFound();\\n+    }\\n+\\n     [HttpDelete(\\\"{id:int}\\\")]\\n     [Authorize(Roles = \\\"Admin\\\")]\\n     public async Task<IActionResult> Delete(int id)\\ndiff --git a/src/Api/Dtos/UpdateOrderStatusRequest.cs b/src/Api/Dtos/UpdateOrderStatusRequest.cs\\nnew file mode 100644\\nindex 0000000..e69de29\\n--- /dev/null\\n+++ b/src/Api/Dtos/UpdateOrderStatusRequest.cs\\n@@ -0,0 +1,8 @@\\n+using System.ComponentModel.DataAnnotations;\\n+\\n+namespace Shop.Api.Dtos;\\n+\\n+public sealed record UpdateOrderStatusRequest(\\n+    [Required, RegularExpression(\\\"^(Pending|Shipped|Delivered|Cancelled)$\\\")]\\n+    string Status);\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 91b2aa4..c4d5e77 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -64,6 +64,19 @@ public sealed class OrderService : IOrderService\\n         return order;\\n     }\\n \\n+    public async Task<bool> UpdateStatusAsync(int orderId, string status, CancellationToken ct)\\n+    {\\n+        var order = await _repository.FindByIdAsync(orderId, ct);\\n+        if (order is null)\\n+        {\\n+            return false;\\n+        }\\n+\\n+        order.Status = status;\\n+        order.StatusUpdatedAt = DateTime.UtcNow;\\n+        await _repository.SaveChangesAsync(ct);\\n+        return true;\\n+    }\\n+\\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\\nnew file mode 100644\\nindex 0000000..1f7c2d9\\n--- /dev/null\\n+++ b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\\n@@ -0,0 +1,3 @@\\n+-- src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\\n+ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\\n+GO\\ndiff --git a/tests/Orders/OrdersControllerTests.cs b/tests/Orders/OrdersControllerTests.cs\\nindex 77c1e2b..2f9a8d4 100644\\n--- a/tests/Orders/OrdersControllerTests.cs\\n+++ b/tests/Orders/OrdersControllerTests.cs\\n@@ -41,4 +41,18 @@ public sealed class OrdersControllerTests\\n         Assert.IsType<OkObjectResult>(result);\\n     }\\n+\\n+    [Fact]\\n+    public async Task UpdateStatus_ReturnsNoContent_WhenOrderExists()\\n+    {\\n+        var service = new Mock<IOrderService>();\\n+        service.Setup(s => s.UpdateStatusAsync(7, \\\"Shipped\\\", It.IsAny<CancellationToken>()))\\n+               .ReturnsAsync(true);\\n+        var controller = new OrdersController(service.Object);\\n+\\n+        var result = await controller.UpdateStatus(7, new UpdateOrderStatusRequest(\\\"Shipped\\\"));\\n+\\n+        Assert.IsType<NoContentResult>(result);\\n+        service.Verify(s => s.UpdateStatusAsync(7, \\\"Shipped\\\", It.IsAny<CancellationToken>()), Times.Once);\\n+    }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nAdds a PATCH endpoint that lets Support agents update an order status from the order detail page and records the change timestamp, backed by a new DTO, service method, database migration, and unit test.\\n\\n### Type of change\\n\\n- New feature (non-breaking change which adds functionality)\\n\\n### Why?\\n\\nSupport handles roughly 400 order status updates per week over email, with each hand-off taking 20–40 minutes and sometimes getting lost between inboxes. Allowing agents to update the status directly removes most of that manual work and reduces the delay from hours to minutes.\\n\\n### How?\\n\\n- **Database:** Adds a nullable `StatusUpdatedAt datetime2` column to the `Orders` table.\\n- **DTO:** Introduces `UpdateOrderStatusRequest` with a required `Status` field restricted by regular expression to `Pending`, `Shipped`, `Delivered`, or `Cancelled`.\\n- **Controller:** Adds `PATCH /orders/{id}/status` to `OrdersController`, decorated with `[Authorize(Roles = \\\"Support\\\")]`, returning `204 NoContent` on success or `404 NotFound` if the order does not exist.\\n- **Service:** Adds `OrderService.UpdateStatusAsync`, which loads the order, updates `Status`, sets `StatusUpdatedAt` to `DateTime.UtcNow`, and saves changes.\\n- **Tests:** Adds a controller test verifying that an existing order update returns `NoContent` and that the service is called once.\\n\\n### Requires Manual Database Migration?\\n\\nYes.\\n\\n```sql\\nALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\\n```\\n\\n### Anything Else?\\n\\n`StatusUpdatedAt` is nullable, so existing orders will not have a recorded update timestamp until the new endpoint is used. The endpoint is role-limited to `Support`, and the request DTO constrains status values to the four allowed states. The UI or API consumer must call the new `PATCH /orders/{id}/status` endpoint.\\n\\nRubric criterion:\\n\\nThe description does not claim any change, file, dependency or behaviour that is absent from the diff (for example caching, a message queue, a new configuration key, or an unrelated refactor).\\n\\n\\nJSON verdict:\"}]"
+              }
+            }
+          ]
+        },
+        "id": "95911999-3830-436e-9ccd-f60543a9f8de",
+        "latencyMs": 10330,
+        "namedScores": {
+          "structure": 1,
+          "conciseness": 1,
+          "type-of-change": 1,
+          "migration-decision": 1,
+          "grounding": 1,
+          "why-business": 1,
+          "how-actionable": 1,
+          "no-invention": 1
+        },
+        "prompt": {
+          "raw": "You are a senior software engineer writing the PR description for a change that is ready for review.\n\n## Task\n\nFill out every PR description field below, in English, using only the User Story and the code diff provided.\n\nIf the User Story is missing or empty, ask the user to provide it and output nothing else.\n\n## Context\n\n- The diff below is the only source of truth about the code change. Do not read files from the workspace.\n- Base every statement on the diff. Do not describe changes that are not in the diff.\n- The business reason comes from the User Story, not from the code.\n\n## Input\n\n### User Story\n\n# US-4127 — Update order status from the order detail page\n\n## User story\n\nAs a customer support agent, I want to set an order's status to \"Shipped\" from the order detail page, so that I stop emailing the logistics team for every update.\n\n## Business context\n\nSupport handles roughly 400 status updates per week over email. Each hand-off takes 20–40 minutes and sometimes gets lost between inboxes. Letting agents update the status directly should remove most of that manual work and cut the delay between dispatch and the customer seeing \"Shipped\" from hours to minutes.\n\n## Acceptance criteria\n\n- An agent with the Support role can change an order's status to Shipped from the order detail page.\n- The change records the timestamp of the status update.\n- The endpoint rejects requests from users without the Support role.\n\n### Code diff\n\ndiff --git a/src/Api/Controllers/OrdersController.cs b/src/Api/Controllers/OrdersController.cs\nindex 4a1c9f2..b7e3d10 100644\n--- a/src/Api/Controllers/OrdersController.cs\n+++ b/src/Api/Controllers/OrdersController.cs\n@@ -28,6 +28,17 @@ public sealed class OrdersController : ControllerBase\n         return Ok(order);\n     }\n \n+    [HttpPatch(\"{id:int}/status\")]\n+    [Authorize(Roles = \"Support\")]\n+    public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateOrderStatusRequest request)\n+    {\n+        var updated = await _orderService.UpdateStatusAsync(id, request.Status, HttpContext.RequestAborted);\n+        return updated ? NoContent() : NotFound();\n+    }\n+\n     [HttpDelete(\"{id:int}\")]\n     [Authorize(Roles = \"Admin\")]\n     public async Task<IActionResult> Delete(int id)\ndiff --git a/src/Api/Dtos/UpdateOrderStatusRequest.cs b/src/Api/Dtos/UpdateOrderStatusRequest.cs\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/Api/Dtos/UpdateOrderStatusRequest.cs\n@@ -0,0 +1,8 @@\n+using System.ComponentModel.DataAnnotations;\n+\n+namespace Shop.Api.Dtos;\n+\n+public sealed record UpdateOrderStatusRequest(\n+    [Required, RegularExpression(\"^(Pending|Shipped|Delivered|Cancelled)$\")]\n+    string Status);\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\nindex 91b2aa4..c4d5e77 100644\n--- a/src/Application/Orders/OrderService.cs\n+++ b/src/Application/Orders/OrderService.cs\n@@ -64,6 +64,19 @@ public sealed class OrderService : IOrderService\n         return order;\n     }\n \n+    public async Task<bool> UpdateStatusAsync(int orderId, string status, CancellationToken ct)\n+    {\n+        var order = await _repository.FindByIdAsync(orderId, ct);\n+        if (order is null)\n+        {\n+            return false;\n+        }\n+\n+        order.Status = status;\n+        order.StatusUpdatedAt = DateTime.UtcNow;\n+        await _repository.SaveChangesAsync(ct);\n+        return true;\n+    }\n+\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\nnew file mode 100644\nindex 0000000..1f7c2d9\n--- /dev/null\n+++ b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\n@@ -0,0 +1,3 @@\n+-- src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\n+ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\n+GO\ndiff --git a/tests/Orders/OrdersControllerTests.cs b/tests/Orders/OrdersControllerTests.cs\nindex 77c1e2b..2f9a8d4 100644\n--- a/tests/Orders/OrdersControllerTests.cs\n+++ b/tests/Orders/OrdersControllerTests.cs\n@@ -41,4 +41,18 @@ public sealed class OrdersControllerTests\n         Assert.IsType<OkObjectResult>(result);\n     }\n+\n+    [Fact]\n+    public async Task UpdateStatus_ReturnsNoContent_WhenOrderExists()\n+    {\n+        var service = new Mock<IOrderService>();\n+        service.Setup(s => s.UpdateStatusAsync(7, \"Shipped\", It.IsAny<CancellationToken>()))\n+               .ReturnsAsync(true);\n+        var controller = new OrdersController(service.Object);\n+\n+        var result = await controller.UpdateStatus(7, new UpdateOrderStatusRequest(\"Shipped\"));\n+\n+        Assert.IsType<NoContentResult>(result);\n+        service.Verify(s => s.UpdateStatusAsync(7, \"Shipped\", It.IsAny<CancellationToken>()), Times.Once);\n+    }\n }\n\n## Output\n\nUse exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.\n\n### What is this change?\n\nOne or two sentences, maximum 60 words, summarizing what changed and who it is for.\n\n### Type of change?\n\nSelect ONLY the relevant options from this list and delete the rest:\n\n- Bug fix (non-breaking change which fixes an issue)\n- New feature (non-breaking change which adds functionality)\n- Refactoring (changes to existing code which neither adds nor changes functionality)\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\n- Configuration change\n- This change requires a documentation update\n- Other: unit tests only, documentation changes only, etc.\n\n### Why?\n\nExplain the business reason from the User Story. Do not restate the diff.\n\n### How?\n\nList the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.\n\n### Requires Manual Database Migration?\n\n- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.\n- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.\n- If the diff contains no migration, answer No and include no code block.\n\n### Anything Else?\n\nNotes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write \"None\" if there is nothing.\n\nIf the change is a breaking change, state what breaks and what consumers must do.\n\n## Rules\n\n- Do not include file path citations or IDE links inside SQL or code blocks.\n- Keep SQL blocks as plain text only.\n- Every statement must be traceable to the User Story or the diff.\n",
+          "label": "pr-description\\prompts\\v3-final.md: You are a senior software engineer writing the PR ...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          }
+        },
+        "promptId": "05bdb546370985eb9bca73fdea87b9473dc16b9eb56df42c66f7c2ab0eff162b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "### What is this change?\n\nAdds a PATCH endpoint that lets Support agents update an order status from the order detail page and records the change timestamp, backed by a new DTO, service method, database migration, and unit test.\n\n### Type of change\n\n- New feature (non-breaking change which adds functionality)\n\n### Why?\n\nSupport handles roughly 400 order status updates per week over email, with each hand-off taking 20–40 minutes and sometimes getting lost between inboxes. Allowing agents to update the status directly removes most of that manual work and reduces the delay from hours to minutes.\n\n### How?\n\n- **Database:** Adds a nullable `StatusUpdatedAt datetime2` column to the `Orders` table.\n- **DTO:** Introduces `UpdateOrderStatusRequest` with a required `Status` field restricted by regular expression to `Pending`, `Shipped`, `Delivered`, or `Cancelled`.\n- **Controller:** Adds `PATCH /orders/{id}/status` to `OrdersController`, decorated with `[Authorize(Roles = \"Support\")]`, returning `204 NoContent` on success or `404 NotFound` if the order does not exist.\n- **Service:** Adds `OrderService.UpdateStatusAsync`, which loads the order, updates `Status`, sets `StatusUpdatedAt` to `DateTime.UtcNow`, and saves changes.\n- **Tests:** Adds a controller test verifying that an existing order update returns `NoContent` and that the service is called once.\n\n### Requires Manual Database Migration?\n\nYes.\n\n```sql\nALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\n```\n\n### Anything Else?\n\n`StatusUpdatedAt` is nullable, so existing orders will not have a recorded update timestamp until the new endpoint is used. The endpoint is role-limited to `Support`, and the request DTO constrains status values to the four allowed states. The UI or API consumer must call the new `PATCH /orders/{id}/status` endpoint."
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "01 feature + migration — new PATCH endpoint with a SQL script",
+          "vars": {
+            "story": "file://fixtures\\01-feature-migration\\story.md",
+            "diff": "file://fixtures\\01-feature-migration\\diff.patch",
+            "expected_types": "[\"New feature\"]",
+            "forbidden_types": "[\"Bug fix\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+            "expected_migration": "yes",
+            "expected_sql_token": "ALTER TABLE",
+            "must_mention": "[\"UpdateOrderStatusRequest\",\"PATCH\",\"StatusUpdatedAt\"]",
+            "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\",\"appsettings.json\"]",
+            "allowed_paths": "[\"OrdersController.cs\",\"UpdateOrderStatusRequest.cs\",\"OrderService.cs\",\"20261101_add_status_updated_at.sql\",\"OrdersControllerTests.cs\"]",
+            "max_words": 60
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:hasStructure",
+              "metric": "structure"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:conciseWhat",
+              "metric": "conciseness"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:typeOfChange",
+              "metric": "type-of-change",
+              "weight": 1.5
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:migrationDecision",
+              "metric": "migration-decision",
+              "weight": 2
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:grounding",
+              "metric": "grounding",
+              "weight": 2
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The \"Why?\" field explains the business reason stated in the User Story (support handling ~400 manual status updates per week, 20-40 minute hand-offs, hours-to-minutes delay), not a restatement of the code change.\n",
+              "threshold": 0.7,
+              "metric": "why-business"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "Every bullet in \"How?\" names a concrete change that exists in the diff: the PATCH endpoint on OrdersController, the UpdateOrderStatusRequest DTO, the UpdateStatusAsync service method, the StatusUpdatedAt column/migration, and the new controller test. Additional bullets are acceptable when they name a change that is present in the diff. It contains no generic filler such as \"updated the code\" or \"added tests\".\n",
+              "threshold": 0.7,
+              "metric": "how-actionable",
+              "weight": 1.5
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The description does not claim any change, file, dependency or behaviour that is absent from the diff (for example caching, a message queue, a new configuration key, or an unrelated refactor).\n",
+              "threshold": 0.8,
+              "metric": "no-invention",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          },
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "file://fixtures\\01-feature-migration\\story.md",
+          "diff": "file://fixtures\\01-feature-migration\\diff.patch",
+          "expected_types": "[\"New feature\"]",
+          "forbidden_types": "[\"Bug fix\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "yes",
+          "expected_sql_token": "ALTER TABLE",
+          "must_mention": "[\"UpdateOrderStatusRequest\",\"PATCH\",\"StatusUpdatedAt\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\",\"appsettings.json\"]",
+          "allowed_paths": "[\"OrdersController.cs\",\"UpdateOrderStatusRequest.cs\",\"OrderService.cs\",\"20261101_add_status_updated_at.sql\",\"OrdersControllerTests.cs\"]",
+          "max_words": 60
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1,
+            "migration-decision": 1,
+            "grounding": 1,
+            "why-business": 1,
+            "how-actionable": 1,
+            "no-invention": 1
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1.5,
+            "migration-decision": 2,
+            "grounding": 2,
+            "why-business": 1,
+            "how-actionable": 1.5,
+            "no-invention": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "all six fields present, in order, no extra sections",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:hasStructure",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "\"What is this change?\" is 18 words (limit 60)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:conciseWhat",
+                "metric": "conciseness"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "selected: bug fix",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:typeOfChange",
+                "metric": "type-of-change",
+                "weight": 1.5
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "No, and no code block",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:migrationDecision",
+                "metric": "migration-decision",
+                "weight": 2
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "grounded in the diff",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:grounding",
+                "metric": "grounding",
+                "weight": 2
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The \"Why?\" field explains the business reason from the User Story (2.1% of checkouts failing, about 180 orders, customers abandoning the cart), not a restatement of the code.\n",
+                "threshold": 0.7,
+                "metric": "why-business"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The Why field includes the business impact from the User Story: 2.1% of checkouts failing, about 180 orders, support recreating orders manually, and customers abandoning the cart.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# BUG-3388 — Checkout returns 500 when the cart has no discount\\n\\n## User story\\n\\nAs an online shopper, I want checkout to complete when my cart has no discount applied, so that I can place my order.\\n\\n## Business context\\n\\n2.1% of checkouts failed last week — about 180 orders. All of them had an empty discount record. Support is recreating those orders by hand and customers are abandoning the cart instead of retrying.\\n\\n## Acceptance criteria\\n\\n- Placing an order with no discount completes without an exception.\\n- The order total is unchanged when no discount is applied.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 5b8e011..a2c4f39 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -88,9 +88,10 @@ public sealed class OrderService : IOrderService\\n     public decimal GetTotal(Order order)\\n     {\\n         var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\\n-        var discount = order.Discount.Percentage;\\n-        return subtotal - (subtotal * discount / 100m);\\n+        var discountPercentage = order.Discount?.Percentage ?? 0m;\\n+        return subtotal - (subtotal * discountPercentage / 100m);\\n     }\\n \\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\\nindex 1d9f2a0..3b7c8e1 100644\\n--- a/tests/Orders/OrderServiceTests.cs\\n+++ b/tests/Orders/OrderServiceTests.cs\\n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\\n         Assert.Equal(90m, total);\\n     }\\n+\\n+    [Fact]\\n+    public void GetTotal_ReturnsSubtotal_WhenDiscountIsNull()\\n+    {\\n+        var order = new Order\\n+        {\\n+            Discount = null,\\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\\n+        };\\n+\\n+        var total = _service.GetTotal(order);\\n+\\n+        Assert.Equal(100m, total);\\n+    }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nFixes `OrderService.GetTotal` so checkout completes when a cart has no discount record, preventing a 500 error for shoppers.\\n\\n### Type of change?\\n\\n- Bug fix (non-breaking change which fixes an issue)\\n\\n### Why?\\n\\n2.1% of checkouts failed last week (about 180 orders) because carts with an empty discount record caused an exception. Support is manually recreating those orders and customers are abandoning instead of retrying.\\n\\n### How?\\n\\n- Updated `OrderService.GetTotal` to use null-conditional access for `order.Discount?.Percentage` and default to `0m` when discount is null.\\n- Added unit test `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` verifying the total equals the subtotal when no discount is applied.\\n\\n### Requires Manual Database Migration?\\n\\nNo\\n\\n### Anything Else?\\n\\nNone\\n\\nRubric criterion:\\n\\nThe \\\"Why?\\\" field explains the business reason from the User Story (2.1% of checkouts failing, about 180 orders, customers abandoning the cart), not a restatement of the code.\\n\\n\\nJSON verdict:\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "Every bullet in \"How?\" names a concrete change in the diff: the null-safe discount lookup in GetTotal and the new unit test covering a null discount. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.\n",
+                "threshold": 0.7,
+                "metric": "how-actionable",
+                "weight": 1.5
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "Both 'How?' bullets name concrete, specific changes that are present in the diff, with no generic filler or extraneous bullets.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# BUG-3388 — Checkout returns 500 when the cart has no discount\\n\\n## User story\\n\\nAs an online shopper, I want checkout to complete when my cart has no discount applied, so that I can place my order.\\n\\n## Business context\\n\\n2.1% of checkouts failed last week — about 180 orders. All of them had an empty discount record. Support is recreating those orders by hand and customers are abandoning the cart instead of retrying.\\n\\n## Acceptance criteria\\n\\n- Placing an order with no discount completes without an exception.\\n- The order total is unchanged when no discount is applied.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 5b8e011..a2c4f39 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -88,9 +88,10 @@ public sealed class OrderService : IOrderService\\n     public decimal GetTotal(Order order)\\n     {\\n         var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\\n-        var discount = order.Discount.Percentage;\\n-        return subtotal - (subtotal * discount / 100m);\\n+        var discountPercentage = order.Discount?.Percentage ?? 0m;\\n+        return subtotal - (subtotal * discountPercentage / 100m);\\n     }\\n \\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\\nindex 1d9f2a0..3b7c8e1 100644\\n--- a/tests/Orders/OrderServiceTests.cs\\n+++ b/tests/Orders/OrderServiceTests.cs\\n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\\n         Assert.Equal(90m, total);\\n     }\\n+\\n+    [Fact]\\n+    public void GetTotal_ReturnsSubtotal_WhenDiscountIsNull()\\n+    {\\n+        var order = new Order\\n+        {\\n+            Discount = null,\\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\\n+        };\\n+\\n+        var total = _service.GetTotal(order);\\n+\\n+        Assert.Equal(100m, total);\\n+    }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nFixes `OrderService.GetTotal` so checkout completes when a cart has no discount record, preventing a 500 error for shoppers.\\n\\n### Type of change?\\n\\n- Bug fix (non-breaking change which fixes an issue)\\n\\n### Why?\\n\\n2.1% of checkouts failed last week (about 180 orders) because carts with an empty discount record caused an exception. Support is manually recreating those orders and customers are abandoning instead of retrying.\\n\\n### How?\\n\\n- Updated `OrderService.GetTotal` to use null-conditional access for `order.Discount?.Percentage` and default to `0m` when discount is null.\\n- Added unit test `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` verifying the total equals the subtotal when no discount is applied.\\n\\n### Requires Manual Database Migration?\\n\\nNo\\n\\n### Anything Else?\\n\\nNone\\n\\nRubric criterion:\\n\\nEvery bullet in \\\"How?\\\" names a concrete change in the diff: the null-safe discount lookup in GetTotal and the new unit test covering a null discount. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.\\n\\n\\nJSON verdict:\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The description does not claim any change absent from the diff: no new endpoint, no migration, no new dependency, no unrelated refactor.\n",
+                "threshold": 0.8,
+                "metric": "no-invention",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The description only describes the null-conditional fix and test that are present in the diff, with no claims about endpoints, migrations, dependencies, or unrelated changes.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# BUG-3388 — Checkout returns 500 when the cart has no discount\\n\\n## User story\\n\\nAs an online shopper, I want checkout to complete when my cart has no discount applied, so that I can place my order.\\n\\n## Business context\\n\\n2.1% of checkouts failed last week — about 180 orders. All of them had an empty discount record. Support is recreating those orders by hand and customers are abandoning the cart instead of retrying.\\n\\n## Acceptance criteria\\n\\n- Placing an order with no discount completes without an exception.\\n- The order total is unchanged when no discount is applied.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 5b8e011..a2c4f39 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -88,9 +88,10 @@ public sealed class OrderService : IOrderService\\n     public decimal GetTotal(Order order)\\n     {\\n         var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\\n-        var discount = order.Discount.Percentage;\\n-        return subtotal - (subtotal * discount / 100m);\\n+        var discountPercentage = order.Discount?.Percentage ?? 0m;\\n+        return subtotal - (subtotal * discountPercentage / 100m);\\n     }\\n \\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\\nindex 1d9f2a0..3b7c8e1 100644\\n--- a/tests/Orders/OrderServiceTests.cs\\n+++ b/tests/Orders/OrderServiceTests.cs\\n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\\n         Assert.Equal(90m, total);\\n     }\\n+\\n+    [Fact]\\n+    public void GetTotal_ReturnsSubtotal_WhenDiscountIsNull()\\n+    {\\n+        var order = new Order\\n+        {\\n+            Discount = null,\\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\\n+        };\\n+\\n+        var total = _service.GetTotal(order);\\n+\\n+        Assert.Equal(100m, total);\\n+    }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nFixes `OrderService.GetTotal` so checkout completes when a cart has no discount record, preventing a 500 error for shoppers.\\n\\n### Type of change?\\n\\n- Bug fix (non-breaking change which fixes an issue)\\n\\n### Why?\\n\\n2.1% of checkouts failed last week (about 180 orders) because carts with an empty discount record caused an exception. Support is manually recreating those orders and customers are abandoning instead of retrying.\\n\\n### How?\\n\\n- Updated `OrderService.GetTotal` to use null-conditional access for `order.Discount?.Percentage` and default to `0m` when discount is null.\\n- Added unit test `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` verifying the total equals the subtotal when no discount is applied.\\n\\n### Requires Manual Database Migration?\\n\\nNo\\n\\n### Anything Else?\\n\\nNone\\n\\nRubric criterion:\\n\\nThe description does not claim any change absent from the diff: no new endpoint, no migration, no new dependency, no unrelated refactor.\\n\\n\\nJSON verdict:\"}]"
+              }
+            }
+          ]
+        },
+        "id": "fcc13a37-c5cb-4dc3-a7f0-a4cfacaff8e1",
+        "latencyMs": 5093,
+        "namedScores": {
+          "structure": 1,
+          "conciseness": 1,
+          "type-of-change": 1,
+          "migration-decision": 1,
+          "grounding": 1,
+          "why-business": 1,
+          "how-actionable": 1,
+          "no-invention": 1
+        },
+        "prompt": {
+          "raw": "You are a senior software engineer writing the PR description for a change that is ready for review.\n\n## Task\n\nFill out every PR description field below, in English, using only the User Story and the code diff provided.\n\nIf the User Story is missing or empty, ask the user to provide it and output nothing else.\n\n## Context\n\n- The diff below is the only source of truth about the code change. Do not read files from the workspace.\n- Base every statement on the diff. Do not describe changes that are not in the diff.\n- The business reason comes from the User Story, not from the code.\n\n## Input\n\n### User Story\n\n# BUG-3388 — Checkout returns 500 when the cart has no discount\n\n## User story\n\nAs an online shopper, I want checkout to complete when my cart has no discount applied, so that I can place my order.\n\n## Business context\n\n2.1% of checkouts failed last week — about 180 orders. All of them had an empty discount record. Support is recreating those orders by hand and customers are abandoning the cart instead of retrying.\n\n## Acceptance criteria\n\n- Placing an order with no discount completes without an exception.\n- The order total is unchanged when no discount is applied.\n\n### Code diff\n\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\nindex 5b8e011..a2c4f39 100644\n--- a/src/Application/Orders/OrderService.cs\n+++ b/src/Application/Orders/OrderService.cs\n@@ -88,9 +88,10 @@ public sealed class OrderService : IOrderService\n     public decimal GetTotal(Order order)\n     {\n         var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\n-        var discount = order.Discount.Percentage;\n-        return subtotal - (subtotal * discount / 100m);\n+        var discountPercentage = order.Discount?.Percentage ?? 0m;\n+        return subtotal - (subtotal * discountPercentage / 100m);\n     }\n \n     public async Task DeleteAsync(int orderId, CancellationToken ct)\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\nindex 1d9f2a0..3b7c8e1 100644\n--- a/tests/Orders/OrderServiceTests.cs\n+++ b/tests/Orders/OrderServiceTests.cs\n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\n         Assert.Equal(90m, total);\n     }\n+\n+    [Fact]\n+    public void GetTotal_ReturnsSubtotal_WhenDiscountIsNull()\n+    {\n+        var order = new Order\n+        {\n+            Discount = null,\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\n+        };\n+\n+        var total = _service.GetTotal(order);\n+\n+        Assert.Equal(100m, total);\n+    }\n }\n\n## Output\n\nUse exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.\n\n### What is this change?\n\nOne or two sentences, maximum 60 words, summarizing what changed and who it is for.\n\n### Type of change?\n\nSelect ONLY the relevant options from this list and delete the rest:\n\n- Bug fix (non-breaking change which fixes an issue)\n- New feature (non-breaking change which adds functionality)\n- Refactoring (changes to existing code which neither adds nor changes functionality)\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\n- Configuration change\n- This change requires a documentation update\n- Other: unit tests only, documentation changes only, etc.\n\n### Why?\n\nExplain the business reason from the User Story. Do not restate the diff.\n\n### How?\n\nList the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.\n\n### Requires Manual Database Migration?\n\n- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.\n- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.\n- If the diff contains no migration, answer No and include no code block.\n\n### Anything Else?\n\nNotes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write \"None\" if there is nothing.\n\nIf the change is a breaking change, state what breaks and what consumers must do.\n\n## Rules\n\n- Do not include file path citations or IDE links inside SQL or code blocks.\n- Keep SQL blocks as plain text only.\n- Every statement must be traceable to the User Story or the diff.\n",
+          "label": "pr-description\\prompts\\v3-final.md: You are a senior software engineer writing the PR ...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          }
+        },
+        "promptId": "05bdb546370985eb9bca73fdea87b9473dc16b9eb56df42c66f7c2ab0eff162b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "### What is this change?\n\nFixes `OrderService.GetTotal` so checkout completes when a cart has no discount record, preventing a 500 error for shoppers.\n\n### Type of change?\n\n- Bug fix (non-breaking change which fixes an issue)\n\n### Why?\n\n2.1% of checkouts failed last week (about 180 orders) because carts with an empty discount record caused an exception. Support is manually recreating those orders and customers are abandoning instead of retrying.\n\n### How?\n\n- Updated `OrderService.GetTotal` to use null-conditional access for `order.Discount?.Percentage` and default to `0m` when discount is null.\n- Added unit test `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` verifying the total equals the subtotal when no discount is applied.\n\n### Requires Manual Database Migration?\n\nNo\n\n### Anything Else?\n\nNone"
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "02 bug fix, no migration — null discount no longer crashes checkout",
+          "vars": {
+            "story": "file://fixtures\\02-bugfix-null\\story.md",
+            "diff": "file://fixtures\\02-bugfix-null\\diff.patch",
+            "expected_types": "[\"Bug fix\"]",
+            "forbidden_types": "[\"New feature\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+            "expected_migration": "no",
+            "expected_sql_token": "",
+            "must_mention": "[\"GetTotal\",\"discount\",\"null\"]",
+            "must_not_mention": "[\"PATCH\",\"ALTER TABLE\",\"sp_rename\",\"Redis\"]",
+            "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+            "max_words": 60
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:hasStructure",
+              "metric": "structure"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:conciseWhat",
+              "metric": "conciseness"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:typeOfChange",
+              "metric": "type-of-change",
+              "weight": 1.5
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:migrationDecision",
+              "metric": "migration-decision",
+              "weight": 2
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:grounding",
+              "metric": "grounding",
+              "weight": 2
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The \"Why?\" field explains the business reason from the User Story (2.1% of checkouts failing, about 180 orders, customers abandoning the cart), not a restatement of the code.\n",
+              "threshold": 0.7,
+              "metric": "why-business"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "Every bullet in \"How?\" names a concrete change in the diff: the null-safe discount lookup in GetTotal and the new unit test covering a null discount. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.\n",
+              "threshold": 0.7,
+              "metric": "how-actionable",
+              "weight": 1.5
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The description does not claim any change absent from the diff: no new endpoint, no migration, no new dependency, no unrelated refactor.\n",
+              "threshold": 0.8,
+              "metric": "no-invention",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          },
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "file://fixtures\\02-bugfix-null\\story.md",
+          "diff": "file://fixtures\\02-bugfix-null\\diff.patch",
+          "expected_types": "[\"Bug fix\"]",
+          "forbidden_types": "[\"New feature\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "no",
+          "expected_sql_token": "",
+          "must_mention": "[\"GetTotal\",\"discount\",\"null\"]",
+          "must_not_mention": "[\"PATCH\",\"ALTER TABLE\",\"sp_rename\",\"Redis\"]",
+          "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+          "max_words": 60
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1,
+            "migration-decision": 1,
+            "grounding": 1,
+            "why-business": 1,
+            "how-actionable": 1,
+            "no-invention": 1
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1.5,
+            "migration-decision": 2,
+            "grounding": 2,
+            "why-business": 1,
+            "how-actionable": 1.5,
+            "no-invention": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "all six fields present, in order, no extra sections",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:hasStructure",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "\"What is this change?\" is 23 words (limit 60)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:conciseWhat",
+                "metric": "conciseness"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "selected: refactoring",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:typeOfChange",
+                "metric": "type-of-change",
+                "weight": 1.5
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "No, and no code block",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:migrationDecision",
+                "metric": "migration-decision",
+                "weight": 2
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "grounded in the diff",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:grounding",
+                "metric": "grounding",
+                "weight": 2
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The \"Why?\" field explains the business reason from the User Story (OrderService is 1,400 lines, every pricing change touches it, the pricing team wants to change rules without touching order orchestration), not a restatement of the code.\n",
+                "threshold": 0.7,
+                "metric": "why-business"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The 'Why?' field reproduces the user story's business justification (1,400-line OrderService, pricing changes touching it, and the pricing team's need for independence) instead of restating the code change.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# TECH-91 — Extract pricing rules out of OrderService\\n\\n## User story\\n\\nAs a developer, I want the pricing rules moved into their own class, so that OrderService stops growing with every pricing change.\\n\\n## Business context\\n\\nOrderService is 1,400 lines and every pricing change touches it. Extracting the calculation lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.\\n\\n## Acceptance criteria\\n\\n- The pricing rules live in a dedicated PriceCalculator class.\\n- OrderService delegates to that class.\\n- No behaviour changes; the existing tests keep passing.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Application/Orders/PriceCalculator.cs b/src/Application/Orders/PriceCalculator.cs\\nnew file mode 100644\\nindex 0000000..7c1d9e4\\n--- /dev/null\\n+++ b/src/Application/Orders/PriceCalculator.cs\\n@@ -0,0 +1,26 @@\\n+namespace Shop.Application.Orders;\\n+\\n+public sealed class PriceCalculator\\n+{\\n+    public decimal Subtotal(Order order) =>\\n+        order.Lines.Sum(line => line.UnitPrice * line.Quantity);\\n+\\n+    public decimal DiscountAmount(Order order)\\n+    {\\n+        var subtotal = Subtotal(order);\\n+        var percentage = order.Discount?.Percentage ?? 0m;\\n+        return subtotal * percentage / 100m;\\n+    }\\n+\\n+    public decimal Total(Order order) => Subtotal(order) - DiscountAmount(order);\\n+}\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 5b8e011..f0a2b18 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -12,6 +12,7 @@ public sealed class OrderService : IOrderService\\n {\\n     private readonly IOrderRepository _repository;\\n+    private readonly PriceCalculator _pricing = new();\\n \\n     public OrderService(IOrderRepository repository)\\n     {\\n@@ -88,9 +89,7 @@ public sealed class OrderService : IOrderService\\n     public decimal GetTotal(Order order)\\n     {\\n-        var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\\n-        var discountPercentage = order.Discount?.Percentage ?? 0m;\\n-        return subtotal - (subtotal * discountPercentage / 100m);\\n+        return _pricing.Total(order);\\n     }\\n \\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\\nindex 1d9f2a0..9e4b7c2 100644\\n--- a/tests/Orders/OrderServiceTests.cs\\n+++ b/tests/Orders/OrderServiceTests.cs\\n@@ -1,6 +1,6 @@\\n using Shop.Application.Orders;\\n \\n-public sealed class OrderServiceTests\\n+public sealed class OrderServiceTests\\n {\\n     private readonly OrderService _service = new(new FakeOrderRepository());\\n \\n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\\n         Assert.Equal(90m, total);\\n     }\\n+\\n+    [Fact]\\n+    public void GetTotal_MatchesPriceCalculator_ForDiscountedOrder()\\n+    {\\n+        var order = new Order\\n+        {\\n+            Discount = new Discount { Percentage = 10m },\\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\\n+        };\\n+\\n+        Assert.Equal(new PriceCalculator().Total(order), _service.GetTotal(order));\\n+    }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nExtracts order pricing calculations from `OrderService` into a dedicated `PriceCalculator` class. This is a pure refactoring for the pricing and order orchestration teams.\\n\\n### Type of change?\\n\\n- Refactoring (changes to existing code which neither adds nor changes functionality)\\n\\n### Why?\\n\\n`OrderService` has grown to 1,400 lines and every pricing change currently touches it. Moving pricing rules into their own class lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.\\n\\n### How?\\n\\n- Added `PriceCalculator` class with `Subtotal`, `DiscountAmount`, and `Total` methods.\\n- `OrderService` now instantiates `PriceCalculator` and delegates `GetTotal` to it.\\n- Added `OrderServiceTests.GetTotal_MatchesPriceCalculator_ForDiscountedOrder` to verify `OrderService.GetTotal` matches `PriceCalculator.Total` for a discounted order.\\n\\n### Requires Manual Database Migration?\\n\\nNo\\n\\n### Anything Else?\\n\\nNone\\n\\nRubric criterion:\\n\\nThe \\\"Why?\\\" field explains the business reason from the User Story (OrderService is 1,400 lines, every pricing change touches it, the pricing team wants to change rules without touching order orchestration), not a restatement of the code.\\n\\n\\nJSON verdict:\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "Every bullet in \"How?\" names a concrete change in the diff: the new PriceCalculator class and OrderService delegating to it. Additional bullets are acceptable when they name a change that is present in the diff. It does not claim new functionality or changed behaviour, because the change is a refactoring.\n",
+                "threshold": 0.7,
+                "metric": "how-actionable",
+                "weight": 1.5
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "Every bullet in the 'How?' section corresponds to a concrete change in the diff, and the PR correctly frames the work as a refactoring with no behavior changes.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# TECH-91 — Extract pricing rules out of OrderService\\n\\n## User story\\n\\nAs a developer, I want the pricing rules moved into their own class, so that OrderService stops growing with every pricing change.\\n\\n## Business context\\n\\nOrderService is 1,400 lines and every pricing change touches it. Extracting the calculation lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.\\n\\n## Acceptance criteria\\n\\n- The pricing rules live in a dedicated PriceCalculator class.\\n- OrderService delegates to that class.\\n- No behaviour changes; the existing tests keep passing.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Application/Orders/PriceCalculator.cs b/src/Application/Orders/PriceCalculator.cs\\nnew file mode 100644\\nindex 0000000..7c1d9e4\\n--- /dev/null\\n+++ b/src/Application/Orders/PriceCalculator.cs\\n@@ -0,0 +1,26 @@\\n+namespace Shop.Application.Orders;\\n+\\n+public sealed class PriceCalculator\\n+{\\n+    public decimal Subtotal(Order order) =>\\n+        order.Lines.Sum(line => line.UnitPrice * line.Quantity);\\n+\\n+    public decimal DiscountAmount(Order order)\\n+    {\\n+        var subtotal = Subtotal(order);\\n+        var percentage = order.Discount?.Percentage ?? 0m;\\n+        return subtotal * percentage / 100m;\\n+    }\\n+\\n+    public decimal Total(Order order) => Subtotal(order) - DiscountAmount(order);\\n+}\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 5b8e011..f0a2b18 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -12,6 +12,7 @@ public sealed class OrderService : IOrderService\\n {\\n     private readonly IOrderRepository _repository;\\n+    private readonly PriceCalculator _pricing = new();\\n \\n     public OrderService(IOrderRepository repository)\\n     {\\n@@ -88,9 +89,7 @@ public sealed class OrderService : IOrderService\\n     public decimal GetTotal(Order order)\\n     {\\n-        var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\\n-        var discountPercentage = order.Discount?.Percentage ?? 0m;\\n-        return subtotal - (subtotal * discountPercentage / 100m);\\n+        return _pricing.Total(order);\\n     }\\n \\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\\nindex 1d9f2a0..9e4b7c2 100644\\n--- a/tests/Orders/OrderServiceTests.cs\\n+++ b/tests/Orders/OrderServiceTests.cs\\n@@ -1,6 +1,6 @@\\n using Shop.Application.Orders;\\n \\n-public sealed class OrderServiceTests\\n+public sealed class OrderServiceTests\\n {\\n     private readonly OrderService _service = new(new FakeOrderRepository());\\n \\n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\\n         Assert.Equal(90m, total);\\n     }\\n+\\n+    [Fact]\\n+    public void GetTotal_MatchesPriceCalculator_ForDiscountedOrder()\\n+    {\\n+        var order = new Order\\n+        {\\n+            Discount = new Discount { Percentage = 10m },\\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\\n+        };\\n+\\n+        Assert.Equal(new PriceCalculator().Total(order), _service.GetTotal(order));\\n+    }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nExtracts order pricing calculations from `OrderService` into a dedicated `PriceCalculator` class. This is a pure refactoring for the pricing and order orchestration teams.\\n\\n### Type of change?\\n\\n- Refactoring (changes to existing code which neither adds nor changes functionality)\\n\\n### Why?\\n\\n`OrderService` has grown to 1,400 lines and every pricing change currently touches it. Moving pricing rules into their own class lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.\\n\\n### How?\\n\\n- Added `PriceCalculator` class with `Subtotal`, `DiscountAmount`, and `Total` methods.\\n- `OrderService` now instantiates `PriceCalculator` and delegates `GetTotal` to it.\\n- Added `OrderServiceTests.GetTotal_MatchesPriceCalculator_ForDiscountedOrder` to verify `OrderService.GetTotal` matches `PriceCalculator.Total` for a discounted order.\\n\\n### Requires Manual Database Migration?\\n\\nNo\\n\\n### Anything Else?\\n\\nNone\\n\\nRubric criterion:\\n\\nEvery bullet in \\\"How?\\\" names a concrete change in the diff: the new PriceCalculator class and OrderService delegating to it. Additional bullets are acceptable when they name a change that is present in the diff. It does not claim new functionality or changed behaviour, because the change is a refactoring.\\n\\n\\nJSON verdict:\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The description does not claim any change absent from the diff and does not present the refactoring as a new feature or a behaviour change.\n",
+                "threshold": 0.8,
+                "metric": "no-invention",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The description only describes the refactoring shown in the diff and explicitly classifies it as a non-behavior-changing refactor.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# TECH-91 — Extract pricing rules out of OrderService\\n\\n## User story\\n\\nAs a developer, I want the pricing rules moved into their own class, so that OrderService stops growing with every pricing change.\\n\\n## Business context\\n\\nOrderService is 1,400 lines and every pricing change touches it. Extracting the calculation lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.\\n\\n## Acceptance criteria\\n\\n- The pricing rules live in a dedicated PriceCalculator class.\\n- OrderService delegates to that class.\\n- No behaviour changes; the existing tests keep passing.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Application/Orders/PriceCalculator.cs b/src/Application/Orders/PriceCalculator.cs\\nnew file mode 100644\\nindex 0000000..7c1d9e4\\n--- /dev/null\\n+++ b/src/Application/Orders/PriceCalculator.cs\\n@@ -0,0 +1,26 @@\\n+namespace Shop.Application.Orders;\\n+\\n+public sealed class PriceCalculator\\n+{\\n+    public decimal Subtotal(Order order) =>\\n+        order.Lines.Sum(line => line.UnitPrice * line.Quantity);\\n+\\n+    public decimal DiscountAmount(Order order)\\n+    {\\n+        var subtotal = Subtotal(order);\\n+        var percentage = order.Discount?.Percentage ?? 0m;\\n+        return subtotal * percentage / 100m;\\n+    }\\n+\\n+    public decimal Total(Order order) => Subtotal(order) - DiscountAmount(order);\\n+}\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 5b8e011..f0a2b18 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -12,6 +12,7 @@ public sealed class OrderService : IOrderService\\n {\\n     private readonly IOrderRepository _repository;\\n+    private readonly PriceCalculator _pricing = new();\\n \\n     public OrderService(IOrderRepository repository)\\n     {\\n@@ -88,9 +89,7 @@ public sealed class OrderService : IOrderService\\n     public decimal GetTotal(Order order)\\n     {\\n-        var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\\n-        var discountPercentage = order.Discount?.Percentage ?? 0m;\\n-        return subtotal - (subtotal * discountPercentage / 100m);\\n+        return _pricing.Total(order);\\n     }\\n \\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\\nindex 1d9f2a0..9e4b7c2 100644\\n--- a/tests/Orders/OrderServiceTests.cs\\n+++ b/tests/Orders/OrderServiceTests.cs\\n@@ -1,6 +1,6 @@\\n using Shop.Application.Orders;\\n \\n-public sealed class OrderServiceTests\\n+public sealed class OrderServiceTests\\n {\\n     private readonly OrderService _service = new(new FakeOrderRepository());\\n \\n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\\n         Assert.Equal(90m, total);\\n     }\\n+\\n+    [Fact]\\n+    public void GetTotal_MatchesPriceCalculator_ForDiscountedOrder()\\n+    {\\n+        var order = new Order\\n+        {\\n+            Discount = new Discount { Percentage = 10m },\\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\\n+        };\\n+\\n+        Assert.Equal(new PriceCalculator().Total(order), _service.GetTotal(order));\\n+    }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nExtracts order pricing calculations from `OrderService` into a dedicated `PriceCalculator` class. This is a pure refactoring for the pricing and order orchestration teams.\\n\\n### Type of change?\\n\\n- Refactoring (changes to existing code which neither adds nor changes functionality)\\n\\n### Why?\\n\\n`OrderService` has grown to 1,400 lines and every pricing change currently touches it. Moving pricing rules into their own class lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.\\n\\n### How?\\n\\n- Added `PriceCalculator` class with `Subtotal`, `DiscountAmount`, and `Total` methods.\\n- `OrderService` now instantiates `PriceCalculator` and delegates `GetTotal` to it.\\n- Added `OrderServiceTests.GetTotal_MatchesPriceCalculator_ForDiscountedOrder` to verify `OrderService.GetTotal` matches `PriceCalculator.Total` for a discounted order.\\n\\n### Requires Manual Database Migration?\\n\\nNo\\n\\n### Anything Else?\\n\\nNone\\n\\nRubric criterion:\\n\\nThe description does not claim any change absent from the diff and does not present the refactoring as a new feature or a behaviour change.\\n\\n\\nJSON verdict:\"}]"
+              }
+            }
+          ]
+        },
+        "id": "f2694136-3adc-46e3-9e94-e32cf934dac3",
+        "latencyMs": 10356,
+        "namedScores": {
+          "structure": 1,
+          "conciseness": 1,
+          "type-of-change": 1,
+          "migration-decision": 1,
+          "grounding": 1,
+          "why-business": 1,
+          "how-actionable": 1,
+          "no-invention": 1
+        },
+        "prompt": {
+          "raw": "You are a senior software engineer writing the PR description for a change that is ready for review.\n\n## Task\n\nFill out every PR description field below, in English, using only the User Story and the code diff provided.\n\nIf the User Story is missing or empty, ask the user to provide it and output nothing else.\n\n## Context\n\n- The diff below is the only source of truth about the code change. Do not read files from the workspace.\n- Base every statement on the diff. Do not describe changes that are not in the diff.\n- The business reason comes from the User Story, not from the code.\n\n## Input\n\n### User Story\n\n# TECH-91 — Extract pricing rules out of OrderService\n\n## User story\n\nAs a developer, I want the pricing rules moved into their own class, so that OrderService stops growing with every pricing change.\n\n## Business context\n\nOrderService is 1,400 lines and every pricing change touches it. Extracting the calculation lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.\n\n## Acceptance criteria\n\n- The pricing rules live in a dedicated PriceCalculator class.\n- OrderService delegates to that class.\n- No behaviour changes; the existing tests keep passing.\n\n### Code diff\n\ndiff --git a/src/Application/Orders/PriceCalculator.cs b/src/Application/Orders/PriceCalculator.cs\nnew file mode 100644\nindex 0000000..7c1d9e4\n--- /dev/null\n+++ b/src/Application/Orders/PriceCalculator.cs\n@@ -0,0 +1,26 @@\n+namespace Shop.Application.Orders;\n+\n+public sealed class PriceCalculator\n+{\n+    public decimal Subtotal(Order order) =>\n+        order.Lines.Sum(line => line.UnitPrice * line.Quantity);\n+\n+    public decimal DiscountAmount(Order order)\n+    {\n+        var subtotal = Subtotal(order);\n+        var percentage = order.Discount?.Percentage ?? 0m;\n+        return subtotal * percentage / 100m;\n+    }\n+\n+    public decimal Total(Order order) => Subtotal(order) - DiscountAmount(order);\n+}\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\nindex 5b8e011..f0a2b18 100644\n--- a/src/Application/Orders/OrderService.cs\n+++ b/src/Application/Orders/OrderService.cs\n@@ -12,6 +12,7 @@ public sealed class OrderService : IOrderService\n {\n     private readonly IOrderRepository _repository;\n+    private readonly PriceCalculator _pricing = new();\n \n     public OrderService(IOrderRepository repository)\n     {\n@@ -88,9 +89,7 @@ public sealed class OrderService : IOrderService\n     public decimal GetTotal(Order order)\n     {\n-        var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\n-        var discountPercentage = order.Discount?.Percentage ?? 0m;\n-        return subtotal - (subtotal * discountPercentage / 100m);\n+        return _pricing.Total(order);\n     }\n \n     public async Task DeleteAsync(int orderId, CancellationToken ct)\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\nindex 1d9f2a0..9e4b7c2 100644\n--- a/tests/Orders/OrderServiceTests.cs\n+++ b/tests/Orders/OrderServiceTests.cs\n@@ -1,6 +1,6 @@\n using Shop.Application.Orders;\n \n-public sealed class OrderServiceTests\n+public sealed class OrderServiceTests\n {\n     private readonly OrderService _service = new(new FakeOrderRepository());\n \n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\n         Assert.Equal(90m, total);\n     }\n+\n+    [Fact]\n+    public void GetTotal_MatchesPriceCalculator_ForDiscountedOrder()\n+    {\n+        var order = new Order\n+        {\n+            Discount = new Discount { Percentage = 10m },\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\n+        };\n+\n+        Assert.Equal(new PriceCalculator().Total(order), _service.GetTotal(order));\n+    }\n }\n\n## Output\n\nUse exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.\n\n### What is this change?\n\nOne or two sentences, maximum 60 words, summarizing what changed and who it is for.\n\n### Type of change?\n\nSelect ONLY the relevant options from this list and delete the rest:\n\n- Bug fix (non-breaking change which fixes an issue)\n- New feature (non-breaking change which adds functionality)\n- Refactoring (changes to existing code which neither adds nor changes functionality)\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\n- Configuration change\n- This change requires a documentation update\n- Other: unit tests only, documentation changes only, etc.\n\n### Why?\n\nExplain the business reason from the User Story. Do not restate the diff.\n\n### How?\n\nList the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.\n\n### Requires Manual Database Migration?\n\n- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.\n- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.\n- If the diff contains no migration, answer No and include no code block.\n\n### Anything Else?\n\nNotes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write \"None\" if there is nothing.\n\nIf the change is a breaking change, state what breaks and what consumers must do.\n\n## Rules\n\n- Do not include file path citations or IDE links inside SQL or code blocks.\n- Keep SQL blocks as plain text only.\n- Every statement must be traceable to the User Story or the diff.\n",
+          "label": "pr-description\\prompts\\v3-final.md: You are a senior software engineer writing the PR ...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          }
+        },
+        "promptId": "05bdb546370985eb9bca73fdea87b9473dc16b9eb56df42c66f7c2ab0eff162b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "### What is this change?\n\nExtracts order pricing calculations from `OrderService` into a dedicated `PriceCalculator` class. This is a pure refactoring for the pricing and order orchestration teams.\n\n### Type of change?\n\n- Refactoring (changes to existing code which neither adds nor changes functionality)\n\n### Why?\n\n`OrderService` has grown to 1,400 lines and every pricing change currently touches it. Moving pricing rules into their own class lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.\n\n### How?\n\n- Added `PriceCalculator` class with `Subtotal`, `DiscountAmount`, and `Total` methods.\n- `OrderService` now instantiates `PriceCalculator` and delegates `GetTotal` to it.\n- Added `OrderServiceTests.GetTotal_MatchesPriceCalculator_ForDiscountedOrder` to verify `OrderService.GetTotal` matches `PriceCalculator.Total` for a discounted order.\n\n### Requires Manual Database Migration?\n\nNo\n\n### Anything Else?\n\nNone"
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "03 refactoring, no migration — pricing rules extracted from OrderService",
+          "vars": {
+            "story": "file://fixtures\\03-refactor\\story.md",
+            "diff": "file://fixtures\\03-refactor\\diff.patch",
+            "expected_types": "[\"Refactoring\"]",
+            "forbidden_types": "[\"New feature\",\"Bug fix\",\"Breaking change\",\"Configuration change\"]",
+            "expected_migration": "no",
+            "expected_sql_token": "",
+            "must_mention": "[\"PriceCalculator\",\"OrderService\"]",
+            "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+            "allowed_paths": "[\"PriceCalculator.cs\",\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+            "max_words": 60
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:hasStructure",
+              "metric": "structure"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:conciseWhat",
+              "metric": "conciseness"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:typeOfChange",
+              "metric": "type-of-change",
+              "weight": 1.5
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:migrationDecision",
+              "metric": "migration-decision",
+              "weight": 2
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:grounding",
+              "metric": "grounding",
+              "weight": 2
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The \"Why?\" field explains the business reason from the User Story (OrderService is 1,400 lines, every pricing change touches it, the pricing team wants to change rules without touching order orchestration), not a restatement of the code.\n",
+              "threshold": 0.7,
+              "metric": "why-business"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "Every bullet in \"How?\" names a concrete change in the diff: the new PriceCalculator class and OrderService delegating to it. Additional bullets are acceptable when they name a change that is present in the diff. It does not claim new functionality or changed behaviour, because the change is a refactoring.\n",
+              "threshold": 0.7,
+              "metric": "how-actionable",
+              "weight": 1.5
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The description does not claim any change absent from the diff and does not present the refactoring as a new feature or a behaviour change.\n",
+              "threshold": 0.8,
+              "metric": "no-invention",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          },
+          "metadata": {}
+        },
+        "testIdx": 2,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "file://fixtures\\03-refactor\\story.md",
+          "diff": "file://fixtures\\03-refactor\\diff.patch",
+          "expected_types": "[\"Refactoring\"]",
+          "forbidden_types": "[\"New feature\",\"Bug fix\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "no",
+          "expected_sql_token": "",
+          "must_mention": "[\"PriceCalculator\",\"OrderService\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+          "allowed_paths": "[\"PriceCalculator.cs\",\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+          "max_words": 60
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1,
+            "migration-decision": 1,
+            "grounding": 1,
+            "backwards-compat": 1,
+            "why-business": 1,
+            "how-actionable": 1,
+            "no-invention": 1
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1.5,
+            "migration-decision": 2,
+            "grounding": 2,
+            "backwards-compat": 1,
+            "why-business": 1,
+            "how-actionable": 1.5,
+            "no-invention": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "all six fields present, in order, no extra sections",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:hasStructure",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "\"What is this change?\" is 40 words (limit 60)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:conciseWhat",
+                "metric": "conciseness"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "selected: breaking change",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:typeOfChange",
+                "metric": "type-of-change",
+                "weight": 1.5
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Yes, with a SQL block containing \"sp_rename\" and no path citations",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:migrationDecision",
+                "metric": "migration-decision",
+                "weight": 2
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "grounded in the diff",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:grounding",
+                "metric": "grounding",
+                "weight": 2
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "states the consumer impact (\"compatib\")",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:breakingNote",
+                "metric": "backwards-compat",
+                "weight": 1
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The \"Why?\" field explains the business reason from the User Story (the field returns the full name but its name suggests only the first name, two partner integrations misread it), not a restatement of the code.\n",
+                "threshold": 0.7,
+                "metric": "why-business"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The 'Why?' field explains the actual business reason from the user story: the field contains a full name but its name suggests only the first name, and partner integrations already misread it, so renaming avoids downstream bad data.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# US-4190 — Rename customerName to customerFullName in the order API\\n\\n## User story\\n\\nAs an API consumer, I want the order payload to use customerFullName, so that the field name matches what it actually contains.\\n\\n## Business context\\n\\nThe field returns the first and last name concatenated, but its name suggests only the first name. Two partner integrations already misread it and displayed the wrong value to their users. Renaming now avoids more bad data downstream.\\n\\n## Acceptance criteria\\n\\n- The order API returns customerFullName instead of customerName.\\n- The database column is renamed to match.\\n- Existing integrations are told the field was renamed.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Api/Dtos/OrderDto.cs b/src/Api/Dtos/OrderDto.cs\\nindex 3c7a1b9..8d2e4f5 100644\\n--- a/src/Api/Dtos/OrderDto.cs\\n+++ b/src/Api/Dtos/OrderDto.cs\\n@@ -8,7 +8,7 @@ public sealed record OrderDto(\\n     int Id,\\n     string Reference,\\n     decimal Total,\\n-    string CustomerName,\\n+    string CustomerFullName,\\n     string Status);\\ndiff --git a/src/Application/Orders/OrderMapper.cs b/src/Application/Orders/OrderMapper.cs\\nindex 2b9c4d1..5e7f3a8 100644\\n--- a/src/Application/Orders/OrderMapper.cs\\n+++ b/src/Application/Orders/OrderMapper.cs\\n@@ -6,7 +6,7 @@ public static class OrderMapper\\n         Id: order.Id,\\n         Reference: order.Reference,\\n         Total: order.Total,\\n-        CustomerName: order.Customer.FirstName + \\\" \\\" + order.Customer.LastName,\\n+        CustomerFullName: order.Customer.FirstName + \\\" \\\" + order.Customer.LastName,\\n         Status: order.Status);\\n }\\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\\nnew file mode 100644\\nindex 0000000..4d8a1c2\\n--- /dev/null\\n+++ b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\\n@@ -0,0 +1,3 @@\\n+-- src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\\n+EXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\\n+GO\\ndiff --git a/tests/Orders/OrderMapperTests.cs b/tests/Orders/OrderMapperTests.cs\\nindex 6f1e2d3..9a8b7c6 100644\\n--- a/tests/Orders/OrderMapperTests.cs\\n+++ b/tests/Orders/OrderMapperTests.cs\\n@@ -18,7 +18,7 @@ public sealed class OrderMapperTests\\n         var dto = OrderMapper.ToDto(order);\\n \\n         Assert.Equal(\\\"Ada Lovelace\\\", dto.CustomerFullName);\\n     }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nThis PR renames the order API's `CustomerName` field to `CustomerFullName` across the DTO, mapper, and database column so the API contract accurately reflects the full name it returns. This is for API consumers who receive or display the order payload.\\n\\n### Type of change?\\n\\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\\n\\n### Why?\\n\\nThe field currently concatenates the customer's first and last name, but its name implies only the first name. Two partner integrations already misread it and showed incorrect values to their users, so renaming it now prevents more bad data from flowing downstream.\\n\\n### How?\\n\\n- Renamed `CustomerName` to `CustomerFullName` in the `OrderDto` record.\\n- Updated `OrderMapper.ToDto` to map the value into `CustomerFullName`.\\n- Added a SQL migration script that renames the `Orders.CustomerName` column to `CustomerFullName`.\\n- Updated the order mapper unit test to assert against `CustomerFullName`.\\n\\n### Requires Manual Database Migration?\\n\\nYes\\n\\n```\\nEXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\\nGO\\n```\\n\\n### Anything Else?\\n\\nThis is a breaking API contract change. Consumers currently reading `customerName` must switch to `customerFullName` and may need to update stored data references once the migration runs. No backwards-compatible alias is retained.\\n\\nRubric criterion:\\n\\nThe \\\"Why?\\\" field explains the business reason from the User Story (the field returns the full name but its name suggests only the first name, two partner integrations misread it), not a restatement of the code.\\n\\n\\nJSON verdict:\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "Every bullet in \"How?\" names a concrete change in the diff: the OrderDto property rename, the OrderMapper update, the SQL rename script and the updated mapper test. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.\n",
+                "threshold": 0.7,
+                "metric": "how-actionable",
+                "weight": 1.5
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "Each 'How?' bullet names a concrete, diff-backed change and there is no generic filler.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# US-4190 — Rename customerName to customerFullName in the order API\\n\\n## User story\\n\\nAs an API consumer, I want the order payload to use customerFullName, so that the field name matches what it actually contains.\\n\\n## Business context\\n\\nThe field returns the first and last name concatenated, but its name suggests only the first name. Two partner integrations already misread it and displayed the wrong value to their users. Renaming now avoids more bad data downstream.\\n\\n## Acceptance criteria\\n\\n- The order API returns customerFullName instead of customerName.\\n- The database column is renamed to match.\\n- Existing integrations are told the field was renamed.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Api/Dtos/OrderDto.cs b/src/Api/Dtos/OrderDto.cs\\nindex 3c7a1b9..8d2e4f5 100644\\n--- a/src/Api/Dtos/OrderDto.cs\\n+++ b/src/Api/Dtos/OrderDto.cs\\n@@ -8,7 +8,7 @@ public sealed record OrderDto(\\n     int Id,\\n     string Reference,\\n     decimal Total,\\n-    string CustomerName,\\n+    string CustomerFullName,\\n     string Status);\\ndiff --git a/src/Application/Orders/OrderMapper.cs b/src/Application/Orders/OrderMapper.cs\\nindex 2b9c4d1..5e7f3a8 100644\\n--- a/src/Application/Orders/OrderMapper.cs\\n+++ b/src/Application/Orders/OrderMapper.cs\\n@@ -6,7 +6,7 @@ public static class OrderMapper\\n         Id: order.Id,\\n         Reference: order.Reference,\\n         Total: order.Total,\\n-        CustomerName: order.Customer.FirstName + \\\" \\\" + order.Customer.LastName,\\n+        CustomerFullName: order.Customer.FirstName + \\\" \\\" + order.Customer.LastName,\\n         Status: order.Status);\\n }\\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\\nnew file mode 100644\\nindex 0000000..4d8a1c2\\n--- /dev/null\\n+++ b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\\n@@ -0,0 +1,3 @@\\n+-- src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\\n+EXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\\n+GO\\ndiff --git a/tests/Orders/OrderMapperTests.cs b/tests/Orders/OrderMapperTests.cs\\nindex 6f1e2d3..9a8b7c6 100644\\n--- a/tests/Orders/OrderMapperTests.cs\\n+++ b/tests/Orders/OrderMapperTests.cs\\n@@ -18,7 +18,7 @@ public sealed class OrderMapperTests\\n         var dto = OrderMapper.ToDto(order);\\n \\n         Assert.Equal(\\\"Ada Lovelace\\\", dto.CustomerFullName);\\n     }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nThis PR renames the order API's `CustomerName` field to `CustomerFullName` across the DTO, mapper, and database column so the API contract accurately reflects the full name it returns. This is for API consumers who receive or display the order payload.\\n\\n### Type of change?\\n\\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\\n\\n### Why?\\n\\nThe field currently concatenates the customer's first and last name, but its name implies only the first name. Two partner integrations already misread it and showed incorrect values to their users, so renaming it now prevents more bad data from flowing downstream.\\n\\n### How?\\n\\n- Renamed `CustomerName` to `CustomerFullName` in the `OrderDto` record.\\n- Updated `OrderMapper.ToDto` to map the value into `CustomerFullName`.\\n- Added a SQL migration script that renames the `Orders.CustomerName` column to `CustomerFullName`.\\n- Updated the order mapper unit test to assert against `CustomerFullName`.\\n\\n### Requires Manual Database Migration?\\n\\nYes\\n\\n```\\nEXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\\nGO\\n```\\n\\n### Anything Else?\\n\\nThis is a breaking API contract change. Consumers currently reading `customerName` must switch to `customerFullName` and may need to update stored data references once the migration runs. No backwards-compatible alias is retained.\\n\\nRubric criterion:\\n\\nEvery bullet in \\\"How?\\\" names a concrete change in the diff: the OrderDto property rename, the OrderMapper update, the SQL rename script and the updated mapper test. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.\\n\\n\\nJSON verdict:\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The description does not claim any change absent from the diff and does not describe the rename as a non-breaking change.\n",
+                "threshold": 0.8,
+                "metric": "no-invention",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The description only lists changes present in the diff and explicitly labels the rename as a breaking change.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n# US-4190 — Rename customerName to customerFullName in the order API\\n\\n## User story\\n\\nAs an API consumer, I want the order payload to use customerFullName, so that the field name matches what it actually contains.\\n\\n## Business context\\n\\nThe field returns the first and last name concatenated, but its name suggests only the first name. Two partner integrations already misread it and displayed the wrong value to their users. Renaming now avoids more bad data downstream.\\n\\n## Acceptance criteria\\n\\n- The order API returns customerFullName instead of customerName.\\n- The database column is renamed to match.\\n- Existing integrations are told the field was renamed.\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Api/Dtos/OrderDto.cs b/src/Api/Dtos/OrderDto.cs\\nindex 3c7a1b9..8d2e4f5 100644\\n--- a/src/Api/Dtos/OrderDto.cs\\n+++ b/src/Api/Dtos/OrderDto.cs\\n@@ -8,7 +8,7 @@ public sealed record OrderDto(\\n     int Id,\\n     string Reference,\\n     decimal Total,\\n-    string CustomerName,\\n+    string CustomerFullName,\\n     string Status);\\ndiff --git a/src/Application/Orders/OrderMapper.cs b/src/Application/Orders/OrderMapper.cs\\nindex 2b9c4d1..5e7f3a8 100644\\n--- a/src/Application/Orders/OrderMapper.cs\\n+++ b/src/Application/Orders/OrderMapper.cs\\n@@ -6,7 +6,7 @@ public static class OrderMapper\\n         Id: order.Id,\\n         Reference: order.Reference,\\n         Total: order.Total,\\n-        CustomerName: order.Customer.FirstName + \\\" \\\" + order.Customer.LastName,\\n+        CustomerFullName: order.Customer.FirstName + \\\" \\\" + order.Customer.LastName,\\n         Status: order.Status);\\n }\\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\\nnew file mode 100644\\nindex 0000000..4d8a1c2\\n--- /dev/null\\n+++ b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\\n@@ -0,0 +1,3 @@\\n+-- src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\\n+EXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\\n+GO\\ndiff --git a/tests/Orders/OrderMapperTests.cs b/tests/Orders/OrderMapperTests.cs\\nindex 6f1e2d3..9a8b7c6 100644\\n--- a/tests/Orders/OrderMapperTests.cs\\n+++ b/tests/Orders/OrderMapperTests.cs\\n@@ -18,7 +18,7 @@ public sealed class OrderMapperTests\\n         var dto = OrderMapper.ToDto(order);\\n \\n         Assert.Equal(\\\"Ada Lovelace\\\", dto.CustomerFullName);\\n     }\\n }\\n\\nPR description to grade:\\n\\n### What is this change?\\n\\nThis PR renames the order API's `CustomerName` field to `CustomerFullName` across the DTO, mapper, and database column so the API contract accurately reflects the full name it returns. This is for API consumers who receive or display the order payload.\\n\\n### Type of change?\\n\\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\\n\\n### Why?\\n\\nThe field currently concatenates the customer's first and last name, but its name implies only the first name. Two partner integrations already misread it and showed incorrect values to their users, so renaming it now prevents more bad data from flowing downstream.\\n\\n### How?\\n\\n- Renamed `CustomerName` to `CustomerFullName` in the `OrderDto` record.\\n- Updated `OrderMapper.ToDto` to map the value into `CustomerFullName`.\\n- Added a SQL migration script that renames the `Orders.CustomerName` column to `CustomerFullName`.\\n- Updated the order mapper unit test to assert against `CustomerFullName`.\\n\\n### Requires Manual Database Migration?\\n\\nYes\\n\\n```\\nEXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\\nGO\\n```\\n\\n### Anything Else?\\n\\nThis is a breaking API contract change. Consumers currently reading `customerName` must switch to `customerFullName` and may need to update stored data references once the migration runs. No backwards-compatible alias is retained.\\n\\nRubric criterion:\\n\\nThe description does not claim any change absent from the diff and does not describe the rename as a non-breaking change.\\n\\n\\nJSON verdict:\"}]"
+              }
+            }
+          ]
+        },
+        "id": "7b78e5f0-a61e-4f26-b094-53e3145e339b",
+        "latencyMs": 7641,
+        "namedScores": {
+          "structure": 1,
+          "conciseness": 1,
+          "type-of-change": 1,
+          "migration-decision": 1,
+          "grounding": 1,
+          "backwards-compat": 1,
+          "why-business": 1,
+          "how-actionable": 1,
+          "no-invention": 1
+        },
+        "prompt": {
+          "raw": "You are a senior software engineer writing the PR description for a change that is ready for review.\n\n## Task\n\nFill out every PR description field below, in English, using only the User Story and the code diff provided.\n\nIf the User Story is missing or empty, ask the user to provide it and output nothing else.\n\n## Context\n\n- The diff below is the only source of truth about the code change. Do not read files from the workspace.\n- Base every statement on the diff. Do not describe changes that are not in the diff.\n- The business reason comes from the User Story, not from the code.\n\n## Input\n\n### User Story\n\n# US-4190 — Rename customerName to customerFullName in the order API\n\n## User story\n\nAs an API consumer, I want the order payload to use customerFullName, so that the field name matches what it actually contains.\n\n## Business context\n\nThe field returns the first and last name concatenated, but its name suggests only the first name. Two partner integrations already misread it and displayed the wrong value to their users. Renaming now avoids more bad data downstream.\n\n## Acceptance criteria\n\n- The order API returns customerFullName instead of customerName.\n- The database column is renamed to match.\n- Existing integrations are told the field was renamed.\n\n### Code diff\n\ndiff --git a/src/Api/Dtos/OrderDto.cs b/src/Api/Dtos/OrderDto.cs\nindex 3c7a1b9..8d2e4f5 100644\n--- a/src/Api/Dtos/OrderDto.cs\n+++ b/src/Api/Dtos/OrderDto.cs\n@@ -8,7 +8,7 @@ public sealed record OrderDto(\n     int Id,\n     string Reference,\n     decimal Total,\n-    string CustomerName,\n+    string CustomerFullName,\n     string Status);\ndiff --git a/src/Application/Orders/OrderMapper.cs b/src/Application/Orders/OrderMapper.cs\nindex 2b9c4d1..5e7f3a8 100644\n--- a/src/Application/Orders/OrderMapper.cs\n+++ b/src/Application/Orders/OrderMapper.cs\n@@ -6,7 +6,7 @@ public static class OrderMapper\n         Id: order.Id,\n         Reference: order.Reference,\n         Total: order.Total,\n-        CustomerName: order.Customer.FirstName + \" \" + order.Customer.LastName,\n+        CustomerFullName: order.Customer.FirstName + \" \" + order.Customer.LastName,\n         Status: order.Status);\n }\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\nnew file mode 100644\nindex 0000000..4d8a1c2\n--- /dev/null\n+++ b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\n@@ -0,0 +1,3 @@\n+-- src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\n+EXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\n+GO\ndiff --git a/tests/Orders/OrderMapperTests.cs b/tests/Orders/OrderMapperTests.cs\nindex 6f1e2d3..9a8b7c6 100644\n--- a/tests/Orders/OrderMapperTests.cs\n+++ b/tests/Orders/OrderMapperTests.cs\n@@ -18,7 +18,7 @@ public sealed class OrderMapperTests\n         var dto = OrderMapper.ToDto(order);\n \n         Assert.Equal(\"Ada Lovelace\", dto.CustomerFullName);\n     }\n }\n\n## Output\n\nUse exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.\n\n### What is this change?\n\nOne or two sentences, maximum 60 words, summarizing what changed and who it is for.\n\n### Type of change?\n\nSelect ONLY the relevant options from this list and delete the rest:\n\n- Bug fix (non-breaking change which fixes an issue)\n- New feature (non-breaking change which adds functionality)\n- Refactoring (changes to existing code which neither adds nor changes functionality)\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\n- Configuration change\n- This change requires a documentation update\n- Other: unit tests only, documentation changes only, etc.\n\n### Why?\n\nExplain the business reason from the User Story. Do not restate the diff.\n\n### How?\n\nList the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.\n\n### Requires Manual Database Migration?\n\n- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.\n- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.\n- If the diff contains no migration, answer No and include no code block.\n\n### Anything Else?\n\nNotes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write \"None\" if there is nothing.\n\nIf the change is a breaking change, state what breaks and what consumers must do.\n\n## Rules\n\n- Do not include file path citations or IDE links inside SQL or code blocks.\n- Keep SQL blocks as plain text only.\n- Every statement must be traceable to the User Story or the diff.\n",
+          "label": "pr-description\\prompts\\v3-final.md: You are a senior software engineer writing the PR ...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          }
+        },
+        "promptId": "05bdb546370985eb9bca73fdea87b9473dc16b9eb56df42c66f7c2ab0eff162b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "### What is this change?\n\nThis PR renames the order API's `CustomerName` field to `CustomerFullName` across the DTO, mapper, and database column so the API contract accurately reflects the full name it returns. This is for API consumers who receive or display the order payload.\n\n### Type of change?\n\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\n\n### Why?\n\nThe field currently concatenates the customer's first and last name, but its name implies only the first name. Two partner integrations already misread it and showed incorrect values to their users, so renaming it now prevents more bad data from flowing downstream.\n\n### How?\n\n- Renamed `CustomerName` to `CustomerFullName` in the `OrderDto` record.\n- Updated `OrderMapper.ToDto` to map the value into `CustomerFullName`.\n- Added a SQL migration script that renames the `Orders.CustomerName` column to `CustomerFullName`.\n- Updated the order mapper unit test to assert against `CustomerFullName`.\n\n### Requires Manual Database Migration?\n\nYes\n\n```\nEXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\nGO\n```\n\n### Anything Else?\n\nThis is a breaking API contract change. Consumers currently reading `customerName` must switch to `customerFullName` and may need to update stored data references once the migration runs. No backwards-compatible alias is retained."
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "04 breaking change + migration — customerName renamed to customerFullName",
+          "vars": {
+            "story": "file://fixtures\\04-breaking-change\\story.md",
+            "diff": "file://fixtures\\04-breaking-change\\diff.patch",
+            "expected_types": "[\"Breaking change\"]",
+            "forbidden_types": "[\"Bug fix\",\"New feature\",\"Refactoring\",\"Configuration change\"]",
+            "expected_migration": "yes",
+            "expected_sql_token": "sp_rename",
+            "must_mention": "[\"customerFullName\",\"customerName\"]",
+            "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+            "allowed_paths": "[\"OrderDto.cs\",\"OrderMapper.cs\",\"20261103_rename_customer_name.sql\",\"OrderMapperTests.cs\"]",
+            "max_words": 60
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:hasStructure",
+              "metric": "structure"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:conciseWhat",
+              "metric": "conciseness"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:typeOfChange",
+              "metric": "type-of-change",
+              "weight": 1.5
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:migrationDecision",
+              "metric": "migration-decision",
+              "weight": 2
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:grounding",
+              "metric": "grounding",
+              "weight": 2
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:breakingNote",
+              "metric": "backwards-compat",
+              "weight": 1
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The \"Why?\" field explains the business reason from the User Story (the field returns the full name but its name suggests only the first name, two partner integrations misread it), not a restatement of the code.\n",
+              "threshold": 0.7,
+              "metric": "why-business"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "Every bullet in \"How?\" names a concrete change in the diff: the OrderDto property rename, the OrderMapper update, the SQL rename script and the updated mapper test. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.\n",
+              "threshold": 0.7,
+              "metric": "how-actionable",
+              "weight": 1.5
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The description does not claim any change absent from the diff and does not describe the rename as a non-breaking change.\n",
+              "threshold": 0.8,
+              "metric": "no-invention",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          },
+          "metadata": {}
+        },
+        "testIdx": 3,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "file://fixtures\\04-breaking-change\\story.md",
+          "diff": "file://fixtures\\04-breaking-change\\diff.patch",
+          "expected_types": "[\"Breaking change\"]",
+          "forbidden_types": "[\"Bug fix\",\"New feature\",\"Refactoring\",\"Configuration change\"]",
+          "expected_migration": "yes",
+          "expected_sql_token": "sp_rename",
+          "must_mention": "[\"customerFullName\",\"customerName\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+          "allowed_paths": "[\"OrderDto.cs\",\"OrderMapper.cs\",\"20261103_rename_customer_name.sql\",\"OrderMapperTests.cs\"]",
+          "max_words": 60
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "missing-story": 1,
+            "asks-for-story": 1
+          },
+          "namedScoreWeights": {
+            "missing-story": 2,
+            "asks-for-story": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "asked for the User Story and emitted no PR fields",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:missingStory",
+                "metric": "missing-story",
+                "weight": 2
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The response asks the user to provide the User Story (or the ticket / requirement) and does not produce a PR description. It does not guess a business reason from the diff.\n",
+                "threshold": 0.9,
+                "metric": "asks-for-story",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The response explicitly asks for the missing User Story and does not fabricate a PR description or business reason from the diff.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n\\n\\nCode diff the description refers to:\\n\\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\\nindex 5b8e011..d1e6a90 100644\\n--- a/src/Application/Orders/OrderService.cs\\n+++ b/src/Application/Orders/OrderService.cs\\n@@ -40,9 +40,9 @@ public sealed class OrderService : IOrderService\\n         return await _repository.FindByIdAsync(orderId, ct);\\n     }\\n \\n-    public async Task CancelAsync(int orderId)\\n+    public async Task CancelAsync(int orderId, CancellationToken ct = default)\\n     {\\n-        var order = await _repository.FindByIdAsync(orderId);\\n+        var order = await _repository.FindByIdAsync(orderId, ct);\\n         if (order is null)\\n         {\\n             return;\\n@@ -48,7 +48,7 @@ public sealed class OrderService : IOrderService\\n \\n         order.Status = \\\"Cancelled\\\";\\n-        await _repository.SaveChangesAsync();\\n+        await _repository.SaveChangesAsync(ct);\\n     }\\n }\\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\\nindex 1d9f2a0..4c8f2b1 100644\\n--- a/tests/Orders/OrderServiceTests.cs\\n+++ b/tests/Orders/OrderServiceTests.cs\\n@@ -30,4 +30,13 @@ public sealed class OrderServiceTests\\n         Assert.Equal(\\\"Cancelled\\\", order.Status);\\n     }\\n+\\n+    [Fact]\\n+    public async Task CancelAsync_ForwardsCancellationToken()\\n+    {\\n+        var repository = new Mock<IOrderRepository>();\\n+        var service = new OrderService(repository.Object);\\n+        using var cts = new CancellationTokenSource();\\n+\\n+        await service.CancelAsync(3, cts.Token);\\n+\\n+        repository.Verify(r => r.FindByIdAsync(3, cts.Token), Times.Once);\\n+    }\\n }\\n\\nPR description to grade:\\n\\nThe User Story field is missing. Please provide the User Story so I can complete the PR description.\\n\\nRubric criterion:\\n\\nThe response asks the user to provide the User Story (or the ticket / requirement) and does not produce a PR description. It does not guess a business reason from the diff.\\n\\n\\nJSON verdict:\"}]"
+              }
+            }
+          ]
+        },
+        "id": "83117576-b817-4d75-96f5-b1e00c06b01d",
+        "latencyMs": 9206,
+        "namedScores": {
+          "missing-story": 1,
+          "asks-for-story": 1
+        },
+        "prompt": {
+          "raw": "You are a senior software engineer writing the PR description for a change that is ready for review.\n\n## Task\n\nFill out every PR description field below, in English, using only the User Story and the code diff provided.\n\nIf the User Story is missing or empty, ask the user to provide it and output nothing else.\n\n## Context\n\n- The diff below is the only source of truth about the code change. Do not read files from the workspace.\n- Base every statement on the diff. Do not describe changes that are not in the diff.\n- The business reason comes from the User Story, not from the code.\n\n## Input\n\n### User Story\n\n\n\n### Code diff\n\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\nindex 5b8e011..d1e6a90 100644\n--- a/src/Application/Orders/OrderService.cs\n+++ b/src/Application/Orders/OrderService.cs\n@@ -40,9 +40,9 @@ public sealed class OrderService : IOrderService\n         return await _repository.FindByIdAsync(orderId, ct);\n     }\n \n-    public async Task CancelAsync(int orderId)\n+    public async Task CancelAsync(int orderId, CancellationToken ct = default)\n     {\n-        var order = await _repository.FindByIdAsync(orderId);\n+        var order = await _repository.FindByIdAsync(orderId, ct);\n         if (order is null)\n         {\n             return;\n@@ -48,7 +48,7 @@ public sealed class OrderService : IOrderService\n \n         order.Status = \"Cancelled\";\n-        await _repository.SaveChangesAsync();\n+        await _repository.SaveChangesAsync(ct);\n     }\n }\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\nindex 1d9f2a0..4c8f2b1 100644\n--- a/tests/Orders/OrderServiceTests.cs\n+++ b/tests/Orders/OrderServiceTests.cs\n@@ -30,4 +30,13 @@ public sealed class OrderServiceTests\n         Assert.Equal(\"Cancelled\", order.Status);\n     }\n+\n+    [Fact]\n+    public async Task CancelAsync_ForwardsCancellationToken()\n+    {\n+        var repository = new Mock<IOrderRepository>();\n+        var service = new OrderService(repository.Object);\n+        using var cts = new CancellationTokenSource();\n+\n+        await service.CancelAsync(3, cts.Token);\n+\n+        repository.Verify(r => r.FindByIdAsync(3, cts.Token), Times.Once);\n+    }\n }\n\n## Output\n\nUse exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.\n\n### What is this change?\n\nOne or two sentences, maximum 60 words, summarizing what changed and who it is for.\n\n### Type of change?\n\nSelect ONLY the relevant options from this list and delete the rest:\n\n- Bug fix (non-breaking change which fixes an issue)\n- New feature (non-breaking change which adds functionality)\n- Refactoring (changes to existing code which neither adds nor changes functionality)\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\n- Configuration change\n- This change requires a documentation update\n- Other: unit tests only, documentation changes only, etc.\n\n### Why?\n\nExplain the business reason from the User Story. Do not restate the diff.\n\n### How?\n\nList the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.\n\n### Requires Manual Database Migration?\n\n- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.\n- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.\n- If the diff contains no migration, answer No and include no code block.\n\n### Anything Else?\n\nNotes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write \"None\" if there is nothing.\n\nIf the change is a breaking change, state what breaks and what consumers must do.\n\n## Rules\n\n- Do not include file path citations or IDE links inside SQL or code blocks.\n- Keep SQL blocks as plain text only.\n- Every statement must be traceable to the User Story or the diff.\n",
+          "label": "pr-description\\prompts\\v3-final.md: You are a senior software engineer writing the PR ...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          }
+        },
+        "promptId": "05bdb546370985eb9bca73fdea87b9473dc16b9eb56df42c66f7c2ab0eff162b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "The User Story field is missing. Please provide the User Story so I can complete the PR description."
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "05 no User Story — must ask for it, not invent a description",
+          "vars": {
+            "story": "",
+            "diff": "file://fixtures\\05-no-story\\diff.patch",
+            "must_mention": "[]",
+            "must_not_mention": "[]",
+            "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:missingStory",
+              "metric": "missing-story",
+              "weight": 2
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The response asks the user to provide the User Story (or the ticket / requirement) and does not produce a PR description. It does not guess a business reason from the diff.\n",
+              "threshold": 0.9,
+              "metric": "asks-for-story",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            },
+            "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+          },
+          "metadata": {}
+        },
+        "testIdx": 4,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "",
+          "diff": "file://fixtures\\05-no-story\\diff.patch",
+          "must_mention": "[]",
+          "must_not_mention": "[]",
+          "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      }
+    ],
+    "stats": {
+      "successes": 5,
+      "failures": 0,
+      "errors": 0,
+      "tokenUsage": {
+        "prompt": 0,
+        "completion": 0,
+        "cached": 0,
+        "total": 0,
+        "numRequests": 5,
+        "completionDetails": {
+          "reasoning": 0,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0
+        },
+        "assertions": {
+          "total": 0,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "numRequests": 0,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          }
+        }
+      },
+      "durationMs": 50405,
+      "evaluationDurationMs": 50405
+    }
+  },
+  "config": {
+    "tags": {},
+    "description": "PR description generator — structure, branch logic and grounding",
+    "prompts": [
+      "pr-description/prompts/v3-final.md"
+    ],
+    "providers": [
+      {
+        "id": "exec: node ../devin.js",
+        "label": "Devin SWE-1.7",
+        "config": {
+          "model": "SWE-1.7"
+        }
+      }
+    ],
+    "tests": [
+      {
+        "description": "01 feature + migration — new PATCH endpoint with a SQL script",
+        "vars": {
+          "story": "file://fixtures/01-feature-migration/story.md",
+          "diff": "file://fixtures/01-feature-migration/diff.patch",
+          "expected_types": "[\"New feature\"]",
+          "forbidden_types": "[\"Bug fix\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "yes",
+          "expected_sql_token": "ALTER TABLE",
+          "must_mention": "[\"UpdateOrderStatusRequest\",\"PATCH\",\"StatusUpdatedAt\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\",\"appsettings.json\"]",
+          "allowed_paths": "[\"OrdersController.cs\",\"UpdateOrderStatusRequest.cs\",\"OrderService.cs\",\"20261101_add_status_updated_at.sql\",\"OrdersControllerTests.cs\"]",
+          "max_words": 60
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:hasStructure",
+            "metric": "structure"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:conciseWhat",
+            "metric": "conciseness"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:typeOfChange",
+            "metric": "type-of-change",
+            "weight": 1.5
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:migrationDecision",
+            "metric": "migration-decision",
+            "weight": 2
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:grounding",
+            "metric": "grounding",
+            "weight": 2
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The \"Why?\" field explains the business reason stated in the User Story (support handling ~400 manual status updates per week, 20-40 minute hand-offs, hours-to-minutes delay), not a restatement of the code change.\n",
+            "threshold": 0.7,
+            "metric": "why-business"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "Every bullet in \"How?\" names a concrete change that exists in the diff: the PATCH endpoint on OrdersController, the UpdateOrderStatusRequest DTO, the UpdateStatusAsync service method, the StatusUpdatedAt column/migration, and the new controller test. Additional bullets are acceptable when they name a change that is present in the diff. It contains no generic filler such as \"updated the code\" or \"added tests\".\n",
+            "threshold": 0.7,
+            "metric": "how-actionable",
+            "weight": 1.5
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The description does not claim any change, file, dependency or behaviour that is absent from the diff (for example caching, a message queue, a new configuration key, or an unrelated refactor).\n",
+            "threshold": 0.8,
+            "metric": "no-invention",
+            "weight": 2
+          }
+        ]
+      },
+      {
+        "description": "02 bug fix, no migration — null discount no longer crashes checkout",
+        "vars": {
+          "story": "file://fixtures/02-bugfix-null/story.md",
+          "diff": "file://fixtures/02-bugfix-null/diff.patch",
+          "expected_types": "[\"Bug fix\"]",
+          "forbidden_types": "[\"New feature\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "no",
+          "expected_sql_token": "",
+          "must_mention": "[\"GetTotal\",\"discount\",\"null\"]",
+          "must_not_mention": "[\"PATCH\",\"ALTER TABLE\",\"sp_rename\",\"Redis\"]",
+          "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+          "max_words": 60
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:hasStructure",
+            "metric": "structure"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:conciseWhat",
+            "metric": "conciseness"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:typeOfChange",
+            "metric": "type-of-change",
+            "weight": 1.5
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:migrationDecision",
+            "metric": "migration-decision",
+            "weight": 2
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:grounding",
+            "metric": "grounding",
+            "weight": 2
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The \"Why?\" field explains the business reason from the User Story (2.1% of checkouts failing, about 180 orders, customers abandoning the cart), not a restatement of the code.\n",
+            "threshold": 0.7,
+            "metric": "why-business"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "Every bullet in \"How?\" names a concrete change in the diff: the null-safe discount lookup in GetTotal and the new unit test covering a null discount. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.\n",
+            "threshold": 0.7,
+            "metric": "how-actionable",
+            "weight": 1.5
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The description does not claim any change absent from the diff: no new endpoint, no migration, no new dependency, no unrelated refactor.\n",
+            "threshold": 0.8,
+            "metric": "no-invention",
+            "weight": 2
+          }
+        ]
+      },
+      {
+        "description": "03 refactoring, no migration — pricing rules extracted from OrderService",
+        "vars": {
+          "story": "file://fixtures/03-refactor/story.md",
+          "diff": "file://fixtures/03-refactor/diff.patch",
+          "expected_types": "[\"Refactoring\"]",
+          "forbidden_types": "[\"New feature\",\"Bug fix\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "no",
+          "expected_sql_token": "",
+          "must_mention": "[\"PriceCalculator\",\"OrderService\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+          "allowed_paths": "[\"PriceCalculator.cs\",\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+          "max_words": 60
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:hasStructure",
+            "metric": "structure"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:conciseWhat",
+            "metric": "conciseness"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:typeOfChange",
+            "metric": "type-of-change",
+            "weight": 1.5
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:migrationDecision",
+            "metric": "migration-decision",
+            "weight": 2
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:grounding",
+            "metric": "grounding",
+            "weight": 2
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The \"Why?\" field explains the business reason from the User Story (OrderService is 1,400 lines, every pricing change touches it, the pricing team wants to change rules without touching order orchestration), not a restatement of the code.\n",
+            "threshold": 0.7,
+            "metric": "why-business"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "Every bullet in \"How?\" names a concrete change in the diff: the new PriceCalculator class and OrderService delegating to it. Additional bullets are acceptable when they name a change that is present in the diff. It does not claim new functionality or changed behaviour, because the change is a refactoring.\n",
+            "threshold": 0.7,
+            "metric": "how-actionable",
+            "weight": 1.5
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The description does not claim any change absent from the diff and does not present the refactoring as a new feature or a behaviour change.\n",
+            "threshold": 0.8,
+            "metric": "no-invention",
+            "weight": 2
+          }
+        ]
+      },
+      {
+        "description": "04 breaking change + migration — customerName renamed to customerFullName",
+        "vars": {
+          "story": "file://fixtures/04-breaking-change/story.md",
+          "diff": "file://fixtures/04-breaking-change/diff.patch",
+          "expected_types": "[\"Breaking change\"]",
+          "forbidden_types": "[\"Bug fix\",\"New feature\",\"Refactoring\",\"Configuration change\"]",
+          "expected_migration": "yes",
+          "expected_sql_token": "sp_rename",
+          "must_mention": "[\"customerFullName\",\"customerName\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+          "allowed_paths": "[\"OrderDto.cs\",\"OrderMapper.cs\",\"20261103_rename_customer_name.sql\",\"OrderMapperTests.cs\"]",
+          "max_words": 60
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:hasStructure",
+            "metric": "structure"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:conciseWhat",
+            "metric": "conciseness"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:typeOfChange",
+            "metric": "type-of-change",
+            "weight": 1.5
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:migrationDecision",
+            "metric": "migration-decision",
+            "weight": 2
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:grounding",
+            "metric": "grounding",
+            "weight": 2
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:breakingNote",
+            "metric": "backwards-compat",
+            "weight": 1
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The \"Why?\" field explains the business reason from the User Story (the field returns the full name but its name suggests only the first name, two partner integrations misread it), not a restatement of the code.\n",
+            "threshold": 0.7,
+            "metric": "why-business"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "Every bullet in \"How?\" names a concrete change in the diff: the OrderDto property rename, the OrderMapper update, the SQL rename script and the updated mapper test. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.\n",
+            "threshold": 0.7,
+            "metric": "how-actionable",
+            "weight": 1.5
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The description does not claim any change absent from the diff and does not describe the rename as a non-breaking change.\n",
+            "threshold": 0.8,
+            "metric": "no-invention",
+            "weight": 2
+          }
+        ]
+      },
+      {
+        "description": "05 no User Story — must ask for it, not invent a description",
+        "vars": {
+          "story": "",
+          "diff": "file://fixtures/05-no-story/diff.patch",
+          "must_mention": "[]",
+          "must_not_mention": "[]",
+          "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]"
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:missingStory",
+            "metric": "missing-story",
+            "weight": 2
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The response asks the user to provide the User Story (or the ticket / requirement) and does not produce a PR description. It does not guess a business reason from the diff.\n",
+            "threshold": 0.9,
+            "metric": "asks-for-story",
+            "weight": 2
+          }
+        ]
+      }
+    ],
+    "env": {},
+    "defaultTest": {
+      "options": {
+        "provider": "Devin SWE-1.7",
+        "rubricPrompt": "[{\"role\":\"system\",\"content\":\"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \\\"string\\\" or \\\"...\\\", and do not add any text outside the JSON.\"},{\"role\":\"user\",\"content\":\"User Story:\\n\\n{{story}}\\n\\nCode diff the description refers to:\\n\\n{{diff}}\\n\\nPR description to grade:\\n\\n{{output}}\\n\\nRubric criterion:\\n\\n{{rubric}}\\n\\nJSON verdict:\"}]"
+      },
+      "vars": {},
+      "assert": [],
+      "metadata": {}
+    },
+    "outputPath": [
+      "pr-description/evidence/eval-v3-final.json",
+      "pr-description/evidence/eval-v3-final.html"
+    ],
+    "extensions": [],
+    "metadata": {},
+    "evaluateOptions": {
+      "maxConcurrency": 2
+    }
+  },
+  "shareableUrl": null,
+  "metadata": {
+    "promptfooVersion": "0.121.17",
+    "nodeVersion": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64",
+    "exportedAt": "2026-11-05T00:02:51.636Z",
+    "evaluationCreatedAt": "2026-11-05T00:02:00.144Z"
+  },
+  "vars": [
+    "story",
+    "diff",
+    "expected_types",
+    "forbidden_types",
+    "expected_migration",
+    "expected_sql_token",
+    "must_mention",
+    "must_not_mention",
+    "allowed_paths",
+    "max_words"
+  ],
+  "runtimeOptions": {
+    "eventSource": "cli",
+    "maxConcurrency": 2,
+    "showProgressBar": true,
+    "repeat": 1,
+    "cache": false
+  }
+}

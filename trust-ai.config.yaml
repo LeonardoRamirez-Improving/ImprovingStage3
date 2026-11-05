@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: Evaluation Driven Development demonstration with promptfoo for "How to Trust AI" ImprovingU
+
+# Define prompts to test - template that includes base prompt
+prompts:
+  - file://trust-ai/simple.prompt.md
+  # - file://trust-ai/advanced.prompt.md
+
+# External evaluation script for custom deterministic evaluations
+# This script contains custom assertion functions used in tests
+defaultTest:
+  options:
+    # ========================================
+    # RUBRIC GRADER — NODE.JS (Cross-platform)
+    # ========================================
+    # Combined scripts auto-detect mode: provider vs grader
+    # Grader mode: prompt is JSON array [{role, content}, ...]
+    # Provider mode: prompt is plain text
+    # Specify the Provider by the Label from the providers section.
+    #
+    # Devin CLI grader — ACTIVE
+    provider: 'Devin SWE-1.7'
+    #
+    # GitHub Copilot CLI grader
+    # provider: 'Github Haiku'
+    #
+    # Claude Code CLI grader
+    # provider: 'Claude Haiku'
+    #
+    # Kiro CLI grader
+    # provider: 'Kiro Sonnet'
+    #
+    # Google Antigravity (AGY) CLI grader
+    # provider: 'Gemini Flash'
+    #
+
+# Use devin cli as a provider via script execution
+providers:
+  # ========================================
+  # NODE.JS VERSIONS (Cross-platform)
+  # ========================================
+  # Combined scripts auto-detect mode: provider vs grader
+  # Grader mode: prompt is JSON array [{role, content}, ...]
+  # Provider mode: prompt is plain text
+  #
+  # Devin CLI provider
+  - id: 'exec: node ./devin.js'
+    label: 'Devin SWE-1.7'
+    config:
+      model: 'SWE-1.7'
+
+  # Devin CLI provider — For Testing a Second Model
+  # MUST Use Label to differentiate providers with same ID (first in wins otherwise)
+  # - id: 'exec: node ./devin.js'
+  #   label: 'Devin Kimi' # MUST provide label when using same provider with different config!
+  #   config:
+  #     model: 'kimi-k2.7'
+
+  # GitHub Copilot CLI provider
+  # - id: 'exec: node ./gh_copilot.js'
+  #   label: 'GitHub Haiku'
+  #   config:
+  #     model: 'claude-haiku-4.5'
+
+  # Claude Code CLI provider
+  # - id: 'exec: node ./claude.js'
+  #   label: 'Claude Haiku'
+  #   config:
+  #     model: 'haiku'
+
+  # Google Antigravity (AGY) CLI provider
+  # - id: 'exec: node ./agy.js'
+  #   label: 'Gemini Flash'
+  #   config:
+  #     model: 'gemini-3.5-flash'
+
+  # Kiro CLI provider
+  # - id: 'exec: node ./kiro.js'
+  #   label: 'Kiro Sonnet'
+  #   config:
+  #     model: 'claude-sonnet-4.6'
+
+# Test cases with different evaluation types
+tests:
+  # ========================================
+  # DETERMINISTIC EVALUATIONS (contains/equiv)
+  # ========================================
+  - vars:
+      request: 'I want to extend an existing pomodoro app to ring with a customizable chime when the timer expires, and be able to change the chimes for the completion of a pomodoro, completion of rest, and indication when it is time for a long break.'
+    description: 'Pomodoro app chime customization - deterministic eval'
+    assert:
+      - type: icontains
+        value: 'pomodoro'
+      - type: icontains
+        value: 'requirement'
+      - type: icontains
+        value: 'custom'
+
+  # ========================================
+  # RUBRIC-BASED EVALUATIONS WITH SCORING
+  # ========================================
+  # Each llm-rubric assertion evaluates a single quality dimension independently.
+  # - threshold: minimum score (0.0–1.0) required to pass this assertion
+  # - metric:    named label shown in the promptfoo web UI results table
+  # - weight:    relative importance when computing the overall test score
+  #
+  # This lets you see per-dimension scores, set different pass bars for
+  # critical vs. nice-to-have criteria, and weight what matters most.
+
+  - vars:
+      request: 'I want to extend an existing pomodoro app to ring with a customizable chime when the timer expires, and be able to change the chimes for the completion of a pomodoro, completion of rest, and indication when it is time for a long break.'
+    description: 'PRD Generation - rubric with per-dimension scoring'
+    assert:
+      # Core definition — highest weight; must score at least 0.7
+      - type: llm-rubric
+        value: The result prd should be in plain language, that a non-expert can understand
+        threshold: 0.7
+        metric: clarity
+        weight: 1.5
+
+      # Functional Requirements
+      - type: llm-rubric
+        value: The result prd should include functional requirements, covering the core functionality and user interactions
+        threshold: 0.7
+        metric: functional-requirements
+        weight: 2.0
+
+      # Non-Functional Requirements
+      - type: llm-rubric
+        value: The result prd should include non-functional requirements, such as performance, security, and usability
+        threshold: 0.7
+        metric: non-functional-requirements
+        weight: 1.50
+outputPath: trust-ai/results.html

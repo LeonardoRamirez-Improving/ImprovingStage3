@@ -1,0 +1,13 @@
+# ========================================
+# This Test demonstrats a match-schema assertion,
+# which validates that the output matches a given JSON schema.
+# You MUST specify the path to the schema file using the 'schemaPath' property.
+# ========================================
+- vars:
+    request: "Generate a JSON object that matches the @./example.schema.json"
+  description: 'Output Schema Validation - Script Based'
+  assert:
+    - type: javascript
+      value: file://./matchSchema-script.js:matchesSchema
+      config:
+        schemaPath: './example.schema.json'

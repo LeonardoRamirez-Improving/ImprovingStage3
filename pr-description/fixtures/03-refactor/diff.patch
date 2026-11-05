@@ -1,0 +1,71 @@
+diff --git a/src/Application/Orders/PriceCalculator.cs b/src/Application/Orders/PriceCalculator.cs
+new file mode 100644
+index 0000000..7c1d9e4
+--- /dev/null
++++ b/src/Application/Orders/PriceCalculator.cs
+@@ -0,0 +1,26 @@
++namespace Shop.Application.Orders;
++
++public sealed class PriceCalculator
++{
++    public decimal Subtotal(Order order) =>
++        order.Lines.Sum(line => line.UnitPrice * line.Quantity);
++
++    public decimal DiscountAmount(Order order)
++    {
++        var subtotal = Subtotal(order);
++        var percentage = order.Discount?.Percentage ?? 0m;
++        return subtotal * percentage / 100m;
++    }
++
++    public decimal Total(Order order) => Subtotal(order) - DiscountAmount(order);
++}
+diff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs
+index 5b8e011..f0a2b18 100644
+--- a/src/Application/Orders/OrderService.cs
++++ b/src/Application/Orders/OrderService.cs
+@@ -12,6 +12,7 @@ public sealed class OrderService : IOrderService
+ {
+     private readonly IOrderRepository _repository;
++    private readonly PriceCalculator _pricing = new();
+ 
+     public OrderService(IOrderRepository repository)
+     {
+@@ -88,9 +89,7 @@ public sealed class OrderService : IOrderService
+     public decimal GetTotal(Order order)
+     {
+-        var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);
+-        var discountPercentage = order.Discount?.Percentage ?? 0m;
+-        return subtotal - (subtotal * discountPercentage / 100m);
++        return _pricing.Total(order);
+     }
+ 
+     public async Task DeleteAsync(int orderId, CancellationToken ct)
+diff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs
+index 1d9f2a0..9e4b7c2 100644
+--- a/tests/Orders/OrderServiceTests.cs
++++ b/tests/Orders/OrderServiceTests.cs
+@@ -1,6 +1,6 @@
+ using Shop.Application.Orders;
+ 
+-public sealed class OrderServiceTests
++public sealed class OrderServiceTests
+ {
+     private readonly OrderService _service = new(new FakeOrderRepository());
+ 
+@@ -22,4 +22,16 @@ public sealed class OrderServiceTests
+         Assert.Equal(90m, total);
+     }
++
++    [Fact]
++    public void GetTotal_MatchesPriceCalculator_ForDiscountedOrder()
++    {
++        var order = new Order
++        {
++            Discount = new Discount { Percentage = 10m },
++            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }
++        };
++
++        Assert.Equal(new PriceCalculator().Total(order), _service.GetTotal(order));
++    }
+ }

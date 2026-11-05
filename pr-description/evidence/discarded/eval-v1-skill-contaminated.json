@@ -1,0 +1,2040 @@
+{
+  "evalId": "eval-wUn-2026-11-04T23:19:00",
+  "results": {
+    "version": 3,
+    "timestamp": "2026-11-04T23:19:00.684Z",
+    "prompts": [
+      {
+        "raw": "Write a PR description for these code changes.\n\nUser Story:\n{{story}}\n\nCode changes:\n{{diff}}\n",
+        "label": "pr-description\\prompts\\v1-baseline.md: Write a PR description for these code changes.\n\nUs...",
+        "id": "fab55c96d8601445845b7ff4ad50a5fbc9355eb1d78ceebd6c961af13f8cd148",
+        "provider": "Devin SWE-1.7",
+        "metrics": {
+          "score": 4.596153846153847,
+          "testPassCount": 1,
+          "testFailCount": 4,
+          "testErrorCount": 0,
+          "assertPassCount": 30,
+          "assertFailCount": 5,
+          "totalLatencyMs": 73399,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 5,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "namedScores": {
+            "structure": 0,
+            "conciseness": 4,
+            "type-of-change": 6,
+            "migration-decision": 8,
+            "grounding": 8,
+            "why-business": 4,
+            "how-actionable": 6,
+            "no-invention": 8,
+            "backwards-compat": 0,
+            "missing-story": 2,
+            "asks-for-story": 2
+          },
+          "namedScoresCount": {
+            "structure": 4,
+            "conciseness": 4,
+            "type-of-change": 4,
+            "migration-decision": 4,
+            "grounding": 4,
+            "why-business": 4,
+            "how-actionable": 4,
+            "no-invention": 4,
+            "backwards-compat": 1,
+            "missing-story": 1,
+            "asks-for-story": 1
+          },
+          "namedScoreWeights": {
+            "structure": 4,
+            "conciseness": 4,
+            "type-of-change": 6,
+            "migration-decision": 8,
+            "grounding": 8,
+            "why-business": 4,
+            "how-actionable": 6,
+            "no-invention": 8,
+            "backwards-compat": 1,
+            "missing-story": 2,
+            "asks-for-story": 2
+          },
+          "cost": 0
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0,
+        "error": "output starts with text, not a field heading: \"Here is the PR description:\"",
+        "gradingResult": {
+          "pass": false,
+          "score": 0.9166666666666666,
+          "reason": "output starts with text, not a field heading: \"Here is the PR description:\"",
+          "namedScores": {
+            "structure": 0,
+            "conciseness": 1,
+            "type-of-change": 1,
+            "migration-decision": 1,
+            "grounding": 1,
+            "why-business": 1,
+            "how-actionable": 1,
+            "no-invention": 1
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1.5,
+            "migration-decision": 2,
+            "grounding": 2,
+            "why-business": 1,
+            "how-actionable": 1.5,
+            "no-invention": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "output starts with text, not a field heading: \"Here is the PR description:\"",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:hasStructure",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "\"What is this change?\" is 28 words (limit 60)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:conciseWhat",
+                "metric": "conciseness"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "selected: new feature",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:typeOfChange",
+                "metric": "type-of-change",
+                "weight": 1.5
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Yes, with a SQL block containing \"ALTER TABLE\" and no path citations",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:migrationDecision",
+                "metric": "migration-decision",
+                "weight": 2
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "grounded in the diff",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:grounding",
+                "metric": "grounding",
+                "weight": 2
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The \"Why?\" field explains the business reason stated in the User Story (support handling ~400 manual status updates per week, 20-40 minute hand-offs, hours-to-minutes delay), not a restatement of the code change.\n",
+                "threshold": 0.7,
+                "metric": "why-business"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "the 'Why?' field cites the business context (400 manual updates per week, 20-40 minute hand-offs, lost emails, hours-to-minutes delay) and does not merely restate the code change",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the PR description:\\n\\n---\\n\\n## What is this change?\\n\\nAdds a new `PATCH /orders/{id}/status` endpoint that lets support agents change an order's status to `Shipped` (or other allowed values) and records the time the update was made.\\n\\n## Type of change\\n\\n- New feature (non-breaking change which adds functionality)\\n\\n## Why?\\n\\nCustomer support currently handles roughly 400 order status updates per week via email, with each hand-off taking 20–40 minutes and sometimes getting lost between inboxes. Allowing agents with the Support role to update the status directly removes most of that manual work and reduces the delay before the customer sees \\\"Shipped\\\" from hours to minutes.\\n\\n## How?\\n\\n- **Model/entity:** Added `StatusUpdatedAt` column to the `Orders` table.\\n- **Migration:** Added `20261101_add_status_updated_at.sql` to alter the table.\\n- **DTO:** Created `UpdateOrderStatusRequest` with a `Required` `RegularExpression` validator allowing `Pending|Shipped|Delivered|Cancelled`.\\n- **Service:** Added `OrderService.UpdateStatusAsync` to load the order, update the status, set `StatusUpdatedAt` to `DateTime.UtcNow`, and persist the change.\\n- **Controller:** Added `PATCH /orders/{id}/status` in `OrdersController` decorated with `[Authorize(Roles = \\\"Support\\\")]`. Returns `204 NoContent` on success or `404 NotFound` if the order does not exist.\\n- **Tests:** Added a unit test verifying that `UpdateStatus` returns `NoContent` and calls the service once for an existing order.\\n\\n## Requires Manual Database Migration?\\n\\nYes\\n\\n```sql\\nALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\\nGO\\n```\\n\\n## Anything Else?\\n\\n- The new `StatusUpdatedAt` column is nullable, so existing orders remain compatible.\\n- The endpoint only validates the format of the `Status` string; domain-specific rules (e.g., which transitions are valid) are not yet enforced and can be added later if needed.\\n- Only one happy-path test was added; follow-up tests for 404 and authorization may be useful.\\n\\n---\\n</Output>\\n<Rubric>\\nThe \\\"Why?\\\" field explains the business reason stated in the User Story (support handling ~400 manual status updates per week, 20-40 minute hand-offs, hours-to-minutes delay), not a restatement of the code change.\\n\\n</Rubric>\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "Every bullet in \"How?\" names a concrete change that exists in the diff: the PATCH endpoint on OrdersController, the UpdateOrderStatusRequest DTO, the UpdateStatusAsync service method, the StatusUpdatedAt column/migration, and the new controller test. It contains no generic filler such as \"updated the code\" or \"added tests\".\n",
+                "threshold": 0.7,
+                "metric": "how-actionable",
+                "weight": 1.5
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The 'How?' section contains six specific bullets, each naming a concrete change: the StatusUpdatedAt column, a named migration file, the UpdateOrderStatusRequest DTO with its validator, the OrderService.UpdateStatusAsync method, the PATCH /orders/{id}/status endpoint with authorization/return codes, and a specific unit test. No generic filler like 'updated the code' or 'added tests' appears.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the PR description:\\n\\n---\\n\\n## What is this change?\\n\\nAdds a new `PATCH /orders/{id}/status` endpoint that lets support agents change an order's status to `Shipped` (or other allowed values) and records the time the update was made.\\n\\n## Type of change\\n\\n- New feature (non-breaking change which adds functionality)\\n\\n## Why?\\n\\nCustomer support currently handles roughly 400 order status updates per week via email, with each hand-off taking 20–40 minutes and sometimes getting lost between inboxes. Allowing agents with the Support role to update the status directly removes most of that manual work and reduces the delay before the customer sees \\\"Shipped\\\" from hours to minutes.\\n\\n## How?\\n\\n- **Model/entity:** Added `StatusUpdatedAt` column to the `Orders` table.\\n- **Migration:** Added `20261101_add_status_updated_at.sql` to alter the table.\\n- **DTO:** Created `UpdateOrderStatusRequest` with a `Required` `RegularExpression` validator allowing `Pending|Shipped|Delivered|Cancelled`.\\n- **Service:** Added `OrderService.UpdateStatusAsync` to load the order, update the status, set `StatusUpdatedAt` to `DateTime.UtcNow`, and persist the change.\\n- **Controller:** Added `PATCH /orders/{id}/status` in `OrdersController` decorated with `[Authorize(Roles = \\\"Support\\\")]`. Returns `204 NoContent` on success or `404 NotFound` if the order does not exist.\\n- **Tests:** Added a unit test verifying that `UpdateStatus` returns `NoContent` and calls the service once for an existing order.\\n\\n## Requires Manual Database Migration?\\n\\nYes\\n\\n```sql\\nALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\\nGO\\n```\\n\\n## Anything Else?\\n\\n- The new `StatusUpdatedAt` column is nullable, so existing orders remain compatible.\\n- The endpoint only validates the format of the `Status` string; domain-specific rules (e.g., which transitions are valid) are not yet enforced and can be added later if needed.\\n- Only one happy-path test was added; follow-up tests for 404 and authorization may be useful.\\n\\n---\\n</Output>\\n<Rubric>\\nEvery bullet in \\\"How?\\\" names a concrete change that exists in the diff: the PATCH endpoint on OrdersController, the UpdateOrderStatusRequest DTO, the UpdateStatusAsync service method, the StatusUpdatedAt column/migration, and the new controller test. It contains no generic filler such as \\\"updated the code\\\" or \\\"added tests\\\".\\n\\n</Rubric>\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The description does not claim any change, file, dependency or behaviour that is absent from the diff (for example caching, a message queue, a new configuration key, or an unrelated refactor).\n",
+                "threshold": 0.8,
+                "metric": "no-invention",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The PR description describes specific, internally consistent additions (new endpoint, database column, migration, DTO, service, controller, and test) without mentioning unrelated changes such as caching, message queues, configuration keys, or unrelated refactors.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the PR description:\\n\\n---\\n\\n## What is this change?\\n\\nAdds a new `PATCH /orders/{id}/status` endpoint that lets support agents change an order's status to `Shipped` (or other allowed values) and records the time the update was made.\\n\\n## Type of change\\n\\n- New feature (non-breaking change which adds functionality)\\n\\n## Why?\\n\\nCustomer support currently handles roughly 400 order status updates per week via email, with each hand-off taking 20–40 minutes and sometimes getting lost between inboxes. Allowing agents with the Support role to update the status directly removes most of that manual work and reduces the delay before the customer sees \\\"Shipped\\\" from hours to minutes.\\n\\n## How?\\n\\n- **Model/entity:** Added `StatusUpdatedAt` column to the `Orders` table.\\n- **Migration:** Added `20261101_add_status_updated_at.sql` to alter the table.\\n- **DTO:** Created `UpdateOrderStatusRequest` with a `Required` `RegularExpression` validator allowing `Pending|Shipped|Delivered|Cancelled`.\\n- **Service:** Added `OrderService.UpdateStatusAsync` to load the order, update the status, set `StatusUpdatedAt` to `DateTime.UtcNow`, and persist the change.\\n- **Controller:** Added `PATCH /orders/{id}/status` in `OrdersController` decorated with `[Authorize(Roles = \\\"Support\\\")]`. Returns `204 NoContent` on success or `404 NotFound` if the order does not exist.\\n- **Tests:** Added a unit test verifying that `UpdateStatus` returns `NoContent` and calls the service once for an existing order.\\n\\n## Requires Manual Database Migration?\\n\\nYes\\n\\n```sql\\nALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\\nGO\\n```\\n\\n## Anything Else?\\n\\n- The new `StatusUpdatedAt` column is nullable, so existing orders remain compatible.\\n- The endpoint only validates the format of the `Status` string; domain-specific rules (e.g., which transitions are valid) are not yet enforced and can be added later if needed.\\n- Only one happy-path test was added; follow-up tests for 404 and authorization may be useful.\\n\\n---\\n</Output>\\n<Rubric>\\nThe description does not claim any change, file, dependency or behaviour that is absent from the diff (for example caching, a message queue, a new configuration key, or an unrelated refactor).\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "0250c39e-3ddc-41d3-8971-38f837999575",
+        "latencyMs": 19771,
+        "namedScores": {
+          "structure": 0,
+          "conciseness": 1,
+          "type-of-change": 1,
+          "migration-decision": 1,
+          "grounding": 1,
+          "why-business": 1,
+          "how-actionable": 1,
+          "no-invention": 1
+        },
+        "prompt": {
+          "raw": "Write a PR description for these code changes.\n\nUser Story:\n# US-4127 — Update order status from the order detail page\n\n## User story\n\nAs a customer support agent, I want to set an order's status to \"Shipped\" from the order detail page, so that I stop emailing the logistics team for every update.\n\n## Business context\n\nSupport handles roughly 400 status updates per week over email. Each hand-off takes 20–40 minutes and sometimes gets lost between inboxes. Letting agents update the status directly should remove most of that manual work and cut the delay between dispatch and the customer seeing \"Shipped\" from hours to minutes.\n\n## Acceptance criteria\n\n- An agent with the Support role can change an order's status to Shipped from the order detail page.\n- The change records the timestamp of the status update.\n- The endpoint rejects requests from users without the Support role.\n\nCode changes:\ndiff --git a/src/Api/Controllers/OrdersController.cs b/src/Api/Controllers/OrdersController.cs\nindex 4a1c9f2..b7e3d10 100644\n--- a/src/Api/Controllers/OrdersController.cs\n+++ b/src/Api/Controllers/OrdersController.cs\n@@ -28,6 +28,17 @@ public sealed class OrdersController : ControllerBase\n         return Ok(order);\n     }\n \n+    [HttpPatch(\"{id:int}/status\")]\n+    [Authorize(Roles = \"Support\")]\n+    public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateOrderStatusRequest request)\n+    {\n+        var updated = await _orderService.UpdateStatusAsync(id, request.Status, HttpContext.RequestAborted);\n+        return updated ? NoContent() : NotFound();\n+    }\n+\n     [HttpDelete(\"{id:int}\")]\n     [Authorize(Roles = \"Admin\")]\n     public async Task<IActionResult> Delete(int id)\ndiff --git a/src/Api/Dtos/UpdateOrderStatusRequest.cs b/src/Api/Dtos/UpdateOrderStatusRequest.cs\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/Api/Dtos/UpdateOrderStatusRequest.cs\n@@ -0,0 +1,8 @@\n+using System.ComponentModel.DataAnnotations;\n+\n+namespace Shop.Api.Dtos;\n+\n+public sealed record UpdateOrderStatusRequest(\n+    [Required, RegularExpression(\"^(Pending|Shipped|Delivered|Cancelled)$\")]\n+    string Status);\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\nindex 91b2aa4..c4d5e77 100644\n--- a/src/Application/Orders/OrderService.cs\n+++ b/src/Application/Orders/OrderService.cs\n@@ -64,6 +64,19 @@ public sealed class OrderService : IOrderService\n         return order;\n     }\n \n+    public async Task<bool> UpdateStatusAsync(int orderId, string status, CancellationToken ct)\n+    {\n+        var order = await _repository.FindByIdAsync(orderId, ct);\n+        if (order is null)\n+        {\n+            return false;\n+        }\n+\n+        order.Status = status;\n+        order.StatusUpdatedAt = DateTime.UtcNow;\n+        await _repository.SaveChangesAsync(ct);\n+        return true;\n+    }\n+\n     public async Task DeleteAsync(int orderId, CancellationToken ct)\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\nnew file mode 100644\nindex 0000000..1f7c2d9\n--- /dev/null\n+++ b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\n@@ -0,0 +1,3 @@\n+-- src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql\n+ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\n+GO\ndiff --git a/tests/Orders/OrdersControllerTests.cs b/tests/Orders/OrdersControllerTests.cs\nindex 77c1e2b..2f9a8d4 100644\n--- a/tests/Orders/OrdersControllerTests.cs\n+++ b/tests/Orders/OrdersControllerTests.cs\n@@ -41,4 +41,18 @@ public sealed class OrdersControllerTests\n         Assert.IsType<OkObjectResult>(result);\n     }\n+\n+    [Fact]\n+    public async Task UpdateStatus_ReturnsNoContent_WhenOrderExists()\n+    {\n+        var service = new Mock<IOrderService>();\n+        service.Setup(s => s.UpdateStatusAsync(7, \"Shipped\", It.IsAny<CancellationToken>()))\n+               .ReturnsAsync(true);\n+        var controller = new OrdersController(service.Object);\n+\n+        var result = await controller.UpdateStatus(7, new UpdateOrderStatusRequest(\"Shipped\"));\n+\n+        Assert.IsType<NoContentResult>(result);\n+        service.Verify(s => s.UpdateStatusAsync(7, \"Shipped\", It.IsAny<CancellationToken>()), Times.Once);\n+    }\n }\n",
+          "label": "pr-description\\prompts\\v1-baseline.md: Write a PR description for these code changes.\n\nUs...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          }
+        },
+        "promptId": "fab55c96d8601445845b7ff4ad50a5fbc9355eb1d78ceebd6c961af13f8cd148",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "Here is the PR description:\n\n---\n\n## What is this change?\n\nAdds a new `PATCH /orders/{id}/status` endpoint that lets support agents change an order's status to `Shipped` (or other allowed values) and records the time the update was made.\n\n## Type of change\n\n- New feature (non-breaking change which adds functionality)\n\n## Why?\n\nCustomer support currently handles roughly 400 order status updates per week via email, with each hand-off taking 20–40 minutes and sometimes getting lost between inboxes. Allowing agents with the Support role to update the status directly removes most of that manual work and reduces the delay before the customer sees \"Shipped\" from hours to minutes.\n\n## How?\n\n- **Model/entity:** Added `StatusUpdatedAt` column to the `Orders` table.\n- **Migration:** Added `20261101_add_status_updated_at.sql` to alter the table.\n- **DTO:** Created `UpdateOrderStatusRequest` with a `Required` `RegularExpression` validator allowing `Pending|Shipped|Delivered|Cancelled`.\n- **Service:** Added `OrderService.UpdateStatusAsync` to load the order, update the status, set `StatusUpdatedAt` to `DateTime.UtcNow`, and persist the change.\n- **Controller:** Added `PATCH /orders/{id}/status` in `OrdersController` decorated with `[Authorize(Roles = \"Support\")]`. Returns `204 NoContent` on success or `404 NotFound` if the order does not exist.\n- **Tests:** Added a unit test verifying that `UpdateStatus` returns `NoContent` and calls the service once for an existing order.\n\n## Requires Manual Database Migration?\n\nYes\n\n```sql\nALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;\nGO\n```\n\n## Anything Else?\n\n- The new `StatusUpdatedAt` column is nullable, so existing orders remain compatible.\n- The endpoint only validates the format of the `Status` string; domain-specific rules (e.g., which transitions are valid) are not yet enforced and can be added later if needed.\n- Only one happy-path test was added; follow-up tests for 404 and authorization may be useful.\n\n---"
+        },
+        "score": 0.9166666666666666,
+        "success": false,
+        "testCase": {
+          "description": "01 feature + migration — new PATCH endpoint with a SQL script",
+          "vars": {
+            "story": "file://fixtures\\01-feature-migration\\story.md",
+            "diff": "file://fixtures\\01-feature-migration\\diff.patch",
+            "expected_types": "[\"New feature\"]",
+            "forbidden_types": "[\"Bug fix\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+            "expected_migration": "yes",
+            "expected_sql_token": "ALTER TABLE",
+            "must_mention": "[\"UpdateOrderStatusRequest\",\"PATCH\",\"StatusUpdatedAt\"]",
+            "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\",\"appsettings.json\"]",
+            "allowed_paths": "[\"OrdersController.cs\",\"UpdateOrderStatusRequest.cs\",\"OrderService.cs\",\"20261101_add_status_updated_at.sql\",\"OrdersControllerTests.cs\"]",
+            "max_words": 60
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:hasStructure",
+              "metric": "structure"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:conciseWhat",
+              "metric": "conciseness"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:typeOfChange",
+              "metric": "type-of-change",
+              "weight": 1.5
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:migrationDecision",
+              "metric": "migration-decision",
+              "weight": 2
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:grounding",
+              "metric": "grounding",
+              "weight": 2
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The \"Why?\" field explains the business reason stated in the User Story (support handling ~400 manual status updates per week, 20-40 minute hand-offs, hours-to-minutes delay), not a restatement of the code change.\n",
+              "threshold": 0.7,
+              "metric": "why-business"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "Every bullet in \"How?\" names a concrete change that exists in the diff: the PATCH endpoint on OrdersController, the UpdateOrderStatusRequest DTO, the UpdateStatusAsync service method, the StatusUpdatedAt column/migration, and the new controller test. It contains no generic filler such as \"updated the code\" or \"added tests\".\n",
+              "threshold": 0.7,
+              "metric": "how-actionable",
+              "weight": 1.5
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The description does not claim any change, file, dependency or behaviour that is absent from the diff (for example caching, a message queue, a new configuration key, or an unrelated refactor).\n",
+              "threshold": 0.8,
+              "metric": "no-invention",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          },
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "file://fixtures\\01-feature-migration\\story.md",
+          "diff": "file://fixtures\\01-feature-migration\\diff.patch",
+          "expected_types": "[\"New feature\"]",
+          "forbidden_types": "[\"Bug fix\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "yes",
+          "expected_sql_token": "ALTER TABLE",
+          "must_mention": "[\"UpdateOrderStatusRequest\",\"PATCH\",\"StatusUpdatedAt\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\",\"appsettings.json\"]",
+          "allowed_paths": "[\"OrdersController.cs\",\"UpdateOrderStatusRequest.cs\",\"OrderService.cs\",\"20261101_add_status_updated_at.sql\",\"OrdersControllerTests.cs\"]",
+          "max_words": 60
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      },
+      {
+        "cost": 0,
+        "error": "output starts with text, not a field heading: \"Here is the completed PR description based on the user story and the code change\"",
+        "gradingResult": {
+          "pass": false,
+          "score": 0.9166666666666666,
+          "reason": "output starts with text, not a field heading: \"Here is the completed PR description based on the user story and the code change\"",
+          "namedScores": {
+            "structure": 0,
+            "conciseness": 1,
+            "type-of-change": 1,
+            "migration-decision": 1,
+            "grounding": 1,
+            "why-business": 1,
+            "how-actionable": 1,
+            "no-invention": 1
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1.5,
+            "migration-decision": 2,
+            "grounding": 2,
+            "why-business": 1,
+            "how-actionable": 1.5,
+            "no-invention": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "output starts with text, not a field heading: \"Here is the completed PR description based on the user story and the code change\"",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:hasStructure",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "\"What is this change?\" is 28 words (limit 60)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:conciseWhat",
+                "metric": "conciseness"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "selected: bug fix",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:typeOfChange",
+                "metric": "type-of-change",
+                "weight": 1.5
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "No, and no code block",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:migrationDecision",
+                "metric": "migration-decision",
+                "weight": 2
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "grounded in the diff",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:grounding",
+                "metric": "grounding",
+                "weight": 2
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The \"Why?\" field explains the business reason from the User Story (2.1% of checkouts failing, about 180 orders, customers abandoning the cart), not a restatement of the code.\n",
+                "threshold": 0.7,
+                "metric": "why-business"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The 'Why?' field cites the business impact (2.1% checkout failure, ~180 orders, support manually recreating orders, customers abandoning carts) rather than restating the technical code change.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the completed PR description based on the user story and the code changes you provided.\\n\\n---\\n\\n## What is this change?\\n\\nFixes a null reference exception in `OrderService.GetTotal` when an order has no discount record, allowing checkout to complete successfully. Adds a unit test to cover the no-discount scenario.\\n\\n## Type of change?\\n\\n- Bug fix (non-breaking change which fixes an issue)\\n\\n## Why?\\n\\nLast week, **2.1% of checkouts failed (approximately 180 orders)**, all of which had an empty discount record. Support is manually recreating these orders and customers are abandoning their carts instead of retrying. This change ensures checkout completes for carts with no discount applied while preserving the correct order total.\\n\\n## How?\\n\\n- **src/Application/Orders/OrderService.cs**\\n  - Updated `GetTotal` to safely access `order.Discount?.Percentage` with a null-coalescing fallback to `0m`.\\n  - Renamed local variable from `discount` to `discountPercentage` to clarify intent.\\n\\n- **tests/Orders/OrderServiceTests.cs**\\n  - Added `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` test verifying an order with a subtotal of `100m` and no discount returns `100m`.\\n\\n## Requires Manual Database Migration?\\n\\nNo.\\n\\n## Anything Else?\\n\\nThis is a backwards-compatible bug fix. Orders with a valid discount continue to calculate the same total as before. Orders with a null discount now default to `0%` discount instead of throwing an exception. No database schema or DTO changes are required.\\n</Output>\\n<Rubric>\\nThe \\\"Why?\\\" field explains the business reason from the User Story (2.1% of checkouts failing, about 180 orders, customers abandoning the cart), not a restatement of the code.\\n\\n</Rubric>\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "Every bullet in \"How?\" names a concrete change in the diff: the null-safe discount lookup in GetTotal and the new unit test covering a null discount. No generic filler.\n",
+                "threshold": 0.7,
+                "metric": "how-actionable",
+                "weight": 1.5
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "Both 'How?' bullets name concrete changes: the null-safe discount lookup in OrderService.GetTotal (including the renamed local variable) and the new unit test verifying null discount behavior. No generic filler is present.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the completed PR description based on the user story and the code changes you provided.\\n\\n---\\n\\n## What is this change?\\n\\nFixes a null reference exception in `OrderService.GetTotal` when an order has no discount record, allowing checkout to complete successfully. Adds a unit test to cover the no-discount scenario.\\n\\n## Type of change?\\n\\n- Bug fix (non-breaking change which fixes an issue)\\n\\n## Why?\\n\\nLast week, **2.1% of checkouts failed (approximately 180 orders)**, all of which had an empty discount record. Support is manually recreating these orders and customers are abandoning their carts instead of retrying. This change ensures checkout completes for carts with no discount applied while preserving the correct order total.\\n\\n## How?\\n\\n- **src/Application/Orders/OrderService.cs**\\n  - Updated `GetTotal` to safely access `order.Discount?.Percentage` with a null-coalescing fallback to `0m`.\\n  - Renamed local variable from `discount` to `discountPercentage` to clarify intent.\\n\\n- **tests/Orders/OrderServiceTests.cs**\\n  - Added `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` test verifying an order with a subtotal of `100m` and no discount returns `100m`.\\n\\n## Requires Manual Database Migration?\\n\\nNo.\\n\\n## Anything Else?\\n\\nThis is a backwards-compatible bug fix. Orders with a valid discount continue to calculate the same total as before. Orders with a null discount now default to `0%` discount instead of throwing an exception. No database schema or DTO changes are required.\\n</Output>\\n<Rubric>\\nEvery bullet in \\\"How?\\\" names a concrete change in the diff: the null-safe discount lookup in GetTotal and the new unit test covering a null discount. No generic filler.\\n\\n</Rubric>\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The description does not claim any change absent from the diff: no new endpoint, no migration, no new dependency, no unrelated refactor.\n",
+                "threshold": 0.8,
+                "metric": "no-invention",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The description only claims the bug fix (null-coalescing fallback for the discount), a closely related variable rename, and a unit test. It explicitly states that no manual database migration is required, and it does not mention a new endpoint, new dependency, or unrelated refactor.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the completed PR description based on the user story and the code changes you provided.\\n\\n---\\n\\n## What is this change?\\n\\nFixes a null reference exception in `OrderService.GetTotal` when an order has no discount record, allowing checkout to complete successfully. Adds a unit test to cover the no-discount scenario.\\n\\n## Type of change?\\n\\n- Bug fix (non-breaking change which fixes an issue)\\n\\n## Why?\\n\\nLast week, **2.1% of checkouts failed (approximately 180 orders)**, all of which had an empty discount record. Support is manually recreating these orders and customers are abandoning their carts instead of retrying. This change ensures checkout completes for carts with no discount applied while preserving the correct order total.\\n\\n## How?\\n\\n- **src/Application/Orders/OrderService.cs**\\n  - Updated `GetTotal` to safely access `order.Discount?.Percentage` with a null-coalescing fallback to `0m`.\\n  - Renamed local variable from `discount` to `discountPercentage` to clarify intent.\\n\\n- **tests/Orders/OrderServiceTests.cs**\\n  - Added `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` test verifying an order with a subtotal of `100m` and no discount returns `100m`.\\n\\n## Requires Manual Database Migration?\\n\\nNo.\\n\\n## Anything Else?\\n\\nThis is a backwards-compatible bug fix. Orders with a valid discount continue to calculate the same total as before. Orders with a null discount now default to `0%` discount instead of throwing an exception. No database schema or DTO changes are required.\\n</Output>\\n<Rubric>\\nThe description does not claim any change absent from the diff: no new endpoint, no migration, no new dependency, no unrelated refactor.\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "0f2a5331-b2b3-4622-9b11-67c4fae13d43",
+        "latencyMs": 20477,
+        "namedScores": {
+          "structure": 0,
+          "conciseness": 1,
+          "type-of-change": 1,
+          "migration-decision": 1,
+          "grounding": 1,
+          "why-business": 1,
+          "how-actionable": 1,
+          "no-invention": 1
+        },
+        "prompt": {
+          "raw": "Write a PR description for these code changes.\n\nUser Story:\n# BUG-3388 — Checkout returns 500 when the cart has no discount\n\n## User story\n\nAs an online shopper, I want checkout to complete when my cart has no discount applied, so that I can place my order.\n\n## Business context\n\n2.1% of checkouts failed last week — about 180 orders. All of them had an empty discount record. Support is recreating those orders by hand and customers are abandoning the cart instead of retrying.\n\n## Acceptance criteria\n\n- Placing an order with no discount completes without an exception.\n- The order total is unchanged when no discount is applied.\n\nCode changes:\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\nindex 5b8e011..a2c4f39 100644\n--- a/src/Application/Orders/OrderService.cs\n+++ b/src/Application/Orders/OrderService.cs\n@@ -88,9 +88,10 @@ public sealed class OrderService : IOrderService\n     public decimal GetTotal(Order order)\n     {\n         var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\n-        var discount = order.Discount.Percentage;\n-        return subtotal - (subtotal * discount / 100m);\n+        var discountPercentage = order.Discount?.Percentage ?? 0m;\n+        return subtotal - (subtotal * discountPercentage / 100m);\n     }\n \n     public async Task DeleteAsync(int orderId, CancellationToken ct)\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\nindex 1d9f2a0..3b7c8e1 100644\n--- a/tests/Orders/OrderServiceTests.cs\n+++ b/tests/Orders/OrderServiceTests.cs\n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\n         Assert.Equal(90m, total);\n     }\n+\n+    [Fact]\n+    public void GetTotal_ReturnsSubtotal_WhenDiscountIsNull()\n+    {\n+        var order = new Order\n+        {\n+            Discount = null,\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\n+        };\n+\n+        var total = _service.GetTotal(order);\n+\n+        Assert.Equal(100m, total);\n+    }\n }\n",
+          "label": "pr-description\\prompts\\v1-baseline.md: Write a PR description for these code changes.\n\nUs...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          }
+        },
+        "promptId": "fab55c96d8601445845b7ff4ad50a5fbc9355eb1d78ceebd6c961af13f8cd148",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "Here is the completed PR description based on the user story and the code changes you provided.\n\n---\n\n## What is this change?\n\nFixes a null reference exception in `OrderService.GetTotal` when an order has no discount record, allowing checkout to complete successfully. Adds a unit test to cover the no-discount scenario.\n\n## Type of change?\n\n- Bug fix (non-breaking change which fixes an issue)\n\n## Why?\n\nLast week, **2.1% of checkouts failed (approximately 180 orders)**, all of which had an empty discount record. Support is manually recreating these orders and customers are abandoning their carts instead of retrying. This change ensures checkout completes for carts with no discount applied while preserving the correct order total.\n\n## How?\n\n- **src/Application/Orders/OrderService.cs**\n  - Updated `GetTotal` to safely access `order.Discount?.Percentage` with a null-coalescing fallback to `0m`.\n  - Renamed local variable from `discount` to `discountPercentage` to clarify intent.\n\n- **tests/Orders/OrderServiceTests.cs**\n  - Added `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` test verifying an order with a subtotal of `100m` and no discount returns `100m`.\n\n## Requires Manual Database Migration?\n\nNo.\n\n## Anything Else?\n\nThis is a backwards-compatible bug fix. Orders with a valid discount continue to calculate the same total as before. Orders with a null discount now default to `0%` discount instead of throwing an exception. No database schema or DTO changes are required."
+        },
+        "score": 0.9166666666666666,
+        "success": false,
+        "testCase": {
+          "description": "02 bug fix, no migration — null discount no longer crashes checkout",
+          "vars": {
+            "story": "file://fixtures\\02-bugfix-null\\story.md",
+            "diff": "file://fixtures\\02-bugfix-null\\diff.patch",
+            "expected_types": "[\"Bug fix\"]",
+            "forbidden_types": "[\"New feature\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+            "expected_migration": "no",
+            "expected_sql_token": "",
+            "must_mention": "[\"GetTotal\",\"discount\",\"null\"]",
+            "must_not_mention": "[\"PATCH\",\"ALTER TABLE\",\"sp_rename\",\"Redis\"]",
+            "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+            "max_words": 60
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:hasStructure",
+              "metric": "structure"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:conciseWhat",
+              "metric": "conciseness"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:typeOfChange",
+              "metric": "type-of-change",
+              "weight": 1.5
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:migrationDecision",
+              "metric": "migration-decision",
+              "weight": 2
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:grounding",
+              "metric": "grounding",
+              "weight": 2
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The \"Why?\" field explains the business reason from the User Story (2.1% of checkouts failing, about 180 orders, customers abandoning the cart), not a restatement of the code.\n",
+              "threshold": 0.7,
+              "metric": "why-business"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "Every bullet in \"How?\" names a concrete change in the diff: the null-safe discount lookup in GetTotal and the new unit test covering a null discount. No generic filler.\n",
+              "threshold": 0.7,
+              "metric": "how-actionable",
+              "weight": 1.5
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The description does not claim any change absent from the diff: no new endpoint, no migration, no new dependency, no unrelated refactor.\n",
+              "threshold": 0.8,
+              "metric": "no-invention",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          },
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "file://fixtures\\02-bugfix-null\\story.md",
+          "diff": "file://fixtures\\02-bugfix-null\\diff.patch",
+          "expected_types": "[\"Bug fix\"]",
+          "forbidden_types": "[\"New feature\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "no",
+          "expected_sql_token": "",
+          "must_mention": "[\"GetTotal\",\"discount\",\"null\"]",
+          "must_not_mention": "[\"PATCH\",\"ALTER TABLE\",\"sp_rename\",\"Redis\"]",
+          "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+          "max_words": 60
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      },
+      {
+        "cost": 0,
+        "error": "output starts with text, not a field heading: \"Here is the PR description based on the user story and code changes:\"",
+        "gradingResult": {
+          "pass": false,
+          "score": 0.9166666666666666,
+          "reason": "output starts with text, not a field heading: \"Here is the PR description based on the user story and code changes:\"",
+          "namedScores": {
+            "structure": 0,
+            "conciseness": 1,
+            "type-of-change": 1,
+            "migration-decision": 1,
+            "grounding": 1,
+            "why-business": 1,
+            "how-actionable": 1,
+            "no-invention": 1
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1.5,
+            "migration-decision": 2,
+            "grounding": 2,
+            "why-business": 1,
+            "how-actionable": 1.5,
+            "no-invention": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "output starts with text, not a field heading: \"Here is the PR description based on the user story and code changes:\"",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:hasStructure",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "\"What is this change?\" is 21 words (limit 60)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:conciseWhat",
+                "metric": "conciseness"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "selected: refactoring",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:typeOfChange",
+                "metric": "type-of-change",
+                "weight": 1.5
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "No, and no code block",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:migrationDecision",
+                "metric": "migration-decision",
+                "weight": 2
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "grounded in the diff",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:grounding",
+                "metric": "grounding",
+                "weight": 2
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The \"Why?\" field explains the business reason from the User Story (OrderService is 1,400 lines, every pricing change touches it, the pricing team wants to change rules without touching order orchestration), not a restatement of the code.\n",
+                "threshold": 0.7,
+                "metric": "why-business"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "the 'Why?' field explains the business motivation: OrderService is 1,400 lines, every pricing change touches the order orchestration flow, and the pricing team wants to iterate on pricing logic independently",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the PR description based on the user story and code changes:\\n\\n---\\n\\n### What is this change?\\n\\nThis change extracts the order pricing logic from `OrderService` into a new dedicated `PriceCalculator` class and makes `OrderService` delegate to it.\\n\\n### Type of change\\n\\n- Refactoring (changes to existing code which neither adds nor changes functionality)\\n\\n### Why?\\n\\n`OrderService` had grown to 1,400 lines, with every pricing change requiring a modification to the order orchestration flow. By moving the pricing rules into a dedicated class, the pricing team can iterate on pricing logic independently, and pricing-related changes get a smaller, faster review surface.\\n\\n### How?\\n\\n- Added `PriceCalculator` class with `Subtotal`, `DiscountAmount`, and `Total` methods.\\n- `OrderService` now instantiates `PriceCalculator` and delegates `GetTotal` to `_pricing.Total(order)`.\\n- Added `OrderServiceTests.GetTotal_MatchesPriceCalculator_ForDiscountedOrder` to verify that `OrderService.GetTotal` and `PriceCalculator.Total` produce the same result for a discounted order.\\n\\n### Requires Manual Database Migration?\\n\\nNo.\\n\\n### Anything Else?\\n\\n- No behavior changes are intended.\\n- Existing tests should continue to pass.\\n- The change is fully backwards compatible for callers of `OrderService.GetTotal`.\\n\\n---\\n</Output>\\n<Rubric>\\nThe \\\"Why?\\\" field explains the business reason from the User Story (OrderService is 1,400 lines, every pricing change touches it, the pricing team wants to change rules without touching order orchestration), not a restatement of the code.\\n\\n</Rubric>\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "Every bullet in \"How?\" names a concrete change in the diff: the new PriceCalculator class and OrderService delegating to it. It does not claim new functionality or changed behaviour, because the change is a refactoring.\n",
+                "threshold": 0.7,
+                "metric": "how-actionable",
+                "weight": 1.5
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "the 'How?' section lists concrete diff-level changes: the new PriceCalculator class, OrderService delegating GetTotal to it, and a test verifying identical results; it frames the work as a refactoring without claiming new functionality or changed behavior",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the PR description based on the user story and code changes:\\n\\n---\\n\\n### What is this change?\\n\\nThis change extracts the order pricing logic from `OrderService` into a new dedicated `PriceCalculator` class and makes `OrderService` delegate to it.\\n\\n### Type of change\\n\\n- Refactoring (changes to existing code which neither adds nor changes functionality)\\n\\n### Why?\\n\\n`OrderService` had grown to 1,400 lines, with every pricing change requiring a modification to the order orchestration flow. By moving the pricing rules into a dedicated class, the pricing team can iterate on pricing logic independently, and pricing-related changes get a smaller, faster review surface.\\n\\n### How?\\n\\n- Added `PriceCalculator` class with `Subtotal`, `DiscountAmount`, and `Total` methods.\\n- `OrderService` now instantiates `PriceCalculator` and delegates `GetTotal` to `_pricing.Total(order)`.\\n- Added `OrderServiceTests.GetTotal_MatchesPriceCalculator_ForDiscountedOrder` to verify that `OrderService.GetTotal` and `PriceCalculator.Total` produce the same result for a discounted order.\\n\\n### Requires Manual Database Migration?\\n\\nNo.\\n\\n### Anything Else?\\n\\n- No behavior changes are intended.\\n- Existing tests should continue to pass.\\n- The change is fully backwards compatible for callers of `OrderService.GetTotal`.\\n\\n---\\n</Output>\\n<Rubric>\\nEvery bullet in \\\"How?\\\" names a concrete change in the diff: the new PriceCalculator class and OrderService delegating to it. It does not claim new functionality or changed behaviour, because the change is a refactoring.\\n\\n</Rubric>\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The description does not claim any change absent from the diff and does not present the refactoring as a new feature or a behaviour change.\n",
+                "threshold": 0.8,
+                "metric": "no-invention",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The description explicitly labels the change as 'Refactoring' and repeatedly states that no behavior changes are intended. It does not present the change as a new feature or claim changes beyond what is in the diff.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the PR description based on the user story and code changes:\\n\\n---\\n\\n### What is this change?\\n\\nThis change extracts the order pricing logic from `OrderService` into a new dedicated `PriceCalculator` class and makes `OrderService` delegate to it.\\n\\n### Type of change\\n\\n- Refactoring (changes to existing code which neither adds nor changes functionality)\\n\\n### Why?\\n\\n`OrderService` had grown to 1,400 lines, with every pricing change requiring a modification to the order orchestration flow. By moving the pricing rules into a dedicated class, the pricing team can iterate on pricing logic independently, and pricing-related changes get a smaller, faster review surface.\\n\\n### How?\\n\\n- Added `PriceCalculator` class with `Subtotal`, `DiscountAmount`, and `Total` methods.\\n- `OrderService` now instantiates `PriceCalculator` and delegates `GetTotal` to `_pricing.Total(order)`.\\n- Added `OrderServiceTests.GetTotal_MatchesPriceCalculator_ForDiscountedOrder` to verify that `OrderService.GetTotal` and `PriceCalculator.Total` produce the same result for a discounted order.\\n\\n### Requires Manual Database Migration?\\n\\nNo.\\n\\n### Anything Else?\\n\\n- No behavior changes are intended.\\n- Existing tests should continue to pass.\\n- The change is fully backwards compatible for callers of `OrderService.GetTotal`.\\n\\n---\\n</Output>\\n<Rubric>\\nThe description does not claim any change absent from the diff and does not present the refactoring as a new feature or a behaviour change.\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "1edba224-8679-4533-be05-3427cacde054",
+        "latencyMs": 10838,
+        "namedScores": {
+          "structure": 0,
+          "conciseness": 1,
+          "type-of-change": 1,
+          "migration-decision": 1,
+          "grounding": 1,
+          "why-business": 1,
+          "how-actionable": 1,
+          "no-invention": 1
+        },
+        "prompt": {
+          "raw": "Write a PR description for these code changes.\n\nUser Story:\n# TECH-91 — Extract pricing rules out of OrderService\n\n## User story\n\nAs a developer, I want the pricing rules moved into their own class, so that OrderService stops growing with every pricing change.\n\n## Business context\n\nOrderService is 1,400 lines and every pricing change touches it. Extracting the calculation lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.\n\n## Acceptance criteria\n\n- The pricing rules live in a dedicated PriceCalculator class.\n- OrderService delegates to that class.\n- No behaviour changes; the existing tests keep passing.\n\nCode changes:\ndiff --git a/src/Application/Orders/PriceCalculator.cs b/src/Application/Orders/PriceCalculator.cs\nnew file mode 100644\nindex 0000000..7c1d9e4\n--- /dev/null\n+++ b/src/Application/Orders/PriceCalculator.cs\n@@ -0,0 +1,26 @@\n+namespace Shop.Application.Orders;\n+\n+public sealed class PriceCalculator\n+{\n+    public decimal Subtotal(Order order) =>\n+        order.Lines.Sum(line => line.UnitPrice * line.Quantity);\n+\n+    public decimal DiscountAmount(Order order)\n+    {\n+        var subtotal = Subtotal(order);\n+        var percentage = order.Discount?.Percentage ?? 0m;\n+        return subtotal * percentage / 100m;\n+    }\n+\n+    public decimal Total(Order order) => Subtotal(order) - DiscountAmount(order);\n+}\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\nindex 5b8e011..f0a2b18 100644\n--- a/src/Application/Orders/OrderService.cs\n+++ b/src/Application/Orders/OrderService.cs\n@@ -12,6 +12,7 @@ public sealed class OrderService : IOrderService\n {\n     private readonly IOrderRepository _repository;\n+    private readonly PriceCalculator _pricing = new();\n \n     public OrderService(IOrderRepository repository)\n     {\n@@ -88,9 +89,7 @@ public sealed class OrderService : IOrderService\n     public decimal GetTotal(Order order)\n     {\n-        var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);\n-        var discountPercentage = order.Discount?.Percentage ?? 0m;\n-        return subtotal - (subtotal * discountPercentage / 100m);\n+        return _pricing.Total(order);\n     }\n \n     public async Task DeleteAsync(int orderId, CancellationToken ct)\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\nindex 1d9f2a0..9e4b7c2 100644\n--- a/tests/Orders/OrderServiceTests.cs\n+++ b/tests/Orders/OrderServiceTests.cs\n@@ -1,6 +1,6 @@\n using Shop.Application.Orders;\n \n-public sealed class OrderServiceTests\n+public sealed class OrderServiceTests\n {\n     private readonly OrderService _service = new(new FakeOrderRepository());\n \n@@ -22,4 +22,16 @@ public sealed class OrderServiceTests\n         Assert.Equal(90m, total);\n     }\n+\n+    [Fact]\n+    public void GetTotal_MatchesPriceCalculator_ForDiscountedOrder()\n+    {\n+        var order = new Order\n+        {\n+            Discount = new Discount { Percentage = 10m },\n+            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }\n+        };\n+\n+        Assert.Equal(new PriceCalculator().Total(order), _service.GetTotal(order));\n+    }\n }\n",
+          "label": "pr-description\\prompts\\v1-baseline.md: Write a PR description for these code changes.\n\nUs...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          }
+        },
+        "promptId": "fab55c96d8601445845b7ff4ad50a5fbc9355eb1d78ceebd6c961af13f8cd148",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "Here is the PR description based on the user story and code changes:\n\n---\n\n### What is this change?\n\nThis change extracts the order pricing logic from `OrderService` into a new dedicated `PriceCalculator` class and makes `OrderService` delegate to it.\n\n### Type of change\n\n- Refactoring (changes to existing code which neither adds nor changes functionality)\n\n### Why?\n\n`OrderService` had grown to 1,400 lines, with every pricing change requiring a modification to the order orchestration flow. By moving the pricing rules into a dedicated class, the pricing team can iterate on pricing logic independently, and pricing-related changes get a smaller, faster review surface.\n\n### How?\n\n- Added `PriceCalculator` class with `Subtotal`, `DiscountAmount`, and `Total` methods.\n- `OrderService` now instantiates `PriceCalculator` and delegates `GetTotal` to `_pricing.Total(order)`.\n- Added `OrderServiceTests.GetTotal_MatchesPriceCalculator_ForDiscountedOrder` to verify that `OrderService.GetTotal` and `PriceCalculator.Total` produce the same result for a discounted order.\n\n### Requires Manual Database Migration?\n\nNo.\n\n### Anything Else?\n\n- No behavior changes are intended.\n- Existing tests should continue to pass.\n- The change is fully backwards compatible for callers of `OrderService.GetTotal`.\n\n---"
+        },
+        "score": 0.9166666666666666,
+        "success": false,
+        "testCase": {
+          "description": "03 refactoring, no migration — pricing rules extracted from OrderService",
+          "vars": {
+            "story": "file://fixtures\\03-refactor\\story.md",
+            "diff": "file://fixtures\\03-refactor\\diff.patch",
+            "expected_types": "[\"Refactoring\"]",
+            "forbidden_types": "[\"New feature\",\"Bug fix\",\"Breaking change\",\"Configuration change\"]",
+            "expected_migration": "no",
+            "expected_sql_token": "",
+            "must_mention": "[\"PriceCalculator\",\"OrderService\"]",
+            "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+            "allowed_paths": "[\"PriceCalculator.cs\",\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+            "max_words": 60
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:hasStructure",
+              "metric": "structure"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:conciseWhat",
+              "metric": "conciseness"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:typeOfChange",
+              "metric": "type-of-change",
+              "weight": 1.5
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:migrationDecision",
+              "metric": "migration-decision",
+              "weight": 2
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:grounding",
+              "metric": "grounding",
+              "weight": 2
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The \"Why?\" field explains the business reason from the User Story (OrderService is 1,400 lines, every pricing change touches it, the pricing team wants to change rules without touching order orchestration), not a restatement of the code.\n",
+              "threshold": 0.7,
+              "metric": "why-business"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "Every bullet in \"How?\" names a concrete change in the diff: the new PriceCalculator class and OrderService delegating to it. It does not claim new functionality or changed behaviour, because the change is a refactoring.\n",
+              "threshold": 0.7,
+              "metric": "how-actionable",
+              "weight": 1.5
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The description does not claim any change absent from the diff and does not present the refactoring as a new feature or a behaviour change.\n",
+              "threshold": 0.8,
+              "metric": "no-invention",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          },
+          "metadata": {}
+        },
+        "testIdx": 2,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "file://fixtures\\03-refactor\\story.md",
+          "diff": "file://fixtures\\03-refactor\\diff.patch",
+          "expected_types": "[\"Refactoring\"]",
+          "forbidden_types": "[\"New feature\",\"Bug fix\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "no",
+          "expected_sql_token": "",
+          "must_mention": "[\"PriceCalculator\",\"OrderService\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+          "allowed_paths": "[\"PriceCalculator.cs\",\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+          "max_words": 60
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      },
+      {
+        "cost": 0,
+        "error": "Expected output to contain \"compatib\"",
+        "gradingResult": {
+          "pass": false,
+          "score": 0.8461538461538461,
+          "reason": "Expected output to contain \"compatib\"",
+          "namedScores": {
+            "structure": 0,
+            "conciseness": 1,
+            "type-of-change": 1,
+            "backwards-compat": 0,
+            "migration-decision": 1,
+            "grounding": 1,
+            "why-business": 1,
+            "how-actionable": 1,
+            "no-invention": 1
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "conciseness": 1,
+            "type-of-change": 1.5,
+            "backwards-compat": 1,
+            "migration-decision": 2,
+            "grounding": 2,
+            "why-business": 1,
+            "how-actionable": 1.5,
+            "no-invention": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "output starts with text, not a field heading: \"Here is the completed PR description:\"",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:hasStructure",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "\"What is this change?\" is 22 words (limit 60)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:conciseWhat",
+                "metric": "conciseness"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "selected: breaking change / this change requires a documentation update",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:typeOfChange",
+                "metric": "type-of-change",
+                "weight": 1.5
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Yes, with a SQL block containing \"sp_rename\" and no path citations",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:migrationDecision",
+                "metric": "migration-decision",
+                "weight": 2
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "grounded in the diff",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:grounding",
+                "metric": "grounding",
+                "weight": 2
+              }
+            },
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "Expected output to contain \"compatib\"",
+              "assertion": {
+                "type": "icontains",
+                "value": "compatib",
+                "metric": "backwards-compat",
+                "weight": 1
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The \"Why?\" field explains the business reason from the User Story (the field returns the full name but its name suggests only the first name, two partner integrations misread it), not a restatement of the code.\n",
+                "threshold": 0.7,
+                "metric": "why-business"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "the 'Why?' section describes the business reason (the field's name suggests only a first name, two partner integrations misread it and showed incorrect values, and renaming prevents downstream issues) without restating the code changes",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the completed PR description:\\n\\n---\\n\\n### What is this change?\\n\\nRenames the `CustomerName` field to `CustomerFullName` in the order API to better reflect that it contains the customer's first and last name.\\n\\n### Type of change?\\n\\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\\n- This change requires a documentation update\\n\\n### Why?\\n\\nThe `CustomerName` field was returning the concatenated first and last name, but its name suggested only the first name. Two partner integrations already misread the field and displayed incorrect values to their users. Renaming the field now prevents further downstream data issues.\\n\\n### How?\\n\\n- `OrderDto` record: renamed `CustomerName` parameter to `CustomerFullName`\\n- `OrderMapper`: updated mapping to populate `CustomerFullName` from `Customer.FirstName + \\\" \\\" + Customer.LastName`\\n- Database migration: added `20261103_rename_customer_name.sql` to rename the `Orders.CustomerName` column to `CustomerFullName`\\n- `OrderMapperTests`: updated assertion to check `dto.CustomerFullName`\\n\\n### Requires Manual Database Migration?\\n\\nYes\\n\\n```sql\\nEXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\\nGO\\n```\\n\\n### Anything Else?\\n\\nThis is a breaking API and database schema change. Any consumers of the order API need to be notified to update their integrations from `customerName` to `customerFullName`. Existing integrations that already misread this value should be informed of the rename and corrected before this change is deployed.\\n</Output>\\n<Rubric>\\nThe \\\"Why?\\\" field explains the business reason from the User Story (the field returns the full name but its name suggests only the first name, two partner integrations misread it), not a restatement of the code.\\n\\n</Rubric>\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "Every bullet in \"How?\" names a concrete change in the diff: the OrderDto property rename, the OrderMapper update, the SQL rename script and the updated mapper test. No generic filler.\n",
+                "threshold": 0.7,
+                "metric": "how-actionable",
+                "weight": 1.5
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "Each 'How?' bullet names a concrete, specific change (OrderDto parameter rename, OrderMapper mapping update, the SQL migration file, and OrderMapperTests assertion update) with no generic filler.",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the completed PR description:\\n\\n---\\n\\n### What is this change?\\n\\nRenames the `CustomerName` field to `CustomerFullName` in the order API to better reflect that it contains the customer's first and last name.\\n\\n### Type of change?\\n\\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\\n- This change requires a documentation update\\n\\n### Why?\\n\\nThe `CustomerName` field was returning the concatenated first and last name, but its name suggested only the first name. Two partner integrations already misread the field and displayed incorrect values to their users. Renaming the field now prevents further downstream data issues.\\n\\n### How?\\n\\n- `OrderDto` record: renamed `CustomerName` parameter to `CustomerFullName`\\n- `OrderMapper`: updated mapping to populate `CustomerFullName` from `Customer.FirstName + \\\" \\\" + Customer.LastName`\\n- Database migration: added `20261103_rename_customer_name.sql` to rename the `Orders.CustomerName` column to `CustomerFullName`\\n- `OrderMapperTests`: updated assertion to check `dto.CustomerFullName`\\n\\n### Requires Manual Database Migration?\\n\\nYes\\n\\n```sql\\nEXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\\nGO\\n```\\n\\n### Anything Else?\\n\\nThis is a breaking API and database schema change. Any consumers of the order API need to be notified to update their integrations from `customerName` to `customerFullName`. Existing integrations that already misread this value should be informed of the rename and corrected before this change is deployed.\\n</Output>\\n<Rubric>\\nEvery bullet in \\\"How?\\\" names a concrete change in the diff: the OrderDto property rename, the OrderMapper update, the SQL rename script and the updated mapper test. No generic filler.\\n\\n</Rubric>\"}]"
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The description does not claim any change absent from the diff and does not describe the rename as a non-breaking change.\n",
+                "threshold": 0.8,
+                "metric": "no-invention",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "the description explicitly marks the change as 'Breaking change' and does not characterize the rename as non-breaking; all described changes are concrete and present in the description",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nHere is the completed PR description:\\n\\n---\\n\\n### What is this change?\\n\\nRenames the `CustomerName` field to `CustomerFullName` in the order API to better reflect that it contains the customer's first and last name.\\n\\n### Type of change?\\n\\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\\n- This change requires a documentation update\\n\\n### Why?\\n\\nThe `CustomerName` field was returning the concatenated first and last name, but its name suggested only the first name. Two partner integrations already misread the field and displayed incorrect values to their users. Renaming the field now prevents further downstream data issues.\\n\\n### How?\\n\\n- `OrderDto` record: renamed `CustomerName` parameter to `CustomerFullName`\\n- `OrderMapper`: updated mapping to populate `CustomerFullName` from `Customer.FirstName + \\\" \\\" + Customer.LastName`\\n- Database migration: added `20261103_rename_customer_name.sql` to rename the `Orders.CustomerName` column to `CustomerFullName`\\n- `OrderMapperTests`: updated assertion to check `dto.CustomerFullName`\\n\\n### Requires Manual Database Migration?\\n\\nYes\\n\\n```sql\\nEXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\\nGO\\n```\\n\\n### Anything Else?\\n\\nThis is a breaking API and database schema change. Any consumers of the order API need to be notified to update their integrations from `customerName` to `customerFullName`. Existing integrations that already misread this value should be informed of the rename and corrected before this change is deployed.\\n</Output>\\n<Rubric>\\nThe description does not claim any change absent from the diff and does not describe the rename as a non-breaking change.\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "5ec426f2-5257-42a3-aeb1-c64834330ab2",
+        "latencyMs": 15309,
+        "namedScores": {
+          "structure": 0,
+          "conciseness": 1,
+          "type-of-change": 1,
+          "backwards-compat": 0,
+          "migration-decision": 1,
+          "grounding": 1,
+          "why-business": 1,
+          "how-actionable": 1,
+          "no-invention": 1
+        },
+        "prompt": {
+          "raw": "Write a PR description for these code changes.\n\nUser Story:\n# US-4190 — Rename customerName to customerFullName in the order API\n\n## User story\n\nAs an API consumer, I want the order payload to use customerFullName, so that the field name matches what it actually contains.\n\n## Business context\n\nThe field returns the first and last name concatenated, but its name suggests only the first name. Two partner integrations already misread it and displayed the wrong value to their users. Renaming now avoids more bad data downstream.\n\n## Acceptance criteria\n\n- The order API returns customerFullName instead of customerName.\n- The database column is renamed to match.\n- Existing integrations are told the field was renamed.\n\nCode changes:\ndiff --git a/src/Api/Dtos/OrderDto.cs b/src/Api/Dtos/OrderDto.cs\nindex 3c7a1b9..8d2e4f5 100644\n--- a/src/Api/Dtos/OrderDto.cs\n+++ b/src/Api/Dtos/OrderDto.cs\n@@ -8,7 +8,7 @@ public sealed record OrderDto(\n     int Id,\n     string Reference,\n     decimal Total,\n-    string CustomerName,\n+    string CustomerFullName,\n     string Status);\ndiff --git a/src/Application/Orders/OrderMapper.cs b/src/Application/Orders/OrderMapper.cs\nindex 2b9c4d1..5e7f3a8 100644\n--- a/src/Application/Orders/OrderMapper.cs\n+++ b/src/Application/Orders/OrderMapper.cs\n@@ -6,7 +6,7 @@ public static class OrderMapper\n         Id: order.Id,\n         Reference: order.Reference,\n         Total: order.Total,\n-        CustomerName: order.Customer.FirstName + \" \" + order.Customer.LastName,\n+        CustomerFullName: order.Customer.FirstName + \" \" + order.Customer.LastName,\n         Status: order.Status);\n }\ndiff --git a/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\nnew file mode 100644\nindex 0000000..4d8a1c2\n--- /dev/null\n+++ b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\n@@ -0,0 +1,3 @@\n+-- src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql\n+EXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\n+GO\ndiff --git a/tests/Orders/OrderMapperTests.cs b/tests/Orders/OrderMapperTests.cs\nindex 6f1e2d3..9a8b7c6 100644\n--- a/tests/Orders/OrderMapperTests.cs\n+++ b/tests/Orders/OrderMapperTests.cs\n@@ -18,7 +18,7 @@ public sealed class OrderMapperTests\n         var dto = OrderMapper.ToDto(order);\n \n         Assert.Equal(\"Ada Lovelace\", dto.CustomerFullName);\n     }\n }\n",
+          "label": "pr-description\\prompts\\v1-baseline.md: Write a PR description for these code changes.\n\nUs...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          }
+        },
+        "promptId": "fab55c96d8601445845b7ff4ad50a5fbc9355eb1d78ceebd6c961af13f8cd148",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "Here is the completed PR description:\n\n---\n\n### What is this change?\n\nRenames the `CustomerName` field to `CustomerFullName` in the order API to better reflect that it contains the customer's first and last name.\n\n### Type of change?\n\n- Breaking change (fix or feature that would cause existing functionality to not work as expected)\n- This change requires a documentation update\n\n### Why?\n\nThe `CustomerName` field was returning the concatenated first and last name, but its name suggested only the first name. Two partner integrations already misread the field and displayed incorrect values to their users. Renaming the field now prevents further downstream data issues.\n\n### How?\n\n- `OrderDto` record: renamed `CustomerName` parameter to `CustomerFullName`\n- `OrderMapper`: updated mapping to populate `CustomerFullName` from `Customer.FirstName + \" \" + Customer.LastName`\n- Database migration: added `20261103_rename_customer_name.sql` to rename the `Orders.CustomerName` column to `CustomerFullName`\n- `OrderMapperTests`: updated assertion to check `dto.CustomerFullName`\n\n### Requires Manual Database Migration?\n\nYes\n\n```sql\nEXEC sp_rename 'Orders.CustomerName', 'CustomerFullName', 'COLUMN';\nGO\n```\n\n### Anything Else?\n\nThis is a breaking API and database schema change. Any consumers of the order API need to be notified to update their integrations from `customerName` to `customerFullName`. Existing integrations that already misread this value should be informed of the rename and corrected before this change is deployed."
+        },
+        "score": 0.8461538461538461,
+        "success": false,
+        "testCase": {
+          "description": "04 breaking change + migration — customerName renamed to customerFullName",
+          "vars": {
+            "story": "file://fixtures\\04-breaking-change\\story.md",
+            "diff": "file://fixtures\\04-breaking-change\\diff.patch",
+            "expected_types": "[\"Breaking change\"]",
+            "forbidden_types": "[\"Bug fix\",\"New feature\",\"Refactoring\",\"Configuration change\"]",
+            "expected_migration": "yes",
+            "expected_sql_token": "sp_rename",
+            "must_mention": "[\"customerFullName\",\"customerName\"]",
+            "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+            "allowed_paths": "[\"OrderDto.cs\",\"OrderMapper.cs\",\"20261103_rename_customer_name.sql\",\"OrderMapperTests.cs\"]",
+            "max_words": 60
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:hasStructure",
+              "metric": "structure"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:conciseWhat",
+              "metric": "conciseness"
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:typeOfChange",
+              "metric": "type-of-change",
+              "weight": 1.5
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:migrationDecision",
+              "metric": "migration-decision",
+              "weight": 2
+            },
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:grounding",
+              "metric": "grounding",
+              "weight": 2
+            },
+            {
+              "type": "icontains",
+              "value": "compatib",
+              "metric": "backwards-compat",
+              "weight": 1
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The \"Why?\" field explains the business reason from the User Story (the field returns the full name but its name suggests only the first name, two partner integrations misread it), not a restatement of the code.\n",
+              "threshold": 0.7,
+              "metric": "why-business"
+            },
+            {
+              "type": "llm-rubric",
+              "value": "Every bullet in \"How?\" names a concrete change in the diff: the OrderDto property rename, the OrderMapper update, the SQL rename script and the updated mapper test. No generic filler.\n",
+              "threshold": 0.7,
+              "metric": "how-actionable",
+              "weight": 1.5
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The description does not claim any change absent from the diff and does not describe the rename as a non-breaking change.\n",
+              "threshold": 0.8,
+              "metric": "no-invention",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          },
+          "metadata": {}
+        },
+        "testIdx": 3,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "file://fixtures\\04-breaking-change\\story.md",
+          "diff": "file://fixtures\\04-breaking-change\\diff.patch",
+          "expected_types": "[\"Breaking change\"]",
+          "forbidden_types": "[\"Bug fix\",\"New feature\",\"Refactoring\",\"Configuration change\"]",
+          "expected_migration": "yes",
+          "expected_sql_token": "sp_rename",
+          "must_mention": "[\"customerFullName\",\"customerName\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+          "allowed_paths": "[\"OrderDto.cs\",\"OrderMapper.cs\",\"20261103_rename_customer_name.sql\",\"OrderMapperTests.cs\"]",
+          "max_words": 60
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "missing-story": 1,
+            "asks-for-story": 1
+          },
+          "namedScoreWeights": {
+            "missing-story": 2,
+            "asks-for-story": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "asked for the User Story and emitted no PR fields",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://eval-script.js:missingStory",
+                "metric": "missing-story",
+                "weight": 2
+              }
+            },
+            {
+              "assertion": {
+                "type": "llm-rubric",
+                "value": "The response asks the user to provide the User Story (or the ticket / requirement) and does not produce a PR description. It does not guess a business reason from the diff.\n",
+                "threshold": 0.9,
+                "metric": "asks-for-story",
+                "weight": 2
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "the response asks the user for the User Story or acceptance criteria and explicitly offers to skip the business context, rather than guessing business reasons from the diff",
+              "tokensUsed": {
+                "total": 0,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 0,
+                "numRequests": 0,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              },
+              "metadata": {
+                "renderedGradingPrompt": "[{\"role\":\"system\",\"content\":\"You are grading output according to a user-specified rubric. If the statement in the rubric is true, then the output passes the test. You respond with a JSON object with this structure: {reason: string, pass: boolean, score: number}\\n\\nExamples:\\n\\n<Output>Hello world</Output>\\n<Rubric>Content contains a greeting</Rubric>\\n{\\\"reason\\\": \\\"the content contains the word 'Hello'\\\", \\\"pass\\\": true, \\\"score\\\": 1.0}\\n\\n<Output>Avast ye swabs, repel the invaders!</Output>\\n<Rubric>Does not speak like a pirate</Rubric>\\n{\\\"reason\\\": \\\"'avast ye' is a common pirate term\\\", \\\"pass\\\": false, \\\"score\\\": 0.0}\"},{\"role\":\"user\",\"content\":\"<Output>\\nI need the User Story for this change. Could you provide the story or acceptance criteria? (If you prefer, I can also generate the PR description from the code changes alone and skip the business context.)\\n</Output>\\n<Rubric>\\nThe response asks the user to provide the User Story (or the ticket / requirement) and does not produce a PR description. It does not guess a business reason from the diff.\\n\\n</Rubric>\"}]"
+              }
+            }
+          ]
+        },
+        "id": "515cfa8b-ed06-4478-8551-4dcc57e15146",
+        "latencyMs": 7004,
+        "namedScores": {
+          "missing-story": 1,
+          "asks-for-story": 1
+        },
+        "prompt": {
+          "raw": "Write a PR description for these code changes.\n\nUser Story:\n\n\nCode changes:\ndiff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs\nindex 5b8e011..d1e6a90 100644\n--- a/src/Application/Orders/OrderService.cs\n+++ b/src/Application/Orders/OrderService.cs\n@@ -40,9 +40,9 @@ public sealed class OrderService : IOrderService\n         return await _repository.FindByIdAsync(orderId, ct);\n     }\n \n-    public async Task CancelAsync(int orderId)\n+    public async Task CancelAsync(int orderId, CancellationToken ct = default)\n     {\n-        var order = await _repository.FindByIdAsync(orderId);\n+        var order = await _repository.FindByIdAsync(orderId, ct);\n         if (order is null)\n         {\n             return;\n@@ -48,7 +48,7 @@ public sealed class OrderService : IOrderService\n \n         order.Status = \"Cancelled\";\n-        await _repository.SaveChangesAsync();\n+        await _repository.SaveChangesAsync(ct);\n     }\n }\ndiff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs\nindex 1d9f2a0..4c8f2b1 100644\n--- a/tests/Orders/OrderServiceTests.cs\n+++ b/tests/Orders/OrderServiceTests.cs\n@@ -30,4 +30,13 @@ public sealed class OrderServiceTests\n         Assert.Equal(\"Cancelled\", order.Status);\n     }\n+\n+    [Fact]\n+    public async Task CancelAsync_ForwardsCancellationToken()\n+    {\n+        var repository = new Mock<IOrderRepository>();\n+        var service = new OrderService(repository.Object);\n+        using var cts = new CancellationTokenSource();\n+\n+        await service.CancelAsync(3, cts.Token);\n+\n+        repository.Verify(r => r.FindByIdAsync(3, cts.Token), Times.Once);\n+    }\n }\n",
+          "label": "pr-description\\prompts\\v1-baseline.md: Write a PR description for these code changes.\n\nUs...",
+          "config": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          }
+        },
+        "promptId": "fab55c96d8601445845b7ff4ad50a5fbc9355eb1d78ceebd6c961af13f8cd148",
+        "promptIdx": 0,
+        "provider": {
+          "id": "exec: node ../devin.js",
+          "label": "Devin SWE-1.7"
+        },
+        "response": {
+          "output": "I need the User Story for this change. Could you provide the story or acceptance criteria? (If you prefer, I can also generate the PR description from the code changes alone and skip the business context.)"
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "description": "05 no User Story — must ask for it, not invent a description",
+          "vars": {
+            "story": "",
+            "diff": "file://fixtures\\05-no-story\\diff.patch",
+            "must_mention": "[]",
+            "must_not_mention": "[]",
+            "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]"
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://eval-script.js:missingStory",
+              "metric": "missing-story",
+              "weight": 2
+            },
+            {
+              "type": "llm-rubric",
+              "value": "The response asks the user to provide the User Story (or the ticket / requirement) and does not produce a PR description. It does not guess a business reason from the diff.\n",
+              "threshold": 0.9,
+              "metric": "asks-for-story",
+              "weight": 2
+            }
+          ],
+          "options": {
+            "provider": {
+              "scriptPath": " node ../devin.js",
+              "options": {
+                "id": "exec: node ../devin.js",
+                "config": {
+                  "model": "SWE-1.7",
+                  "basePath": "pr-description"
+                },
+                "env": {}
+              },
+              "delay": 0,
+              "label": "Devin SWE-1.7"
+            }
+          },
+          "metadata": {}
+        },
+        "testIdx": 4,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "story": "",
+          "diff": "file://fixtures\\05-no-story\\diff.patch",
+          "must_mention": "[]",
+          "must_not_mention": "[]",
+          "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      }
+    ],
+    "stats": {
+      "successes": 1,
+      "failures": 4,
+      "errors": 0,
+      "tokenUsage": {
+        "prompt": 0,
+        "completion": 0,
+        "cached": 0,
+        "total": 0,
+        "numRequests": 5,
+        "completionDetails": {
+          "reasoning": 0,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0
+        },
+        "assertions": {
+          "total": 0,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "numRequests": 0,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          }
+        }
+      },
+      "durationMs": 81358,
+      "evaluationDurationMs": 81358
+    }
+  },
+  "config": {
+    "tags": {},
+    "description": "PR description generator — structure, branch logic and grounding",
+    "prompts": [
+      "pr-description/prompts/v1-baseline.md"
+    ],
+    "providers": [
+      {
+        "id": "exec: node ../devin.js",
+        "label": "Devin SWE-1.7",
+        "config": {
+          "model": "SWE-1.7"
+        }
+      }
+    ],
+    "tests": [
+      {
+        "description": "01 feature + migration — new PATCH endpoint with a SQL script",
+        "vars": {
+          "story": "file://fixtures/01-feature-migration/story.md",
+          "diff": "file://fixtures/01-feature-migration/diff.patch",
+          "expected_types": "[\"New feature\"]",
+          "forbidden_types": "[\"Bug fix\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "yes",
+          "expected_sql_token": "ALTER TABLE",
+          "must_mention": "[\"UpdateOrderStatusRequest\",\"PATCH\",\"StatusUpdatedAt\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\",\"appsettings.json\"]",
+          "allowed_paths": "[\"OrdersController.cs\",\"UpdateOrderStatusRequest.cs\",\"OrderService.cs\",\"20261101_add_status_updated_at.sql\",\"OrdersControllerTests.cs\"]",
+          "max_words": 60
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:hasStructure",
+            "metric": "structure"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:conciseWhat",
+            "metric": "conciseness"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:typeOfChange",
+            "metric": "type-of-change",
+            "weight": 1.5
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:migrationDecision",
+            "metric": "migration-decision",
+            "weight": 2
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:grounding",
+            "metric": "grounding",
+            "weight": 2
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The \"Why?\" field explains the business reason stated in the User Story (support handling ~400 manual status updates per week, 20-40 minute hand-offs, hours-to-minutes delay), not a restatement of the code change.\n",
+            "threshold": 0.7,
+            "metric": "why-business"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "Every bullet in \"How?\" names a concrete change that exists in the diff: the PATCH endpoint on OrdersController, the UpdateOrderStatusRequest DTO, the UpdateStatusAsync service method, the StatusUpdatedAt column/migration, and the new controller test. It contains no generic filler such as \"updated the code\" or \"added tests\".\n",
+            "threshold": 0.7,
+            "metric": "how-actionable",
+            "weight": 1.5
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The description does not claim any change, file, dependency or behaviour that is absent from the diff (for example caching, a message queue, a new configuration key, or an unrelated refactor).\n",
+            "threshold": 0.8,
+            "metric": "no-invention",
+            "weight": 2
+          }
+        ]
+      },
+      {
+        "description": "02 bug fix, no migration — null discount no longer crashes checkout",
+        "vars": {
+          "story": "file://fixtures/02-bugfix-null/story.md",
+          "diff": "file://fixtures/02-bugfix-null/diff.patch",
+          "expected_types": "[\"Bug fix\"]",
+          "forbidden_types": "[\"New feature\",\"Refactoring\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "no",
+          "expected_sql_token": "",
+          "must_mention": "[\"GetTotal\",\"discount\",\"null\"]",
+          "must_not_mention": "[\"PATCH\",\"ALTER TABLE\",\"sp_rename\",\"Redis\"]",
+          "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+          "max_words": 60
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:hasStructure",
+            "metric": "structure"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:conciseWhat",
+            "metric": "conciseness"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:typeOfChange",
+            "metric": "type-of-change",
+            "weight": 1.5
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:migrationDecision",
+            "metric": "migration-decision",
+            "weight": 2
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:grounding",
+            "metric": "grounding",
+            "weight": 2
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The \"Why?\" field explains the business reason from the User Story (2.1% of checkouts failing, about 180 orders, customers abandoning the cart), not a restatement of the code.\n",
+            "threshold": 0.7,
+            "metric": "why-business"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "Every bullet in \"How?\" names a concrete change in the diff: the null-safe discount lookup in GetTotal and the new unit test covering a null discount. No generic filler.\n",
+            "threshold": 0.7,
+            "metric": "how-actionable",
+            "weight": 1.5
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The description does not claim any change absent from the diff: no new endpoint, no migration, no new dependency, no unrelated refactor.\n",
+            "threshold": 0.8,
+            "metric": "no-invention",
+            "weight": 2
+          }
+        ]
+      },
+      {
+        "description": "03 refactoring, no migration — pricing rules extracted from OrderService",
+        "vars": {
+          "story": "file://fixtures/03-refactor/story.md",
+          "diff": "file://fixtures/03-refactor/diff.patch",
+          "expected_types": "[\"Refactoring\"]",
+          "forbidden_types": "[\"New feature\",\"Bug fix\",\"Breaking change\",\"Configuration change\"]",
+          "expected_migration": "no",
+          "expected_sql_token": "",
+          "must_mention": "[\"PriceCalculator\",\"OrderService\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+          "allowed_paths": "[\"PriceCalculator.cs\",\"OrderService.cs\",\"OrderServiceTests.cs\"]",
+          "max_words": 60
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:hasStructure",
+            "metric": "structure"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:conciseWhat",
+            "metric": "conciseness"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:typeOfChange",
+            "metric": "type-of-change",
+            "weight": 1.5
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:migrationDecision",
+            "metric": "migration-decision",
+            "weight": 2
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:grounding",
+            "metric": "grounding",
+            "weight": 2
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The \"Why?\" field explains the business reason from the User Story (OrderService is 1,400 lines, every pricing change touches it, the pricing team wants to change rules without touching order orchestration), not a restatement of the code.\n",
+            "threshold": 0.7,
+            "metric": "why-business"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "Every bullet in \"How?\" names a concrete change in the diff: the new PriceCalculator class and OrderService delegating to it. It does not claim new functionality or changed behaviour, because the change is a refactoring.\n",
+            "threshold": 0.7,
+            "metric": "how-actionable",
+            "weight": 1.5
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The description does not claim any change absent from the diff and does not present the refactoring as a new feature or a behaviour change.\n",
+            "threshold": 0.8,
+            "metric": "no-invention",
+            "weight": 2
+          }
+        ]
+      },
+      {
+        "description": "04 breaking change + migration — customerName renamed to customerFullName",
+        "vars": {
+          "story": "file://fixtures/04-breaking-change/story.md",
+          "diff": "file://fixtures/04-breaking-change/diff.patch",
+          "expected_types": "[\"Breaking change\"]",
+          "forbidden_types": "[\"Bug fix\",\"New feature\",\"Refactoring\",\"Configuration change\"]",
+          "expected_migration": "yes",
+          "expected_sql_token": "sp_rename",
+          "must_mention": "[\"customerFullName\",\"customerName\"]",
+          "must_not_mention": "[\"Redis\",\"Kafka\",\"Dockerfile\"]",
+          "allowed_paths": "[\"OrderDto.cs\",\"OrderMapper.cs\",\"20261103_rename_customer_name.sql\",\"OrderMapperTests.cs\"]",
+          "max_words": 60
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:hasStructure",
+            "metric": "structure"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:conciseWhat",
+            "metric": "conciseness"
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:typeOfChange",
+            "metric": "type-of-change",
+            "weight": 1.5
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:migrationDecision",
+            "metric": "migration-decision",
+            "weight": 2
+          },
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:grounding",
+            "metric": "grounding",
+            "weight": 2
+          },
+          {
+            "type": "icontains",
+            "value": "compatib",
+            "metric": "backwards-compat",
+            "weight": 1
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The \"Why?\" field explains the business reason from the User Story (the field returns the full name but its name suggests only the first name, two partner integrations misread it), not a restatement of the code.\n",
+            "threshold": 0.7,
+            "metric": "why-business"
+          },
+          {
+            "type": "llm-rubric",
+            "value": "Every bullet in \"How?\" names a concrete change in the diff: the OrderDto property rename, the OrderMapper update, the SQL rename script and the updated mapper test. No generic filler.\n",
+            "threshold": 0.7,
+            "metric": "how-actionable",
+            "weight": 1.5
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The description does not claim any change absent from the diff and does not describe the rename as a non-breaking change.\n",
+            "threshold": 0.8,
+            "metric": "no-invention",
+            "weight": 2
+          }
+        ]
+      },
+      {
+        "description": "05 no User Story — must ask for it, not invent a description",
+        "vars": {
+          "story": "",
+          "diff": "file://fixtures/05-no-story/diff.patch",
+          "must_mention": "[]",
+          "must_not_mention": "[]",
+          "allowed_paths": "[\"OrderService.cs\",\"OrderServiceTests.cs\"]"
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://eval-script.js:missingStory",
+            "metric": "missing-story",
+            "weight": 2
+          },
+          {
+            "type": "llm-rubric",
+            "value": "The response asks the user to provide the User Story (or the ticket / requirement) and does not produce a PR description. It does not guess a business reason from the diff.\n",
+            "threshold": 0.9,
+            "metric": "asks-for-story",
+            "weight": 2
+          }
+        ]
+      }
+    ],
+    "env": {},
+    "defaultTest": {
+      "options": {
+        "provider": "Devin SWE-1.7"
+      },
+      "vars": {},
+      "assert": [],
+      "metadata": {}
+    },
+    "outputPath": [
+      "pr-description/evidence/eval-v1-run1.json",
+      "pr-description/evidence/eval-v1-run1.html"
+    ],
+    "extensions": [],
+    "metadata": {},
+    "evaluateOptions": {
+      "maxConcurrency": 2
+    }
+  },
+  "shareableUrl": null,
+  "metadata": {
+    "promptfooVersion": "0.121.17",
+    "nodeVersion": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64",
+    "exportedAt": "2026-11-04T23:20:23.829Z",
+    "evaluationCreatedAt": "2026-11-04T23:19:00.684Z"
+  },
+  "vars": [
+    "story",
+    "diff",
+    "expected_types",
+    "forbidden_types",
+    "expected_migration",
+    "expected_sql_token",
+    "must_mention",
+    "must_not_mention",
+    "allowed_paths",
+    "max_words"
+  ],
+  "runtimeOptions": {
+    "eventSource": "cli",
+    "maxConcurrency": 2,
+    "showProgressBar": true,
+    "repeat": 1,
+    "cache": false
+  }
+}

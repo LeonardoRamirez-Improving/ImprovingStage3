@@ -1,0 +1,294 @@
+# Evaluation Driven Development — PR description generator
+#
+# Prompt under test: pr-description/prompts/v3-final.md
+# Fixtures: synthetic ASP.NET Core + EF Core changes with a known expected PR description.
+#
+# Run from the repository root so that `exec: node ./devin.js` resolves:
+#   npm run test pr-description/promptfooconfig.yaml
+#
+# Reproduce an earlier iteration by overriding the prompt:
+#   npx promptfoo eval -c pr-description/promptfooconfig.yaml -p pr-description/prompts/v1-baseline.md --no-cache
+
+description: 'PR description generator — structure, branch logic and grounding'
+
+prompts:
+  - file://prompts/v5-final.md
+
+# NOTE: promptfoo runs `exec:` with cwd = the directory of this config file,
+# so the provider scripts in the repository root are referenced as ../<script>.
+providers:
+  # Model under test — Devin CLI via the combined provider/grader script
+  - id: 'exec: node ../devin.js'
+    label: 'Devin SWE-1.7'
+    config:
+      model: 'SWE-1.7'
+
+  # Model under test — Claude Code CLI.
+  # Left disabled because the `claude` binary is not installed in this environment
+  # (checked with `command -v claude`). Enable it once Claude Code is installed and
+  # authenticated; no other change is needed.
+  # - id: 'exec: node ../claude.js'
+  #   label: 'Claude Haiku'
+  #   config:
+  #     model: 'haiku'
+
+defaultTest:
+  options:
+    # Grader is fixed so rubric scores stay comparable across the models under test.
+    # ./grader.js retries the Devin CLI when it returns empty stdout, which would
+    # otherwise be recorded as a false assertion failure ("No output").
+    provider:
+      id: 'exec: node ./grader.js'
+      label: 'Devin SWE-1.7 (grader)'
+      config:
+        model: 'SWE-1.7'
+    # promptfoo's default rubric prompt lets the CLI echo the response schema
+    # ("reason": "string", ...). This one forces an actual verdict.
+    rubricPrompt: '[{"role":"system","content":"You are an impartial judge grading a PR description against ONE rubric criterion. Score 1.0 when the criterion is fully met, 0.5 when it is partially met, 0.0 when it is not met or contradicted. Reply with ONLY a JSON object with exactly these keys: pass (boolean), score (number between 0.0 and 1.0), reason (one short sentence). Do not repeat this schema, do not use placeholder values such as \"string\" or \"...\", and do not add any text outside the JSON."},{"role":"user","content":"User Story:\n\n{{story}}\n\nCode diff the description refers to:\n\n{{diff}}\n\nPR description to grade:\n\n{{output}}\n\nRubric criterion:\n\n{{rubric}}\n\nJSON verdict:"}]'
+
+evaluateOptions:
+  maxConcurrency: 2
+
+tests:
+  # ---------------------------------------------------------------- 01
+  - description: '01 feature + migration — new PATCH endpoint with a SQL script'
+    vars:
+      story: file://fixtures/01-feature-migration/story.md
+      diff: file://fixtures/01-feature-migration/diff.patch
+      expected_types: '["New feature"]'
+      forbidden_types: '["Bug fix","Refactoring","Breaking change","Configuration change"]'
+      expected_migration: 'yes'
+      expected_sql_token: 'ALTER TABLE'
+      must_mention: '["UpdateOrderStatusRequest","PATCH","StatusUpdatedAt"]'
+      must_not_mention: '["Redis","Kafka","Dockerfile","appsettings.json"]'
+      allowed_paths: '["OrdersController.cs","UpdateOrderStatusRequest.cs","OrderService.cs","20261101_add_status_updated_at.sql","OrdersControllerTests.cs"]'
+      max_words: 60
+    assert:
+      - type: javascript
+        value: file://eval-script.js:hasStructure
+        metric: structure
+      - type: javascript
+        value: file://eval-script.js:conciseWhat
+        metric: conciseness
+      - type: javascript
+        value: file://eval-script.js:typeOfChange
+        metric: type-of-change
+        weight: 1.5
+      - type: javascript
+        value: file://eval-script.js:migrationDecision
+        metric: migration-decision
+        weight: 2
+      - type: javascript
+        value: file://eval-script.js:grounding
+        metric: grounding
+        weight: 2
+      - type: llm-rubric
+        value: >
+          The "Why?" field explains the business reason stated in the User Story (support handling
+          ~400 manual status updates per week, 20-40 minute hand-offs, hours-to-minutes delay), not
+          a restatement of the code change.
+        threshold: 0.7
+        metric: why-business
+      - type: llm-rubric
+        value: >
+          Every bullet in "How?" names a concrete change that exists in the diff: the PATCH
+          endpoint on OrdersController, the UpdateOrderStatusRequest DTO, the UpdateStatusAsync
+          service method, the StatusUpdatedAt column/migration, and the new controller test.
+          Additional bullets are acceptable when they name a change that is present in the diff. It contains no generic filler such as "updated the code" or "added tests".
+        threshold: 0.7
+        metric: how-actionable
+        weight: 1.5
+      - type: llm-rubric
+        value: >
+          The description does not claim any change, file, dependency or behaviour that is absent
+          from the diff (for example caching, a message queue, a new configuration key, or an
+          unrelated refactor).
+        threshold: 0.8
+        metric: no-invention
+        weight: 2
+
+  # ---------------------------------------------------------------- 02
+  - description: '02 bug fix, no migration — null discount no longer crashes checkout'
+    vars:
+      story: file://fixtures/02-bugfix-null/story.md
+      diff: file://fixtures/02-bugfix-null/diff.patch
+      expected_types: '["Bug fix"]'
+      forbidden_types: '["New feature","Refactoring","Breaking change","Configuration change"]'
+      expected_migration: 'no'
+      expected_sql_token: ''
+      must_mention: '["GetTotal","discount","null"]'
+      must_not_mention: '["PATCH","ALTER TABLE","sp_rename","Redis"]'
+      allowed_paths: '["OrderService.cs","OrderServiceTests.cs"]'
+      max_words: 60
+    assert:
+      - type: javascript
+        value: file://eval-script.js:hasStructure
+        metric: structure
+      - type: javascript
+        value: file://eval-script.js:conciseWhat
+        metric: conciseness
+      - type: javascript
+        value: file://eval-script.js:typeOfChange
+        metric: type-of-change
+        weight: 1.5
+      - type: javascript
+        value: file://eval-script.js:migrationDecision
+        metric: migration-decision
+        weight: 2
+      - type: javascript
+        value: file://eval-script.js:grounding
+        metric: grounding
+        weight: 2
+      - type: llm-rubric
+        value: >
+          The "Why?" field explains the business reason from the User Story (2.1% of checkouts
+          failing, about 180 orders, customers abandoning the cart), not a restatement of the code.
+        threshold: 0.7
+        metric: why-business
+      - type: llm-rubric
+        value: >
+          Every bullet in "How?" names a concrete change in the diff: the null-safe discount
+          lookup in GetTotal and the new unit test covering a null discount. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.
+        threshold: 0.7
+        metric: how-actionable
+        weight: 1.5
+      - type: llm-rubric
+        value: >
+          The description does not claim any change absent from the diff: no new endpoint, no
+          migration, no new dependency, no unrelated refactor.
+        threshold: 0.8
+        metric: no-invention
+        weight: 2
+
+  # ---------------------------------------------------------------- 03
+  - description: '03 refactoring, no migration — pricing rules extracted from OrderService'
+    vars:
+      story: file://fixtures/03-refactor/story.md
+      diff: file://fixtures/03-refactor/diff.patch
+      expected_types: '["Refactoring"]'
+      forbidden_types: '["New feature","Bug fix","Breaking change","Configuration change"]'
+      expected_migration: 'no'
+      expected_sql_token: ''
+      must_mention: '["PriceCalculator","OrderService"]'
+      must_not_mention: '["Redis","Kafka","Dockerfile"]'
+      allowed_paths: '["PriceCalculator.cs","OrderService.cs","OrderServiceTests.cs"]'
+      max_words: 60
+    assert:
+      - type: javascript
+        value: file://eval-script.js:hasStructure
+        metric: structure
+      - type: javascript
+        value: file://eval-script.js:conciseWhat
+        metric: conciseness
+      - type: javascript
+        value: file://eval-script.js:typeOfChange
+        metric: type-of-change
+        weight: 1.5
+      - type: javascript
+        value: file://eval-script.js:migrationDecision
+        metric: migration-decision
+        weight: 2
+      - type: javascript
+        value: file://eval-script.js:grounding
+        metric: grounding
+        weight: 2
+      - type: llm-rubric
+        value: >
+          The "Why?" field explains the business reason from the User Story (OrderService is 1,400
+          lines, every pricing change touches it, the pricing team wants to change rules without
+          touching order orchestration), not a restatement of the code.
+        threshold: 0.7
+        metric: why-business
+      - type: llm-rubric
+        value: >
+          Every bullet in "How?" names a concrete change in the diff: the new PriceCalculator
+          class and OrderService delegating to it. Additional bullets are acceptable when they name a change that is present in the diff. It does not claim new functionality or changed behaviour, because the change is a refactoring.
+        threshold: 0.7
+        metric: how-actionable
+        weight: 1.5
+      - type: llm-rubric
+        value: >
+          The description does not claim any change absent from the diff and does not present the
+          refactoring as a new feature or a behaviour change.
+        threshold: 0.8
+        metric: no-invention
+        weight: 2
+
+  # ---------------------------------------------------------------- 04
+  - description: '04 breaking change + migration — customerName renamed to customerFullName'
+    vars:
+      story: file://fixtures/04-breaking-change/story.md
+      diff: file://fixtures/04-breaking-change/diff.patch
+      expected_types: '["Breaking change"]'
+      forbidden_types: '["Bug fix","New feature","Refactoring","Configuration change"]'
+      expected_migration: 'yes'
+      expected_sql_token: 'sp_rename'
+      must_mention: '["customerFullName","customerName"]'
+      must_not_mention: '["Redis","Kafka","Dockerfile"]'
+      allowed_paths: '["OrderDto.cs","OrderMapper.cs","20261103_rename_customer_name.sql","OrderMapperTests.cs"]'
+      max_words: 60
+    assert:
+      - type: javascript
+        value: file://eval-script.js:hasStructure
+        metric: structure
+      - type: javascript
+        value: file://eval-script.js:conciseWhat
+        metric: conciseness
+      - type: javascript
+        value: file://eval-script.js:typeOfChange
+        metric: type-of-change
+        weight: 1.5
+      - type: javascript
+        value: file://eval-script.js:migrationDecision
+        metric: migration-decision
+        weight: 2
+      - type: javascript
+        value: file://eval-script.js:grounding
+        metric: grounding
+        weight: 2
+      - type: javascript
+        value: file://eval-script.js:breakingNote
+        metric: backwards-compat
+        weight: 1
+      - type: llm-rubric
+        value: >
+          The "Why?" field explains the business reason from the User Story (the field returns the
+          full name but its name suggests only the first name, two partner integrations misread it),
+          not a restatement of the code.
+        threshold: 0.7
+        metric: why-business
+      - type: llm-rubric
+        value: >
+          Every bullet in "How?" names a concrete change in the diff: the OrderDto property rename,
+          the OrderMapper update, the SQL rename script and the updated mapper test. Additional bullets are acceptable when they name a change that is present in the diff. No generic filler.
+        threshold: 0.7
+        metric: how-actionable
+        weight: 1.5
+      - type: llm-rubric
+        value: >
+          The description does not claim any change absent from the diff and does not describe the
+          rename as a non-breaking change.
+        threshold: 0.8
+        metric: no-invention
+        weight: 2
+
+  # ---------------------------------------------------------------- 05
+  - description: '05 no User Story — must ask for it, not invent a description'
+    vars:
+      story: ''
+      diff: file://fixtures/05-no-story/diff.patch
+      must_mention: '[]'
+      must_not_mention: '[]'
+      allowed_paths: '["OrderService.cs","OrderServiceTests.cs"]'
+    assert:
+      - type: javascript
+        value: file://eval-script.js:missingStory
+        metric: missing-story
+        weight: 2
+      - type: llm-rubric
+        value: >
+          The response asks the user to provide the User Story (or the ticket / requirement) and
+          does not produce a PR description. It does not guess a business reason from the diff.
+        threshold: 0.9
+        metric: asks-for-story
+        weight: 2

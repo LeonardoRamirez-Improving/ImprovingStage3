@@ -1,0 +1,3181 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>PR description generator — structure, branch logic and grounding</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --page-bg: #f4f6fb;
+        --surface: #ffffff;
+        --surface-muted: #f7f8fc;
+        --border: #d8deea;
+        --text: #172033;
+        --text-muted: #55627a;
+        --accent: #2157d6;
+        --pass: #147d42;
+        --pass-bg: #e9f8ef;
+        --fail: #b42318;
+        --fail-bg: #fff0ef;
+        --error: #9a3412;
+        --error-bg: #fff4e8;
+        --shadow: 0 18px 45px rgba(23, 32, 51, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--page-bg);
+        color: var(--text);
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+      }
+
+      .page {
+        width: min(1600px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 32px 0 48px;
+      }
+
+      .hero,
+      .report-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero {
+        display: grid;
+        gap: 24px;
+        padding: 28px;
+      }
+
+      .brand-lockup {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        width: fit-content;
+        margin-bottom: 12px;
+      }
+
+      .brand-logo {
+        display: block;
+        width: 34px;
+        height: 34px;
+        flex: 0 0 auto;
+      }
+
+      .brand-name {
+        color: var(--text);
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 3vw, 40px);
+        line-height: 1.1;
+      }
+
+      .meta-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 16px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .meta-list li {
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+        padding: 0 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--text-muted);
+        background: var(--surface-muted);
+        font-size: 13px;
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 14px;
+      }
+
+      .metric {
+        min-height: 112px;
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface-muted);
+      }
+
+      .metric-label {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .metric-value {
+        margin: 12px 0 0;
+        font-size: 30px;
+        font-weight: 750;
+        line-height: 1;
+      }
+
+      .metric.pass .metric-value {
+        color: var(--pass);
+      }
+
+      .metric.fail .metric-value {
+        color: var(--fail);
+      }
+
+      .metric.error .metric-value {
+        color: var(--error);
+      }
+
+      .report-panel {
+        margin-top: 20px;
+        overflow: hidden;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+      }
+
+      .toolbar-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .control {
+        display: grid;
+        gap: 6px;
+      }
+
+      .control label {
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .control input,
+      .control select {
+        min-height: 42px;
+        min-width: 220px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #ffffff;
+        color: var(--text);
+        font: inherit;
+        padding: 0 12px;
+      }
+
+      .control input:focus,
+      .control select:focus {
+        outline: 2px solid rgba(33, 87, 214, 0.2);
+        border-color: var(--accent);
+      }
+
+      .toolbar-summary {
+        display: flex;
+        align-items: end;
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+
+      .table-shell {
+        max-height: min(72vh, 980px);
+        overflow: auto;
+        background: var(--surface);
+      }
+
+      table,
+      th,
+      td {
+        border-collapse: collapse;
+        border-spacing: 0;
+        text-align: left;
+      }
+
+      table {
+        width: 100%;
+        min-width: 920px;
+      }
+
+      thead {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      th {
+        background: #eef2fb;
+        color: #24324b;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      th,
+      td {
+        min-width: 220px;
+        padding: 12px 16px;
+        white-space: pre-wrap;
+        vertical-align: top;
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        word-break: break-word;
+      }
+
+      th:last-child,
+      td:last-child {
+        border-right: 0;
+      }
+
+      tbody tr:nth-child(even) {
+        background: #fbfcff;
+      }
+
+      tbody tr:hover {
+        background: #f5f8ff;
+      }
+
+      .cell-content {
+        max-width: 560px;
+        color: var(--text);
+        line-height: 1.55;
+      }
+
+      td[data-status='pass'] {
+        background: linear-gradient(90deg, var(--pass-bg), rgba(255, 255, 255, 0));
+      }
+
+      td[data-status='fail'] {
+        background: linear-gradient(90deg, var(--fail-bg), rgba(255, 255, 255, 0));
+      }
+
+      td[data-status='error'] {
+        background: linear-gradient(90deg, var(--error-bg), rgba(255, 255, 255, 0));
+      }
+
+      .output-cell {
+        display: grid;
+        gap: 10px;
+      }
+
+      .output-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .status-pill,
+      .score-pill,
+      .named-score-pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 0 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .status-pill.pass {
+        color: var(--pass);
+        background: #daf2e4;
+      }
+
+      .status-pill.fail {
+        color: var(--fail);
+        background: #ffdeda;
+      }
+
+      .status-pill.error {
+        color: var(--error);
+        background: #ffe4c7;
+      }
+
+      .score-pill,
+      .named-score-pill {
+        color: var(--text-muted);
+        background: rgba(23, 32, 51, 0.06);
+      }
+
+      .output-section {
+        display: grid;
+        gap: 4px;
+      }
+
+      .output-section-label {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .output-text,
+      .output-reason,
+      .variable-text {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .output-text,
+      .variable-text {
+        color: var(--text);
+        line-height: 1.55;
+      }
+
+      .output-reason {
+        margin: 0;
+        padding-left: 12px;
+        border-left: 3px solid rgba(23, 32, 51, 0.14);
+        color: var(--text-muted);
+        line-height: 1.55;
+      }
+
+      .detail-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 32px;
+        padding: 0 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        background: var(--surface);
+        cursor: pointer;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .detail-button:hover,
+      .detail-button:focus-visible {
+        border-color: rgba(33, 87, 214, 0.45);
+        background: #f5f8ff;
+        outline: none;
+      }
+
+      body.detail-open {
+        overflow: hidden;
+      }
+
+      .detail-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        background: rgba(23, 32, 51, 0.38);
+      }
+
+      .detail-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 21;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        width: min(620px, calc(100vw - 24px));
+        border-left: 1px solid var(--border);
+        background: var(--surface);
+        box-shadow: -20px 0 48px rgba(23, 32, 51, 0.22);
+      }
+
+      .detail-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 24px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .detail-heading {
+        min-width: 0;
+      }
+
+      .detail-title {
+        margin: 0;
+        font-size: 24px;
+        line-height: 1.2;
+      }
+
+      .detail-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        background: var(--surface);
+        cursor: pointer;
+      }
+
+      .detail-close-icon {
+        position: relative;
+        display: block;
+        width: 16px;
+        height: 16px;
+      }
+
+      .detail-close-icon::before,
+      .detail-close-icon::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+        content: '';
+        transform-origin: center;
+      }
+
+      .detail-close-icon::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      .detail-close-icon::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      .detail-close:hover,
+      .detail-close:focus-visible {
+        border-color: rgba(33, 87, 214, 0.45);
+        background: #f5f8ff;
+        outline: none;
+      }
+
+      .detail-body {
+        display: grid;
+        align-content: start;
+        overflow: auto;
+        padding: 24px;
+      }
+
+      .detail-content {
+        display: grid;
+        gap: 24px;
+      }
+
+      .detail-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .detail-metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .detail-metric {
+        display: grid;
+        align-content: center;
+        gap: 8px;
+        min-height: 96px;
+        padding: 18px 20px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface-muted);
+      }
+
+      .detail-metric-label,
+      .detail-section-title,
+      .detail-variable-name {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 750;
+        text-transform: uppercase;
+      }
+
+      .detail-metric-value {
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 750;
+      }
+
+      .detail-section {
+        display: grid;
+        gap: 10px;
+      }
+
+      .detail-copy {
+        margin: 0;
+        padding: 18px 20px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        background: var(--surface-muted);
+        line-height: 1.65;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .detail-reason {
+        border-left: 4px solid rgba(23, 32, 51, 0.16);
+      }
+
+      .detail-variables {
+        display: grid;
+        gap: 0;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface-muted);
+      }
+
+      .detail-variable {
+        display: grid;
+        gap: 6px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .detail-variable:last-child {
+        border-bottom: 0;
+      }
+
+      .detail-variable-value {
+        margin: 0;
+        color: var(--text);
+        line-height: 1.55;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      .empty-state {
+        display: none;
+        margin: 0;
+        padding: 28px 20px;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+      }
+
+      .empty-state.visible {
+        display: block;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      @media (max-width: 720px) {
+        .page {
+          width: min(100%, calc(100vw - 20px));
+          padding-top: 10px;
+        }
+
+        .hero {
+          padding: 20px;
+        }
+
+        .toolbar {
+          padding: 16px;
+        }
+
+        .toolbar-controls,
+        .control input,
+        .control select {
+          width: 100%;
+        }
+
+        .control {
+          flex: 1 1 100%;
+        }
+
+        .toolbar-summary {
+          width: 100%;
+        }
+
+        .detail-metrics {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero" aria-labelledby="report-title">
+        <div>
+          <div class="brand-lockup" aria-label="Promptfoo">
+            <img
+              class="brand-logo"
+              src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNS4yLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjIwMCAzMjUgMjAwIDIwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTk1LjI4IDg0MS44OTsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4NCgkuc3Qwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO30NCgkuc3Qxe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6I0ZFMkMwNjt9DQoJLnN0MntmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtmaWxsOiM4QTBBMUM7fQ0KCS5zdDN7Y2xpcC1wYXRoOnVybCgjU1ZHSURfMl8pO2ZpbGw6dXJsKCNTVkdJRF8zXyk7fQ0KCS5zdDR7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkVGRUZFO30NCgkuc3Q1e2ZpbGw6bm9uZTtzdHJva2U6IzM3MzQzNTtzdHJva2Utd2lkdGg6MC4yMTY7c3Ryb2tlLW1pdGVybGltaXQ6Mi42MTMxO30NCjwvc3R5bGU+DQo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMjM5Ljc2LDQ1MS45N2w1Ny42OCw1OC44OWw0NC4zMi00NS4yNWwxNy4xNCwyMC4xOWwwLjgyLDAuMzljMi45MSwxLjM5LDYuNDYsMC4xOCw4LjkyLTEuNTkNCgljMy0yLjE2LDQuOTYtNi4yLDIuODEtOS42NGwtMC4xNS0wLjIzbC0xNC44Ni0xOC4wOGwtMS43MywxLjI2bC0xLjkyLTIuMjhsMC42My0wLjg5YzIuNjctMy44MSw0LjA4LTguMzEsNC4wOC0xMi45Ng0KCWMwLTEuNDMtMC4xMy0yLjg1LTAuNC00LjI1bC0wLjE3LTAuODhsMC43OC0wLjU3YzAuMzktMC4yOCwwLjc3LTAuNTcsMS4xNS0wLjg3YzMuOTctMy4wNyw3LjUyLTYuNjYsMTAuOTUtMTAuM2wyLjYzLTIuNzkNCglsLTEyLjI5LTE0LjI4bDAuNDItMC44NWMyLjI1LTQuNDgsMy45Ni05LjQyLDUuMTgtMTQuMjhsMC4wNi0wLjI0YzEtNC4wNywxLjczLTguMzUsMS44OS0xMi41NWMwLjI4LTcuMDgsMC41MS0xNC4xOSwwLjM0LTIxLjI4DQoJbC0wLjA5LTMuOTVsLTMuOTUtMC4xOWMtNC4xOC0wLjItOC41MSwwLjEtMTIuNjYsMC41OWMtNy44OCwwLjkzLTE1Ljk2LDIuOTEtMjMuMDQsNi41NWwtMS4zMSwwLjY3bC02LjgxLTE0LjQ5bC0yMi43NS05LjUxDQoJbC0yMi43NSw5LjUxbC02LjgxLDE0LjQ5bC0xLjMxLTAuNjdjLTcuMDgtMy42NC0xNS4xNi01LjYyLTIzLjA0LTYuNTVjLTQuMTUtMC40OS04LjQ4LTAuNzktMTIuNjYtMC41OWwtMy45NSwwLjE5bC0wLjA5LDMuOTUNCgljLTAuMTcsNy4wOSwwLjA3LDE0LjE5LDAuMzQsMjEuMjhjMC4xNiw0LjE5LDAuODksOC40OCwxLjg5LDEyLjU1bDAuMDYsMC4yNGMxLjIxLDQuODYsMi45Miw5LjgsNS4xNywxNC4yOGwwLjQyLDAuODVsLTEyLjI5LDE0LjI4DQoJbDIuNjMsMi43OWMzLjQzLDMuNjQsNi45OSw3LjIzLDEwLjk1LDEwLjNjMC4wNSwwLjA0LDAuMSwwLjA4LDAuMTYsMC4xMmwwLjQzLDAuMzNMMjM5Ljc2LDQ1MS45N3oiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMjk3LjQ0LDM0Mi45NCAzMTcuMDMsMzUxLjEyIDMyNS43MSwzNjkuNTkgMjk3LjQ0LDM2OS41OSAiLz4NCjxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0yOTcuNDQsMzc4LjE3bDMwLjY5LDAuMDhsMjEsMTEuM2MtMTcuMjMsMi4wOS0zMC4zNywzLjczLTUxLjY5LDMuODJWMzc4LjE3eiIvPg0KPHBhdGggY2xhc3M9InN0MiIgZD0iTTI3Ny4xMSw0MTAuOTVjMi4xOSwwLDMuOTYsMS43NywzLjk2LDMuOTZjMCwyLjE5LTEuNzcsMy45Ni0zLjk2LDMuOTZjLTIuMTksMC0zLjk2LTEuNzctMy45Ni0zLjk2DQoJQzI3My4xNSw0MTIuNzMsMjc0LjkzLDQxMC45NSwyNzcuMTEsNDEwLjk1IE0yOTcuNDQsMzk3LjljLTE0LjM4LTAuMjctMjkuMzctMS4xNS00NS45LTMuMDZMMjI4LjE1LDQyMg0KCWMxMC40LDExLjA0LDE1Ljc4LDE0LjcsMzEuNDcsMjAuMzVjMTQuMjMsNS4xMiwzMS40MSwxMS4zLDM3LjgyLDExLjUzdi05LjNoLTUuNDVjMCwwLTAuNzYtMC4yMi0wLjk1LTEuNzgNCgljLTAuMTktMS41NiwxLjAyLTEuNzQsMS4wMi0xLjc0aDN2LTQuNjFjMCwwLTQuMjktMi4yMy01LjI3LTUuMmMtMC40OS0xLjUtMC4zOS0yLjUyLTAuMDMtMy4yMmMwLjkxLTEuNzgsMy4xOC0xLjkyLDQuOS0xLjkyaDIuNzcNCglWMzk3Ljl6Ii8+DQo8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMjk3LjQ0LDQ1Ny42MXYxNS42N2wtMjIuNjctMjEuODNDMjc0Ljc2LDQ1MS40NiwyODguMDYsNDU2Ljg3LDI5Ny40NCw0NTcuNjEiLz4NCjxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0yNDEuNjUsNDM5LjM3YzAsMCw5LjEyLDQuMzgsMTUuNjEsNi43NGM2LjQ5LDIuMzUsMTAuNTYsMy41NywxMC41NiwzLjU3bDI5LjYyLDI5LjA2djI2LjA1bC01My43NS01NC44OA0KCUwyNDEuNjUsNDM5LjM3eiIvPg0KPHBhdGggY2xhc3M9InN0MSIgZD0iTTMxNy43Niw0MTAuOTVjLTIuMTksMC0zLjk2LDEuNzctMy45NiwzLjk2YzAsMi4xOSwxLjc3LDMuOTYsMy45NiwzLjk2YzIuMTksMCwzLjk2LTEuNzcsMy45Ni0zLjk2DQoJQzMyMS43Miw0MTIuNzMsMzE5Ljk0LDQxMC45NSwzMTcuNzYsNDEwLjk1IE0yOTcuNDQsMzk3LjljMTQuMzgtMC4yNywyOS4zNy0xLjE1LDQ1LjktMy4wNkwzNjYuNzIsNDIyDQoJYy00LjM0LDQuNjEtNy44MSw3LjkzLTExLjUyLDEwLjY1Yy0zLjQ5LTcuNzQtMTEuMjctMTMuMTMtMjAuMzEtMTMuMTNjLTEyLjI5LDAtMjIuMjYsOS45Ni0yMi4yNiwyMi4yNmMwLDIuOCwwLjUyLDUuNDcsMS40Niw3Ljk0DQoJYy03LjE3LDIuMzMtMTMuMzUsNC4wMy0xNi42Niw0LjE1di05LjNoNS40NWMwLDAsMC43Ni0wLjIyLDAuOTUtMS43OGMwLjE5LTEuNTYtMS4wMi0xLjc0LTEuMDItMS43NGgtM3YtNC42MQ0KCWMwLDAsNC4yOS0yLjIzLDUuMjctNS4yYzAuNDktMS41LDAuMzktMi41MiwwLjAzLTMuMjJjLTAuOTEtMS43OC0zLjE4LTEuOTItNC45LTEuOTJoLTIuNzdWMzk3Ljl6Ii8+DQo8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMjk3LjQ0LDQ1Ny42MXYxNS42N2wxOS4zMi0xOC42Yy0wLjM3LTAuNTEtMC43MS0xLjA0LTEuMDMtMS41OUMzMTEuMDIsNDU0Ljc2LDMwMy40Myw0NTcuMTQsMjk3LjQ0LDQ1Ny42MSIvPg0KPHBhdGggY2xhc3M9InN0MSIgZD0iTTMxOS4xLDQ1Ny40N2wtMjEuNjcsMjEuMjZ2MjYuMDVsNDAuMDUtNDAuODljLTAuODUsMC4xLTEuNzIsMC4xNS0yLjYsMC4xNQ0KCUMzMjguNzIsNDY0LjA0LDMyMy4xNCw0NjEuNTMsMzE5LjEsNDU3LjQ3Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3QyIiBwb2ludHM9IjI5Ny40NCwzNDIuOTQgMjc3Ljg0LDM1MS4xMiAyNjkuMTYsMzY5LjU5IDI5Ny40NCwzNjkuNTkgIi8+DQo8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMjk3LjQ0LDM3OC4xN2wtMzAuNjksMC4wOGwtMjEsMTEuM2MxNy4yMywyLjA5LDMwLjM3LDMuNzMsNTEuNjksMy44MlYzNzguMTd6Ii8+DQo8Zz4NCgk8ZGVmcz4NCgkJPHBhdGggaWQ9IlNWR0lEXzFfIiBkPSJNMzQ2LjAzLDQ0MS44MmMtMC4wMiw2LjEzLTUsMTEuMDktMTEuMTQsMTEuMDljLTMuNywwLTYuOTctMS44LTktNC41OEwzNDYuMDMsNDQxLjgyeiBNMzM0Ljg5LDQzMC42NA0KCQkJYzQuNzcsMCw4Ljg0LDMsMTAuNDMsNy4yMmwtMjEuMTcsNi44NWMtMC4yNS0wLjkzLTAuMzktMS45Mi0wLjM5LTIuOTNDMzIzLjc1LDQzNS42MywzMjguNzQsNDMwLjY0LDMzNC44OSw0MzAuNjR6Ii8+DQoJPC9kZWZzPg0KCTxjbGlwUGF0aCBpZD0iU1ZHSURfMl8iPg0KCQk8dXNlIHhsaW5rOmhyZWY9IiNTVkdJRF8xXyIgIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlOyIvPg0KCTwvY2xpcFBhdGg+DQoJPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF8zXyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIzMzcuMDI4MSIgeTE9IjQ0Ni42NTkiIHgyPSIzMzIuMDM4MSIgeTI9IjQzNS4yNjkiPg0KCQk8c3RvcCAgb2Zmc2V0PSIwIiBzdHlsZT0ic3RvcC1jb2xvcjojRkUyQzA2Ii8+DQoJCTxzdG9wICBvZmZzZXQ9IjEiIHN0eWxlPSJzdG9wLWNvbG9yOiM4QTBBMUMiLz4NCgk8L2xpbmVhckdyYWRpZW50Pg0KCTxyZWN0IHg9IjMyMy43NSIgeT0iNDMwLjY0IiBjbGFzcz0ic3QzIiB3aWR0aD0iMjIuMjciIGhlaWdodD0iMjIuMjciLz4NCjwvZz4NCjxwYXRoIGNsYXNzPSJzdDQiIGQ9Ik0zMTQuMDksNDQ5LjcyYy03LjE3LDIuMzMtMTMuMzUsNC4wMy0xNi42Niw0LjE1Yy0zLjk1LTAuMTQtMTIuMDEtMi41NS0yMC45NC01LjU4DQoJYy0xLjcyLTIuMzMtMi41NC00LjMzLTIuNzgtNi44N2MtMC43Ni04LjMxLDUuMzktMTcuMzMsMTIuMTYtMjIuMzdjMy45MS0yLjkxLDcuNzMtNC4yMiwxMS41Ni00LjMxYzMuODQsMC4wOSw3LjY1LDEuNCwxMS41Niw0LjMxDQoJYzMuMTIsMi4zMiw2LjEsNS40OCw4LjM0LDkuMDNjLTIuOTUsMy43OC00LjcxLDguNTMtNC43MSwxMy42OUMzMTIuNjMsNDQ0LjU4LDMxMy4xNSw0NDcuMjUsMzE0LjA5LDQ0OS43MiBNMjcxLjE1LDQwMi44Ng0KCWM0LjA0LTEuMDEsOC40LTEuNDcsMTIuMDYsMC44M2MyLjUyLDEuNTgsMy43OCw0LjM0LDQuNzMsNy4wNWwtMi44OS0wLjRDMjg1LjA2LDQxMC4zMywyNzkuMjUsNDA1LjQ0LDI3MS4xNSw0MDIuODZ6DQoJIE0zMjMuNzIsNDAyLjg2Yy00LjA0LTEuMDEtOC40LTEuNDctMTIuMDYsMC44M2MtMi41MiwxLjU4LTMuNzgsNC4zNC00LjczLDcuMDVsMi44OS0wLjQNCglDMzA5LjgxLDQxMC4zMywzMTUuNjIsNDA1LjQ0LDMyMy43Miw0MDIuODZ6IE0zNTYuMjYsNDMxLjg1Yy0wLjM1LDAuMjctMC43MSwwLjU0LTEuMDYsMC44Yy0zLjQtNy41Ni0xMC45MS0xMi44Ny0xOS42OC0xMy4xMg0KCWMtMy4xNC04LjE3LTkuMDMtMTMuMzMtOS4wMy0xMy4zM3MxNC4yMiwyLjQ1LDIxLjk1LDEwLjc5QzM1My4xMyw0MjIuMDUsMzU1LjI5LDQyNy45OCwzNTYuMjYsNDMxLjg1eiBNMjM4LjYxLDQzMS44NQ0KCWM1LjM5LDQuMTcsMTEuMDcsNi44OSwyMC41NSwxMC4zM2MtMS4wOC0yLjc3LTIuNjMtOC40Ni0xLjQ1LTE2LjQ4YzEuNzItMTEuNjUsMTAuNjctMTkuNDksMTAuNjctMTkuNDlzLTE0LjIyLDIuNDUtMjEuOTUsMTAuNzkNCglDMjQxLjc0LDQyMi4wNSwyMzkuNTgsNDI3Ljk4LDIzOC42MSw0MzEuODV6IE0zMjguNzQsMzY2LjI0bDQuOCw5LjY5YzQuMjYtMi40NSwxMi4yNC01LjcyLDIwLjQyLTYuMTljLTAuMzEsNS43LTEsMTEuMTMtMy4yOCwxNi42DQoJbDguMDcsNC40MWMtMi44OSwxLjY4LTcuNSwyLjY0LTEwLjU0LDMuNDdsOC4zLDExLjRjMCwwLDYuNDEtMTIuMzQsNi45NC0yNS44NGMwLjUzLTEzLjUsMC4zNC0yMS4wMSwwLjM0LTIxLjAxDQoJUzM0My43NSwzNTcuNzgsMzI4Ljc0LDM2Ni4yNHogTTI2Ni4xMywzNjYuMjRsLTQuOCw5LjY5Yy00LjI2LTIuNDUtMTIuMjQtNS43Mi0yMC40Mi02LjE5YzAuMzEsNS43LDEsMTEuMTMsMy4yOCwxNi42bC04LjA3LDQuNDENCgljMi44OSwxLjY4LDcuNSwyLjY0LDEwLjU0LDMuNDdsLTguMywxMS40YzAsMC02LjQxLTEyLjM0LTYuOTQtMjUuODRjLTAuNTMtMTMuNS0wLjM0LTIxLjAxLTAuMzQtMjEuMDFTMjUxLjEyLDM1Ny43OCwyNjYuMTMsMzY2LjI0DQoJeiBNMzM5LjE1LDQzMS40OWMyLjg0LDEuMTgsNS4wOSwzLjQ5LDYuMTcsNi4zOGwtNy45MywyLjU3YzAuNDgtMS4xNywwLjk5LTIuNzIsMS4yNy00LjQ2DQoJQzMzOC45Nyw0MzQuMDYsMzM5LjEsNDMyLjUzLDMzOS4xNSw0MzEuNDl6IE0zMzQuODksNDI3LjQ4YzcuOSwwLDE0LjMsNi40LDE0LjMsMTQuM2MwLDcuOS02LjQsMTQuMy0xNC4zLDE0LjMNCgljLTcuOSwwLTE0LjMtNi40LTE0LjMtMTQuM0MzMjAuNTksNDMzLjg4LDMyNi45OSw0MjcuNDgsMzM0Ljg5LDQyNy40OHogTTMzNC44OSw0MjMuNDJjMTAuMTQsMCwxOC4zNiw4LjIyLDE4LjM2LDE4LjM2DQoJcy04LjIyLDE4LjM2LTE4LjM2LDE4LjM2Yy0xMC4xNCwwLTE4LjM2LTguMjItMTguMzYtMTguMzZTMzI0Ljc1LDQyMy40MiwzMzQuODksNDIzLjQyeiBNMzQ2LjU0LDQ2MC43NWwyLjcsMi45NQ0KCWMwLDAsMC42OC0xLjA4LDEuMjQtMS40OGMwLjU2LTAuNCwxLjc3LTAuNjQsMS43Ny0wLjY0bC0yLjYyLTMuMTFDMzQ5LjYyLDQ1OC40NiwzNDguMTgsNDYwLjAzLDM0Ni41NCw0NjAuNzV6IE0zNDguODksNDY3LjQ1DQoJbDEyLjY2LDE0LjkxYzAsMCwxLjc2LDAuODQsNC42MS0xLjJjMi44NS0yLjA1LDEuNjgtMy45MywxLjY4LTMuOTNsLTEyLjE0LTE0Ljc2TDM0OC44OSw0NjcuNDV6IE0zMjcuNjEsNDQwLjMzDQoJYzAsMCwxLjAyLTIuMzEsMi44MS0zLjkyYzEuMTgtMS4wNiwyLjE4LTEuMzMsMi44NS0xLjcxYzAuNzEtMC40LDEuMTctMS40OCwwLjg0LTIuMjFjLTAuMzItMC43Mi0xLjI1LTEuMDgtMi41MS0wLjY0DQoJYy0xLjc1LDAuNi0zLjUxLDEuNTItNS4wMSwzLjY4Yy0xLjUsMi4xNi0xLjQ3LDQuNTUtMS40Nyw0LjU1TDMyNy42MSw0NDAuMzN6IE0yOTcuNDQsNDI2LjFoMi43N2MxLjcyLDAsNCwwLjE0LDQuOSwxLjkyDQoJYzAuMzYsMC43MSwwLjQ2LDEuNzItMC4wMywzLjIyYy0wLjk3LDIuOTctNS4yNyw1LjItNS4yNyw1LjJ2NC42MWgzYzAsMCwxLjIxLDAuMTksMS4wMiwxLjc0Yy0wLjE5LDEuNTYtMC45NSwxLjc4LTAuOTUsMS43OGgtNS40NQ0KCWgtNS40NWMwLDAtMC43Ni0wLjIyLTAuOTUtMS43OGMtMC4xOS0xLjU2LDEuMDItMS43NCwxLjAyLTEuNzRoM3YtNC42MWMwLDAtNC4yOS0yLjIzLTUuMjctNS4yYy0wLjQ5LTEuNS0wLjM5LTIuNTItMC4wMy0zLjIyDQoJYzAuOTEtMS43OCwzLjE4LTEuOTIsNC45LTEuOTJIMjk3LjQ0eiBNMzI2LjQ1LDQ0MS4yMWMxLjAxLDAsMS44NCwwLjgyLDEuODQsMS44NHMtMC44MiwxLjg0LTEuODQsMS44NHMtMS44NC0wLjgyLTEuODQtMS44NA0KCVMzMjUuNDQsNDQxLjIxLDMyNi40NSw0NDEuMjF6Ii8+DQo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMjc3LjExLDQxOC44N2MyLjE5LDAsMy45Ni0xLjc3LDMuOTYtMy45NmMwLTIuMTktMS43Ny0zLjk2LTMuOTYtMy45NmMtMi4xOSwwLTMuOTYsMS43Ny0zLjk2LDMuOTYNCglDMjczLjE1LDQxNy4xLDI3NC45Myw0MTguODcsMjc3LjExLDQxOC44N3ogTTI5OS44MSw0MzYuNDRjMCwwLDQuMjktMi4yMyw1LjI3LTUuMmMwLjQ5LTEuNSwwLjM5LTIuNTIsMC4wMy0zLjIyDQoJYy0wLjkxLTEuNzgtMy4xOC0xLjkyLTQuOS0xLjkyaC0yLjc3aC0yLjc3Yy0xLjcyLDAtNCwwLjE0LTQuOSwxLjkyYy0wLjM2LDAuNzEtMC40NiwxLjcyLDAuMDMsMy4yMmMwLjk3LDIuOTcsNS4yNyw1LjIsNS4yNyw1LjINCgl2NC42MWgtM2MwLDAtMS4yMSwwLjE5LTEuMDIsMS43NGMwLjE5LDEuNTYsMC45NSwxLjc4LDAuOTUsMS43OGg1LjQ1aDUuNDVjMCwwLDAuNzYtMC4yMiwwLjk1LTEuNzhjMC4xOS0xLjU2LTEuMDItMS43NC0xLjAyLTEuNzQNCgloLTNWNDM2LjQ0eiBNMzEzLjgsNDE0LjkxYzAsMi4xOSwxLjc3LDMuOTYsMy45NiwzLjk2YzIuMTksMCwzLjk2LTEuNzcsMy45Ni0zLjk2YzAtMi4xOS0xLjc3LTMuOTYtMy45Ni0zLjk2DQoJQzMxNS41Nyw0MTAuOTUsMzEzLjgsNDEyLjczLDMxMy44LDQxNC45MXoiLz4NCjxwYXRoIGNsYXNzPSJzdDUiIGQ9Ik0yNzcuMTEsNDE4Ljg3YzIuMTksMCwzLjk2LTEuNzcsMy45Ni0zLjk2YzAtMi4xOS0xLjc3LTMuOTYtMy45Ni0zLjk2Yy0yLjE5LDAtMy45NiwxLjc3LTMuOTYsMy45Ng0KCUMyNzMuMTUsNDE3LjEsMjc0LjkzLDQxOC44NywyNzcuMTEsNDE4Ljg3eiBNMjk5LjgxLDQzNi40NGMwLDAsNC4yOS0yLjIzLDUuMjctNS4yYzAuNDktMS41LDAuMzktMi41MiwwLjAzLTMuMjINCgljLTAuOTEtMS43OC0zLjE4LTEuOTItNC45LTEuOTJoLTIuNzdoLTIuNzdjLTEuNzIsMC00LDAuMTQtNC45LDEuOTJjLTAuMzYsMC43MS0wLjQ2LDEuNzIsMC4wMywzLjIyYzAuOTcsMi45Nyw1LjI3LDUuMiw1LjI3LDUuMg0KCXY0LjYxaC0zYzAsMC0xLjIxLDAuMTktMS4wMiwxLjc0YzAuMTksMS41NiwwLjk1LDEuNzgsMC45NSwxLjc4aDUuNDVoNS40NWMwLDAsMC43Ni0wLjIyLDAuOTUtMS43OGMwLjE5LTEuNTYtMS4wMi0xLjc0LTEuMDItMS43NA0KCWgtM1Y0MzYuNDR6IE0zMTMuOCw0MTQuOTFjMCwyLjE5LDEuNzcsMy45NiwzLjk2LDMuOTZjMi4xOSwwLDMuOTYtMS43NywzLjk2LTMuOTZjMC0yLjE5LTEuNzctMy45Ni0zLjk2LTMuOTYNCglDMzE1LjU3LDQxMC45NSwzMTMuOCw0MTIuNzMsMzEzLjgsNDE0LjkxeiIvPg0KPC9zdmc+DQo="
+              alt=""
+              aria-hidden="true"
+            />
+            <span class="brand-name">Promptfoo</span>
+          </div>
+          <h1 id="report-title">
+            PR description generator — structure, branch logic and grounding
+          </h1>
+          <ul class="meta-list" aria-label="Report metadata">
+            <li>Exported 2026-11-05T00:06:33.707Z</li>
+            
+            <li>Evaluated 2026-11-05T00:05:38.826Z</li>
+             
+          </ul>
+        </div>
+
+        <div class="metric-grid" aria-label="Evaluation summary">
+          <article class="metric">
+            <p class="metric-label">Total Results</p>
+            <p class="metric-value">5</p>
+          </article>
+          <article class="metric pass">
+            <p class="metric-label">Pass Rate</p>
+            <p class="metric-value">80.0%</p>
+          </article>
+          <article class="metric pass">
+            <p class="metric-label">Passed</p>
+            <p class="metric-value">4</p>
+          </article>
+          <article class="metric fail">
+            <p class="metric-label">Failed</p>
+            <p class="metric-value">1</p>
+          </article>
+          <article class="metric error">
+            <p class="metric-label">Errors</p>
+            <p class="metric-value">0</p>
+          </article>
+          <article class="metric">
+            <p class="metric-label">Prompts</p>
+            <p class="metric-value">1</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="report-panel" aria-labelledby="results-heading">
+        <h2 id="results-heading" class="sr-only">Evaluation results</h2>
+        <div class="toolbar">
+          <div class="toolbar-controls">
+            <div class="control">
+              <label for="report-search">Search</label>
+              <input
+                id="report-search"
+                data-report-search
+                type="search"
+                placeholder="Search rows, outputs, or variables"
+                autocomplete="off"
+              />
+            </div>
+            <div class="control">
+              <label for="status-filter">Status</label>
+              <select id="status-filter" data-status-filter>
+                <option value="all">All results</option>
+                <option value="pass">Fully passing rows</option>
+                <option value="fail">Rows with failures</option>
+                <option value="error">Rows with errors</option>
+              </select>
+            </div>
+          </div>
+          <div class="toolbar-summary" aria-live="polite">
+            <span data-visible-count>5</span>&nbsp;of 5
+            rows shown
+          </div>
+        </div>
+
+        <div class="table-shell">
+          <table data-results-table>
+            <caption class="sr-only">
+              Promptfoo evaluation results table
+            </caption>
+            <thead>
+              <tr>
+                
+                <th scope="col">story</th>
+                
+                <th scope="col">diff</th>
+                
+                <th scope="col">expected_types</th>
+                
+                <th scope="col">forbidden_types</th>
+                
+                <th scope="col">expected_migration</th>
+                
+                <th scope="col">expected_sql_token</th>
+                
+                <th scope="col">must_mention</th>
+                
+                <th scope="col">must_not_mention</th>
+                
+                <th scope="col">allowed_paths</th>
+                
+                <th scope="col">max_words</th>
+                
+                <th scope="col">[Devin SWE-1.7] pr-description&#92;prompts&#92;v4-refactor.md: ## Task
+
+Fill out every PR description field below...</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr data-result-row>
+                 
+                <td
+                  data-search="file://fixtures&#92;01-feature-migration&#92;story.md"
+                  data-variable-name="story"
+                >
+                  <div class="cell-content variable-text">file://fixtures&#92;01-feature-migration&#92;story.md</div>
+                </td>
+                  
+                <td
+                  data-search="file://fixtures&#92;01-feature-migration&#92;diff.patch"
+                  data-variable-name="diff"
+                >
+                  <div class="cell-content variable-text">file://fixtures&#92;01-feature-migration&#92;diff.patch</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;New feature&quot;]"
+                  data-variable-name="expected_types"
+                >
+                  <div class="cell-content variable-text">[&quot;New feature&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;Bug fix&quot;,&quot;Refactoring&quot;,&quot;Breaking change&quot;,&quot;Configuration change&quot;]"
+                  data-variable-name="forbidden_types"
+                >
+                  <div class="cell-content variable-text">[&quot;Bug fix&quot;,&quot;Refactoring&quot;,&quot;Breaking change&quot;,&quot;Configuration change&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="yes"
+                  data-variable-name="expected_migration"
+                >
+                  <div class="cell-content variable-text">yes</div>
+                </td>
+                  
+                <td
+                  data-search="ALTER TABLE"
+                  data-variable-name="expected_sql_token"
+                >
+                  <div class="cell-content variable-text">ALTER TABLE</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;UpdateOrderStatusRequest&quot;,&quot;PATCH&quot;,&quot;StatusUpdatedAt&quot;]"
+                  data-variable-name="must_mention"
+                >
+                  <div class="cell-content variable-text">[&quot;UpdateOrderStatusRequest&quot;,&quot;PATCH&quot;,&quot;StatusUpdatedAt&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;Redis&quot;,&quot;Kafka&quot;,&quot;Dockerfile&quot;,&quot;appsettings.json&quot;]"
+                  data-variable-name="must_not_mention"
+                >
+                  <div class="cell-content variable-text">[&quot;Redis&quot;,&quot;Kafka&quot;,&quot;Dockerfile&quot;,&quot;appsettings.json&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;OrdersController.cs&quot;,&quot;UpdateOrderStatusRequest.cs&quot;,&quot;OrderService.cs&quot;,&quot;20261101_add_status_updated_at.sql&quot;,&quot;OrdersControllerTests.cs&quot;]"
+                  data-variable-name="allowed_paths"
+                >
+                  <div class="cell-content variable-text">[&quot;OrdersController.cs&quot;,&quot;UpdateOrderStatusRequest.cs&quot;,&quot;OrderService.cs&quot;,&quot;20261101_add_status_updated_at.sql&quot;,&quot;OrdersControllerTests.cs&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="60"
+                  data-variable-name="max_words"
+                >
+                  <div class="cell-content variable-text">60</div>
+                </td>
+                  
+                <td
+                  data-output-cell="true"
+                  data-status="pass"
+                  data-search="PASS 1.00 ### What is this change?
+
+Adds a Support-role-protected PATCH endpoint that lets support agents set an order&#39;s status to Shipped from the order detail page, recording the update timestamp.
+
+### Type of change?
+
+- New feature (non-breaking change which adds functionality)
+
+### Why?
+
+Support currently handles roughly 400 order status updates per week over email. Each hand-off takes 20–40 minutes and sometimes gets lost between inboxes. Letting agents with the Support role update the status directly from the order detail page removes most of that manual work and reduces the delay between dispatch and the customer seeing &quot;Shipped&quot; from hours to minutes.
+
+### How?
+
+- Added a `PATCH {id}/status` endpoint to `OrdersController` with `[Authorize(Roles = &quot;Support&quot;)]` and a new `UpdateOrderStatusRequest` DTO.
+- Added `UpdateStatusAsync` to `OrderService`, which sets the order `Status`, sets `StatusUpdatedAt` to `DateTime.UtcNow`, and persists the change.
+- Added a database migration to add the `StatusUpdatedAt` column to the `Orders` table.
+- Added a controller test verifying the endpoint returns 204 No Content when the order exists.
+
+### Requires Manual Database Migration?
+
+Yes.
+
+```sql
+ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;
+GO
+```
+
+### Anything Else?
+
+The endpoint returns 404 when the order does not exist. The `StatusUpdatedAt` column is nullable, so existing rows will not have a value until their status is updated. The request DTO restricts `Status` to `Pending`, `Shipped`, `Delivered`, or `Cancelled`. All assertions passed "
+                >
+                  <div class="cell-content output-cell">
+                    <div class="output-meta">
+                      <span class="status-pill pass"
+                        >PASS</span
+                      >
+                      <span class="score-pill">Score 1.00</span>
+                      
+                      <span class="named-score-pill"
+                        >structure 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >conciseness 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >type-of-change 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >migration-decision 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >grounding 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >why-business 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >how-actionable 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >no-invention 1.00</span
+                      >
+                      
+                    </div>
+                    <div class="output-section">
+                      <span class="output-section-label">Output</span>
+                      <div class="output-text">### What is this change?
+
+Adds a Support-role-protected PATCH endpoint that lets support agents set an order&#39;s status to Shipped from the order detail page, recording the update timestamp.
+
+### Type of change?
+
+- New feature (non-breaking change which adds functionality)
+
+### Why?
+
+Support currently handles roughly 400 order status updates per week over email. Each hand-off takes 20–40 minutes and sometimes gets lost between inboxes. Letting agents with the Support role update the status directly from the order detail page removes most of that manual work and reduces the delay between dispatch and the customer seeing &quot;Shipped&quot; from hours to minutes.
+
+### How?
+
+- Added a `PATCH {id}/status` endpoint to `OrdersController` with `[Authorize(Roles = &quot;Support&quot;)]` and a new `UpdateOrderStatusRequest` DTO.
+- Added `UpdateStatusAsync` to `OrderService`, which sets the order `Status`, sets `StatusUpdatedAt` to `DateTime.UtcNow`, and persists the change.
+- Added a database migration to add the `StatusUpdatedAt` column to the `Orders` table.
+- Added a controller test verifying the endpoint returns 204 No Content when the order exists.
+
+### Requires Manual Database Migration?
+
+Yes.
+
+```sql
+ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;
+GO
+```
+
+### Anything Else?
+
+The endpoint returns 404 when the order does not exist. The `StatusUpdatedAt` column is nullable, so existing rows will not have a value until their status is updated. The request DTO restricts `Status` to `Pending`, `Shipped`, `Delivered`, or `Cancelled`.</div>
+                    </div>
+                    
+                    <div class="output-section">
+                      <span class="output-section-label">Reason</span>
+                      <p class="output-reason">All assertions passed</p>
+                    </div>
+                    
+                    <div>
+                      <button
+                        type="button"
+                        class="detail-button"
+                        data-open-detail
+                        data-detail-target="result-detail-0-0"
+                      >
+                        View detail
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                 
+              </tr>
+              
+              <tr data-result-row>
+                 
+                <td
+                  data-search="file://fixtures&#92;02-bugfix-null&#92;story.md"
+                  data-variable-name="story"
+                >
+                  <div class="cell-content variable-text">file://fixtures&#92;02-bugfix-null&#92;story.md</div>
+                </td>
+                  
+                <td
+                  data-search="file://fixtures&#92;02-bugfix-null&#92;diff.patch"
+                  data-variable-name="diff"
+                >
+                  <div class="cell-content variable-text">file://fixtures&#92;02-bugfix-null&#92;diff.patch</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;Bug fix&quot;]"
+                  data-variable-name="expected_types"
+                >
+                  <div class="cell-content variable-text">[&quot;Bug fix&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;New feature&quot;,&quot;Refactoring&quot;,&quot;Breaking change&quot;,&quot;Configuration change&quot;]"
+                  data-variable-name="forbidden_types"
+                >
+                  <div class="cell-content variable-text">[&quot;New feature&quot;,&quot;Refactoring&quot;,&quot;Breaking change&quot;,&quot;Configuration change&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="no"
+                  data-variable-name="expected_migration"
+                >
+                  <div class="cell-content variable-text">no</div>
+                </td>
+                  
+                <td
+                  data-search=""
+                  data-variable-name="expected_sql_token"
+                >
+                  <div class="cell-content variable-text"></div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;GetTotal&quot;,&quot;discount&quot;,&quot;null&quot;]"
+                  data-variable-name="must_mention"
+                >
+                  <div class="cell-content variable-text">[&quot;GetTotal&quot;,&quot;discount&quot;,&quot;null&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;PATCH&quot;,&quot;ALTER TABLE&quot;,&quot;sp_rename&quot;,&quot;Redis&quot;]"
+                  data-variable-name="must_not_mention"
+                >
+                  <div class="cell-content variable-text">[&quot;PATCH&quot;,&quot;ALTER TABLE&quot;,&quot;sp_rename&quot;,&quot;Redis&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;OrderService.cs&quot;,&quot;OrderServiceTests.cs&quot;]"
+                  data-variable-name="allowed_paths"
+                >
+                  <div class="cell-content variable-text">[&quot;OrderService.cs&quot;,&quot;OrderServiceTests.cs&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="60"
+                  data-variable-name="max_words"
+                >
+                  <div class="cell-content variable-text">60</div>
+                </td>
+                  
+                <td
+                  data-output-cell="true"
+                  data-status="pass"
+                  data-search="PASS 1.00 ### What is this change?
+
+Fixes a null reference in `OrderService.GetTotal` so checkout completes for orders without a discount, keeping the order total unchanged for shoppers.
+
+### Type of change?
+
+- Bug fix (non-breaking change which fixes an issue)
+
+### Why?
+
+2.1% of checkouts failed last week, affecting about 180 orders. All failed checkouts had an empty discount record, forcing support to recreate orders manually and causing customers to abandon their carts instead of retrying.
+
+### How?
+
+- Updated `OrderService.GetTotal` to use the null-conditional operator (`?.`) with a null-coalescing fallback (`?? 0m`) when reading `order.Discount.Percentage`, so a missing discount defaults to `0%` instead of throwing.
+- Added a new unit test `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` in `OrderServiceTests` that verifies the total equals the subtotal when `Discount` is `null`.
+
+### Requires Manual Database Migration?
+
+No
+
+### Anything Else?
+
+Backwards compatible: orders with a discount still use the configured percentage, and orders with a null discount now default to 0%. No consumer changes required. All assertions passed "
+                >
+                  <div class="cell-content output-cell">
+                    <div class="output-meta">
+                      <span class="status-pill pass"
+                        >PASS</span
+                      >
+                      <span class="score-pill">Score 1.00</span>
+                      
+                      <span class="named-score-pill"
+                        >structure 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >conciseness 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >type-of-change 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >migration-decision 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >grounding 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >why-business 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >how-actionable 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >no-invention 1.00</span
+                      >
+                      
+                    </div>
+                    <div class="output-section">
+                      <span class="output-section-label">Output</span>
+                      <div class="output-text">### What is this change?
+
+Fixes a null reference in `OrderService.GetTotal` so checkout completes for orders without a discount, keeping the order total unchanged for shoppers.
+
+### Type of change?
+
+- Bug fix (non-breaking change which fixes an issue)
+
+### Why?
+
+2.1% of checkouts failed last week, affecting about 180 orders. All failed checkouts had an empty discount record, forcing support to recreate orders manually and causing customers to abandon their carts instead of retrying.
+
+### How?
+
+- Updated `OrderService.GetTotal` to use the null-conditional operator (`?.`) with a null-coalescing fallback (`?? 0m`) when reading `order.Discount.Percentage`, so a missing discount defaults to `0%` instead of throwing.
+- Added a new unit test `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` in `OrderServiceTests` that verifies the total equals the subtotal when `Discount` is `null`.
+
+### Requires Manual Database Migration?
+
+No
+
+### Anything Else?
+
+Backwards compatible: orders with a discount still use the configured percentage, and orders with a null discount now default to 0%. No consumer changes required.</div>
+                    </div>
+                    
+                    <div class="output-section">
+                      <span class="output-section-label">Reason</span>
+                      <p class="output-reason">All assertions passed</p>
+                    </div>
+                    
+                    <div>
+                      <button
+                        type="button"
+                        class="detail-button"
+                        data-open-detail
+                        data-detail-target="result-detail-1-0"
+                      >
+                        View detail
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                 
+              </tr>
+              
+              <tr data-result-row>
+                 
+                <td
+                  data-search="file://fixtures&#92;03-refactor&#92;story.md"
+                  data-variable-name="story"
+                >
+                  <div class="cell-content variable-text">file://fixtures&#92;03-refactor&#92;story.md</div>
+                </td>
+                  
+                <td
+                  data-search="file://fixtures&#92;03-refactor&#92;diff.patch"
+                  data-variable-name="diff"
+                >
+                  <div class="cell-content variable-text">file://fixtures&#92;03-refactor&#92;diff.patch</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;Refactoring&quot;]"
+                  data-variable-name="expected_types"
+                >
+                  <div class="cell-content variable-text">[&quot;Refactoring&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;New feature&quot;,&quot;Bug fix&quot;,&quot;Breaking change&quot;,&quot;Configuration change&quot;]"
+                  data-variable-name="forbidden_types"
+                >
+                  <div class="cell-content variable-text">[&quot;New feature&quot;,&quot;Bug fix&quot;,&quot;Breaking change&quot;,&quot;Configuration change&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="no"
+                  data-variable-name="expected_migration"
+                >
+                  <div class="cell-content variable-text">no</div>
+                </td>
+                  
+                <td
+                  data-search=""
+                  data-variable-name="expected_sql_token"
+                >
+                  <div class="cell-content variable-text"></div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;PriceCalculator&quot;,&quot;OrderService&quot;]"
+                  data-variable-name="must_mention"
+                >
+                  <div class="cell-content variable-text">[&quot;PriceCalculator&quot;,&quot;OrderService&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;Redis&quot;,&quot;Kafka&quot;,&quot;Dockerfile&quot;]"
+                  data-variable-name="must_not_mention"
+                >
+                  <div class="cell-content variable-text">[&quot;Redis&quot;,&quot;Kafka&quot;,&quot;Dockerfile&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;PriceCalculator.cs&quot;,&quot;OrderService.cs&quot;,&quot;OrderServiceTests.cs&quot;]"
+                  data-variable-name="allowed_paths"
+                >
+                  <div class="cell-content variable-text">[&quot;PriceCalculator.cs&quot;,&quot;OrderService.cs&quot;,&quot;OrderServiceTests.cs&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="60"
+                  data-variable-name="max_words"
+                >
+                  <div class="cell-content variable-text">60</div>
+                </td>
+                  
+                <td
+                  data-output-cell="true"
+                  data-status="pass"
+                  data-search="PASS 1.00 ### What is this change?
+Extracts order pricing rules from `OrderService` into a dedicated `PriceCalculator` class for the pricing team, simplifying future pricing changes and reducing the size of `OrderService`.
+
+### Type of change?
+- Refactoring (changes to existing code which neither adds nor changes functionality)
+
+### Why?
+`OrderService` has grown to 1,400 lines and every pricing change touches it. Extracting the pricing calculation into its own class lets the pricing team change rules without going through order orchestration, and shortens review time for those changes.
+
+### How?
+- Added a new `PriceCalculator` class in `src/Application/Orders/PriceCalculator.cs` with `Subtotal`, `DiscountAmount`, and `Total` methods.
+- Updated `OrderService` to use a private `PriceCalculator` instance and delegate `GetTotal` to `_pricing.Total(order)`.
+- Added a new unit test `GetTotal_MatchesPriceCalculator_ForDiscountedOrder` verifying that `OrderService.GetTotal` matches `PriceCalculator.Total` for a discounted order.
+
+### Requires Manual Database Migration?
+No
+
+### Anything Else?
+No public API or behavior changes; `PriceCalculator` is an internal implementation detail. The new test confirms `OrderService.GetTotal` still matches `PriceCalculator.Total` for discounted orders, guarding against regressions. All assertions passed "
+                >
+                  <div class="cell-content output-cell">
+                    <div class="output-meta">
+                      <span class="status-pill pass"
+                        >PASS</span
+                      >
+                      <span class="score-pill">Score 1.00</span>
+                      
+                      <span class="named-score-pill"
+                        >structure 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >conciseness 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >type-of-change 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >migration-decision 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >grounding 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >why-business 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >how-actionable 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >no-invention 1.00</span
+                      >
+                      
+                    </div>
+                    <div class="output-section">
+                      <span class="output-section-label">Output</span>
+                      <div class="output-text">### What is this change?
+Extracts order pricing rules from `OrderService` into a dedicated `PriceCalculator` class for the pricing team, simplifying future pricing changes and reducing the size of `OrderService`.
+
+### Type of change?
+- Refactoring (changes to existing code which neither adds nor changes functionality)
+
+### Why?
+`OrderService` has grown to 1,400 lines and every pricing change touches it. Extracting the pricing calculation into its own class lets the pricing team change rules without going through order orchestration, and shortens review time for those changes.
+
+### How?
+- Added a new `PriceCalculator` class in `src/Application/Orders/PriceCalculator.cs` with `Subtotal`, `DiscountAmount`, and `Total` methods.
+- Updated `OrderService` to use a private `PriceCalculator` instance and delegate `GetTotal` to `_pricing.Total(order)`.
+- Added a new unit test `GetTotal_MatchesPriceCalculator_ForDiscountedOrder` verifying that `OrderService.GetTotal` matches `PriceCalculator.Total` for a discounted order.
+
+### Requires Manual Database Migration?
+No
+
+### Anything Else?
+No public API or behavior changes; `PriceCalculator` is an internal implementation detail. The new test confirms `OrderService.GetTotal` still matches `PriceCalculator.Total` for discounted orders, guarding against regressions.</div>
+                    </div>
+                    
+                    <div class="output-section">
+                      <span class="output-section-label">Reason</span>
+                      <p class="output-reason">All assertions passed</p>
+                    </div>
+                    
+                    <div>
+                      <button
+                        type="button"
+                        class="detail-button"
+                        data-open-detail
+                        data-detail-target="result-detail-2-0"
+                      >
+                        View detail
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                 
+              </tr>
+              
+              <tr data-result-row>
+                 
+                <td
+                  data-search="file://fixtures&#92;04-breaking-change&#92;story.md"
+                  data-variable-name="story"
+                >
+                  <div class="cell-content variable-text">file://fixtures&#92;04-breaking-change&#92;story.md</div>
+                </td>
+                  
+                <td
+                  data-search="file://fixtures&#92;04-breaking-change&#92;diff.patch"
+                  data-variable-name="diff"
+                >
+                  <div class="cell-content variable-text">file://fixtures&#92;04-breaking-change&#92;diff.patch</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;Breaking change&quot;]"
+                  data-variable-name="expected_types"
+                >
+                  <div class="cell-content variable-text">[&quot;Breaking change&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;Bug fix&quot;,&quot;New feature&quot;,&quot;Refactoring&quot;,&quot;Configuration change&quot;]"
+                  data-variable-name="forbidden_types"
+                >
+                  <div class="cell-content variable-text">[&quot;Bug fix&quot;,&quot;New feature&quot;,&quot;Refactoring&quot;,&quot;Configuration change&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="yes"
+                  data-variable-name="expected_migration"
+                >
+                  <div class="cell-content variable-text">yes</div>
+                </td>
+                  
+                <td
+                  data-search="sp_rename"
+                  data-variable-name="expected_sql_token"
+                >
+                  <div class="cell-content variable-text">sp_rename</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;customerFullName&quot;,&quot;customerName&quot;]"
+                  data-variable-name="must_mention"
+                >
+                  <div class="cell-content variable-text">[&quot;customerFullName&quot;,&quot;customerName&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;Redis&quot;,&quot;Kafka&quot;,&quot;Dockerfile&quot;]"
+                  data-variable-name="must_not_mention"
+                >
+                  <div class="cell-content variable-text">[&quot;Redis&quot;,&quot;Kafka&quot;,&quot;Dockerfile&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;OrderDto.cs&quot;,&quot;OrderMapper.cs&quot;,&quot;20261103_rename_customer_name.sql&quot;,&quot;OrderMapperTests.cs&quot;]"
+                  data-variable-name="allowed_paths"
+                >
+                  <div class="cell-content variable-text">[&quot;OrderDto.cs&quot;,&quot;OrderMapper.cs&quot;,&quot;20261103_rename_customer_name.sql&quot;,&quot;OrderMapperTests.cs&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search="60"
+                  data-variable-name="max_words"
+                >
+                  <div class="cell-content variable-text">60</div>
+                </td>
+                  
+                <td
+                  data-output-cell="true"
+                  data-status="fail"
+                  data-search="FAIL 0.94 ### What is this change?
+
+Renames the order API&#39;s `customerName` field to `customerFullName` and renames the matching database column, making the API contract clearer for consumers.
+
+### Type of change?
+
+- Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- This change requires a documentation update
+
+### Why?
+
+The field returns the customer&#39;s first and last name concatenated, but its current name suggests only the first name. Two partner integrations already misread it and displayed the wrong value to their users; renaming now prevents more bad data downstream.
+
+### How?
+
+- DTO: `OrderDto` parameter `CustomerName` is renamed to `CustomerFullName`.
+- Mapping: `OrderMapper` now maps the full name to `CustomerFullName`.
+- Database: a migration script renames the `Orders.CustomerName` column to `CustomerFullName`.
+- Tests: `OrderMapperTests` assert on `CustomerFullName`.
+- No entity, controller, service, or repository changes are present in the diff.
+
+### Requires Manual Database Migration?
+
+Yes
+
+```
+EXEC sp_rename &#39;Orders.CustomerName&#39;, &#39;CustomerFullName&#39;, &#39;COLUMN&#39;;
+```
+
+### Anything Else?
+
+This is a breaking API and database schema change. Consumers must update integrations to read `customerFullName` instead of `customerName`. Existing integrations have been informed of the rename, and the documentation should be updated to reflect the new field name. The final &quot;How?&quot; bullet describes an absence of changes rather than a concrete change in the diff, so not every bullet names a present concrete change. The final &quot;How?&quot; bullet describes an absence of changes rather than a concrete change in the diff, so not every bullet names a present concrete change."
+                >
+                  <div class="cell-content output-cell">
+                    <div class="output-meta">
+                      <span class="status-pill fail"
+                        >FAIL</span
+                      >
+                      <span class="score-pill">Score 0.94</span>
+                      
+                      <span class="named-score-pill"
+                        >structure 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >conciseness 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >type-of-change 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >migration-decision 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >grounding 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >backwards-compat 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >why-business 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >how-actionable 0.50</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >no-invention 1.00</span
+                      >
+                      
+                    </div>
+                    <div class="output-section">
+                      <span class="output-section-label">Output</span>
+                      <div class="output-text">### What is this change?
+
+Renames the order API&#39;s `customerName` field to `customerFullName` and renames the matching database column, making the API contract clearer for consumers.
+
+### Type of change?
+
+- Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- This change requires a documentation update
+
+### Why?
+
+The field returns the customer&#39;s first and last name concatenated, but its current name suggests only the first name. Two partner integrations already misread it and displayed the wrong value to their users; renaming now prevents more bad data downstream.
+
+### How?
+
+- DTO: `OrderDto` parameter `CustomerName` is renamed to `CustomerFullName`.
+- Mapping: `OrderMapper` now maps the full name to `CustomerFullName`.
+- Database: a migration script renames the `Orders.CustomerName` column to `CustomerFullName`.
+- Tests: `OrderMapperTests` assert on `CustomerFullName`.
+- No entity, controller, service, or repository changes are present in the diff.
+
+### Requires Manual Database Migration?
+
+Yes
+
+```
+EXEC sp_rename &#39;Orders.CustomerName&#39;, &#39;CustomerFullName&#39;, &#39;COLUMN&#39;;
+```
+
+### Anything Else?
+
+This is a breaking API and database schema change. Consumers must update integrations to read `customerFullName` instead of `customerName`. Existing integrations have been informed of the rename, and the documentation should be updated to reflect the new field name.</div>
+                    </div>
+                    
+                    <div class="output-section">
+                      <span class="output-section-label">Reason</span>
+                      <p class="output-reason">The final &quot;How?&quot; bullet describes an absence of changes rather than a concrete change in the diff, so not every bullet names a present concrete change.</p>
+                    </div>
+                    
+                    <div>
+                      <button
+                        type="button"
+                        class="detail-button"
+                        data-open-detail
+                        data-detail-target="result-detail-3-0"
+                      >
+                        View detail
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                 
+              </tr>
+              
+              <tr data-result-row>
+                 
+                <td
+                  data-search=""
+                  data-variable-name="story"
+                >
+                  <div class="cell-content variable-text"></div>
+                </td>
+                  
+                <td
+                  data-search="file://fixtures&#92;05-no-story&#92;diff.patch"
+                  data-variable-name="diff"
+                >
+                  <div class="cell-content variable-text">file://fixtures&#92;05-no-story&#92;diff.patch</div>
+                </td>
+                  
+                <td
+                  data-search=""
+                  data-variable-name="expected_types"
+                >
+                  <div class="cell-content variable-text"></div>
+                </td>
+                  
+                <td
+                  data-search=""
+                  data-variable-name="forbidden_types"
+                >
+                  <div class="cell-content variable-text"></div>
+                </td>
+                  
+                <td
+                  data-search=""
+                  data-variable-name="expected_migration"
+                >
+                  <div class="cell-content variable-text"></div>
+                </td>
+                  
+                <td
+                  data-search=""
+                  data-variable-name="expected_sql_token"
+                >
+                  <div class="cell-content variable-text"></div>
+                </td>
+                  
+                <td
+                  data-search="[]"
+                  data-variable-name="must_mention"
+                >
+                  <div class="cell-content variable-text">[]</div>
+                </td>
+                  
+                <td
+                  data-search="[]"
+                  data-variable-name="must_not_mention"
+                >
+                  <div class="cell-content variable-text">[]</div>
+                </td>
+                  
+                <td
+                  data-search="[&quot;OrderService.cs&quot;,&quot;OrderServiceTests.cs&quot;]"
+                  data-variable-name="allowed_paths"
+                >
+                  <div class="cell-content variable-text">[&quot;OrderService.cs&quot;,&quot;OrderServiceTests.cs&quot;]</div>
+                </td>
+                  
+                <td
+                  data-search=""
+                  data-variable-name="max_words"
+                >
+                  <div class="cell-content variable-text"></div>
+                </td>
+                  
+                <td
+                  data-output-cell="true"
+                  data-status="pass"
+                  data-search="PASS 1.00 The User Story is missing. Please provide the User Story so I can complete the PR description. All assertions passed "
+                >
+                  <div class="cell-content output-cell">
+                    <div class="output-meta">
+                      <span class="status-pill pass"
+                        >PASS</span
+                      >
+                      <span class="score-pill">Score 1.00</span>
+                      
+                      <span class="named-score-pill"
+                        >missing-story 1.00</span
+                      >
+                      
+                      <span class="named-score-pill"
+                        >asks-for-story 1.00</span
+                      >
+                      
+                    </div>
+                    <div class="output-section">
+                      <span class="output-section-label">Output</span>
+                      <div class="output-text">The User Story is missing. Please provide the User Story so I can complete the PR description.</div>
+                    </div>
+                    
+                    <div class="output-section">
+                      <span class="output-section-label">Reason</span>
+                      <p class="output-reason">All assertions passed</p>
+                    </div>
+                    
+                    <div>
+                      <button
+                        type="button"
+                        class="detail-button"
+                        data-open-detail
+                        data-detail-target="result-detail-4-0"
+                      >
+                        View detail
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                 
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+        <p class="empty-state" data-empty-state>
+          No rows match the current search and status filters.
+        </p>
+      </section>
+    </main>
+
+    <div class="detail-backdrop" data-detail-backdrop hidden></div>
+    <aside
+      class="detail-drawer"
+      data-detail-drawer
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="detail-drawer-title"
+      hidden
+    >
+      <header class="detail-header">
+        <div class="detail-heading">
+          <h2 class="detail-title" id="detail-drawer-title" data-detail-title>Result detail</h2>
+        </div>
+        <button
+          type="button"
+          class="detail-close"
+          data-detail-close
+          aria-label="Close result detail"
+        >
+          <span class="detail-close-icon" aria-hidden="true"></span>
+        </button>
+      </header>
+      <div class="detail-body" data-detail-body></div>
+    </aside>
+
+                          
+    <template
+      id="result-detail-0-0"
+      data-detail-heading="Result detail - row 1, prompt 1"
+    >
+      <article class="detail-content" data-detail-template>
+        <div class="detail-summary">
+          <span class="status-pill pass"
+            >PASS</span
+          >
+          <span class="score-pill">Score 1.00</span>
+          
+          <span class="named-score-pill"
+            >structure 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >conciseness 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >type-of-change 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >migration-decision 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >grounding 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >why-business 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >how-actionable 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >no-invention 1.00</span
+          >
+          
+        </div>
+
+        <div class="detail-metrics">
+          
+          <div class="detail-metric">
+            <span class="detail-metric-label">Provider</span>
+            <span class="detail-metric-value">Devin SWE-1.7</span>
+          </div>
+           
+          <div class="detail-metric">
+            <span class="detail-metric-label">Latency</span>
+            <span class="detail-metric-value">8147 ms</span>
+          </div>
+            
+          <div class="detail-metric">
+            <span class="detail-metric-label">Tokens</span>
+            <span class="detail-metric-value">0</span>
+          </div>
+          
+        </div>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Test</span>
+          <p class="detail-copy">01 feature + migration — new PATCH endpoint with a SQL script</p>
+        </section>
+         
+        <section class="detail-section">
+          <span class="detail-section-title">Prompt</span>
+          <p class="detail-copy">## Task
+
+Fill out every PR description field below, in English, using only the User Story and the code diff provided.
+
+If the User Story is missing or empty, ask the user to provide it and output nothing else.
+
+## Context
+
+- The diff below is the only source of truth about the code change. Do not read files from the workspace.
+- Base every statement on the diff. Do not describe changes that are not in the diff.
+- The business reason comes from the User Story, not from the code.
+
+## Input
+
+### User Story
+
+# US-4127 — Update order status from the order detail page
+
+## User story
+
+As a customer support agent, I want to set an order&#39;s status to &quot;Shipped&quot; from the order detail page, so that I stop emailing the logistics team for every update.
+
+## Business context
+
+Support handles roughly 400 status updates per week over email. Each hand-off takes 20–40 minutes and sometimes gets lost between inboxes. Letting agents update the status directly should remove most of that manual work and cut the delay between dispatch and the customer seeing &quot;Shipped&quot; from hours to minutes.
+
+## Acceptance criteria
+
+- An agent with the Support role can change an order&#39;s status to Shipped from the order detail page.
+- The change records the timestamp of the status update.
+- The endpoint rejects requests from users without the Support role.
+
+### Code diff
+
+diff --git a/src/Api/Controllers/OrdersController.cs b/src/Api/Controllers/OrdersController.cs
+index 4a1c9f2..b7e3d10 100644
+--- a/src/Api/Controllers/OrdersController.cs
++++ b/src/Api/Controllers/OrdersController.cs
+@@ -28,6 +28,17 @@ public sealed class OrdersController : ControllerBase
+         return Ok(order);
+     }
+ 
++    [HttpPatch(&quot;{id:int}/status&quot;)]
++    [Authorize(Roles = &quot;Support&quot;)]
++    public async Task&lt;IActionResult&gt; UpdateStatus(int id, [FromBody] UpdateOrderStatusRequest request)
++    {
++        var updated = await _orderService.UpdateStatusAsync(id, request.Status, HttpContext.RequestAborted);
++        return updated ? NoContent() : NotFound();
++    }
++
+     [HttpDelete(&quot;{id:int}&quot;)]
+     [Authorize(Roles = &quot;Admin&quot;)]
+     public async Task&lt;IActionResult&gt; Delete(int id)
+diff --git a/src/Api/Dtos/UpdateOrderStatusRequest.cs b/src/Api/Dtos/UpdateOrderStatusRequest.cs
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/src/Api/Dtos/UpdateOrderStatusRequest.cs
+@@ -0,0 +1,8 @@
++using System.ComponentModel.DataAnnotations;
++
++namespace Shop.Api.Dtos;
++
++public sealed record UpdateOrderStatusRequest(
++    [Required, RegularExpression(&quot;^(Pending|Shipped|Delivered|Cancelled)$&quot;)]
++    string Status);
+diff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs
+index 91b2aa4..c4d5e77 100644
+--- a/src/Application/Orders/OrderService.cs
++++ b/src/Application/Orders/OrderService.cs
+@@ -64,6 +64,19 @@ public sealed class OrderService : IOrderService
+         return order;
+     }
+ 
++    public async Task&lt;bool&gt; UpdateStatusAsync(int orderId, string status, CancellationToken ct)
++    {
++        var order = await _repository.FindByIdAsync(orderId, ct);
++        if (order is null)
++        {
++            return false;
++        }
++
++        order.Status = status;
++        order.StatusUpdatedAt = DateTime.UtcNow;
++        await _repository.SaveChangesAsync(ct);
++        return true;
++    }
++
+     public async Task DeleteAsync(int orderId, CancellationToken ct)
+diff --git a/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql
+new file mode 100644
+index 0000000..1f7c2d9
+--- /dev/null
++++ b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql
+@@ -0,0 +1,3 @@
++-- src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql
++ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;
++GO
+diff --git a/tests/Orders/OrdersControllerTests.cs b/tests/Orders/OrdersControllerTests.cs
+index 77c1e2b..2f9a8d4 100644
+--- a/tests/Orders/OrdersControllerTests.cs
++++ b/tests/Orders/OrdersControllerTests.cs
+@@ -41,4 +41,18 @@ public sealed class OrdersControllerTests
+         Assert.IsType&lt;OkObjectResult&gt;(result);
+     }
++
++    [Fact]
++    public async Task UpdateStatus_ReturnsNoContent_WhenOrderExists()
++    {
++        var service = new Mock&lt;IOrderService&gt;();
++        service.Setup(s =&gt; s.UpdateStatusAsync(7, &quot;Shipped&quot;, It.IsAny&lt;CancellationToken&gt;()))
++               .ReturnsAsync(true);
++        var controller = new OrdersController(service.Object);
++
++        var result = await controller.UpdateStatus(7, new UpdateOrderStatusRequest(&quot;Shipped&quot;));
++
++        Assert.IsType&lt;NoContentResult&gt;(result);
++        service.Verify(s =&gt; s.UpdateStatusAsync(7, &quot;Shipped&quot;, It.IsAny&lt;CancellationToken&gt;()), Times.Once);
++    }
+ }
+
+## Output
+
+Use exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.
+
+### What is this change?
+
+One or two sentences, maximum 60 words, summarizing what changed and who it is for.
+
+### Type of change?
+
+Select ONLY the relevant options from this list and delete the rest:
+
+- Bug fix (non-breaking change which fixes an issue)
+- New feature (non-breaking change which adds functionality)
+- Refactoring (changes to existing code which neither adds nor changes functionality)
+- Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- Configuration change
+- This change requires a documentation update
+- Other: unit tests only, documentation changes only, etc.
+
+### Why?
+
+Explain the business reason from the User Story. Do not restate the diff.
+
+### How?
+
+List the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.
+
+### Requires Manual Database Migration?
+
+- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.
+- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.
+- If the diff contains no migration, answer No and include no code block.
+
+### Anything Else?
+
+Notes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write &quot;None&quot; if there is nothing.
+
+If the change is a breaking change, state what breaks and what consumers must do.
+
+## Rules
+
+- Do not include file path citations or IDE links inside SQL or code blocks.
+- Keep SQL blocks as plain text only.
+- Every statement must be traceable to the User Story or the diff.
+</p>
+        </section>
+        
+
+        <section class="detail-section">
+          <span class="detail-section-title">Output</span>
+          <p class="detail-copy">### What is this change?
+
+Adds a Support-role-protected PATCH endpoint that lets support agents set an order&#39;s status to Shipped from the order detail page, recording the update timestamp.
+
+### Type of change?
+
+- New feature (non-breaking change which adds functionality)
+
+### Why?
+
+Support currently handles roughly 400 order status updates per week over email. Each hand-off takes 20–40 minutes and sometimes gets lost between inboxes. Letting agents with the Support role update the status directly from the order detail page removes most of that manual work and reduces the delay between dispatch and the customer seeing &quot;Shipped&quot; from hours to minutes.
+
+### How?
+
+- Added a `PATCH {id}/status` endpoint to `OrdersController` with `[Authorize(Roles = &quot;Support&quot;)]` and a new `UpdateOrderStatusRequest` DTO.
+- Added `UpdateStatusAsync` to `OrderService`, which sets the order `Status`, sets `StatusUpdatedAt` to `DateTime.UtcNow`, and persists the change.
+- Added a database migration to add the `StatusUpdatedAt` column to the `Orders` table.
+- Added a controller test verifying the endpoint returns 204 No Content when the order exists.
+
+### Requires Manual Database Migration?
+
+Yes.
+
+```sql
+ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;
+GO
+```
+
+### Anything Else?
+
+The endpoint returns 404 when the order does not exist. The `StatusUpdatedAt` column is nullable, so existing rows will not have a value until their status is updated. The request DTO restricts `Status` to `Pending`, `Shipped`, `Delivered`, or `Cancelled`.</p>
+        </section>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Reason</span>
+          <p class="detail-copy detail-reason">All assertions passed</p>
+        </section>
+         
+        <div data-detail-variable-slot></div>
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Token Breakdown</span>
+          <div class="detail-metrics">
+            
+            <div class="detail-metric">
+              <span class="detail-metric-label">Prompt</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+             
+            <div class="detail-metric">
+              <span class="detail-metric-label">Completion</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+            
+          </div>
+        </section>
+        
+      </article>
+    </template>
+                            
+    <template
+      id="result-detail-1-0"
+      data-detail-heading="Result detail - row 2, prompt 1"
+    >
+      <article class="detail-content" data-detail-template>
+        <div class="detail-summary">
+          <span class="status-pill pass"
+            >PASS</span
+          >
+          <span class="score-pill">Score 1.00</span>
+          
+          <span class="named-score-pill"
+            >structure 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >conciseness 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >type-of-change 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >migration-decision 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >grounding 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >why-business 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >how-actionable 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >no-invention 1.00</span
+          >
+          
+        </div>
+
+        <div class="detail-metrics">
+          
+          <div class="detail-metric">
+            <span class="detail-metric-label">Provider</span>
+            <span class="detail-metric-value">Devin SWE-1.7</span>
+          </div>
+           
+          <div class="detail-metric">
+            <span class="detail-metric-label">Latency</span>
+            <span class="detail-metric-value">6611 ms</span>
+          </div>
+            
+          <div class="detail-metric">
+            <span class="detail-metric-label">Tokens</span>
+            <span class="detail-metric-value">0</span>
+          </div>
+          
+        </div>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Test</span>
+          <p class="detail-copy">02 bug fix, no migration — null discount no longer crashes checkout</p>
+        </section>
+         
+        <section class="detail-section">
+          <span class="detail-section-title">Prompt</span>
+          <p class="detail-copy">## Task
+
+Fill out every PR description field below, in English, using only the User Story and the code diff provided.
+
+If the User Story is missing or empty, ask the user to provide it and output nothing else.
+
+## Context
+
+- The diff below is the only source of truth about the code change. Do not read files from the workspace.
+- Base every statement on the diff. Do not describe changes that are not in the diff.
+- The business reason comes from the User Story, not from the code.
+
+## Input
+
+### User Story
+
+# BUG-3388 — Checkout returns 500 when the cart has no discount
+
+## User story
+
+As an online shopper, I want checkout to complete when my cart has no discount applied, so that I can place my order.
+
+## Business context
+
+2.1% of checkouts failed last week — about 180 orders. All of them had an empty discount record. Support is recreating those orders by hand and customers are abandoning the cart instead of retrying.
+
+## Acceptance criteria
+
+- Placing an order with no discount completes without an exception.
+- The order total is unchanged when no discount is applied.
+
+### Code diff
+
+diff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs
+index 5b8e011..a2c4f39 100644
+--- a/src/Application/Orders/OrderService.cs
++++ b/src/Application/Orders/OrderService.cs
+@@ -88,9 +88,10 @@ public sealed class OrderService : IOrderService
+     public decimal GetTotal(Order order)
+     {
+         var subtotal = order.Lines.Sum(line =&gt; line.UnitPrice * line.Quantity);
+-        var discount = order.Discount.Percentage;
+-        return subtotal - (subtotal * discount / 100m);
++        var discountPercentage = order.Discount?.Percentage ?? 0m;
++        return subtotal - (subtotal * discountPercentage / 100m);
+     }
+ 
+     public async Task DeleteAsync(int orderId, CancellationToken ct)
+diff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs
+index 1d9f2a0..3b7c8e1 100644
+--- a/tests/Orders/OrderServiceTests.cs
++++ b/tests/Orders/OrderServiceTests.cs
+@@ -22,4 +22,16 @@ public sealed class OrderServiceTests
+         Assert.Equal(90m, total);
+     }
++
++    [Fact]
++    public void GetTotal_ReturnsSubtotal_WhenDiscountIsNull()
++    {
++        var order = new Order
++        {
++            Discount = null,
++            Lines = new List&lt;OrderLine&gt; { new() { UnitPrice = 50m, Quantity = 2 } }
++        };
++
++        var total = _service.GetTotal(order);
++
++        Assert.Equal(100m, total);
++    }
+ }
+
+## Output
+
+Use exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.
+
+### What is this change?
+
+One or two sentences, maximum 60 words, summarizing what changed and who it is for.
+
+### Type of change?
+
+Select ONLY the relevant options from this list and delete the rest:
+
+- Bug fix (non-breaking change which fixes an issue)
+- New feature (non-breaking change which adds functionality)
+- Refactoring (changes to existing code which neither adds nor changes functionality)
+- Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- Configuration change
+- This change requires a documentation update
+- Other: unit tests only, documentation changes only, etc.
+
+### Why?
+
+Explain the business reason from the User Story. Do not restate the diff.
+
+### How?
+
+List the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.
+
+### Requires Manual Database Migration?
+
+- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.
+- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.
+- If the diff contains no migration, answer No and include no code block.
+
+### Anything Else?
+
+Notes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write &quot;None&quot; if there is nothing.
+
+If the change is a breaking change, state what breaks and what consumers must do.
+
+## Rules
+
+- Do not include file path citations or IDE links inside SQL or code blocks.
+- Keep SQL blocks as plain text only.
+- Every statement must be traceable to the User Story or the diff.
+</p>
+        </section>
+        
+
+        <section class="detail-section">
+          <span class="detail-section-title">Output</span>
+          <p class="detail-copy">### What is this change?
+
+Fixes a null reference in `OrderService.GetTotal` so checkout completes for orders without a discount, keeping the order total unchanged for shoppers.
+
+### Type of change?
+
+- Bug fix (non-breaking change which fixes an issue)
+
+### Why?
+
+2.1% of checkouts failed last week, affecting about 180 orders. All failed checkouts had an empty discount record, forcing support to recreate orders manually and causing customers to abandon their carts instead of retrying.
+
+### How?
+
+- Updated `OrderService.GetTotal` to use the null-conditional operator (`?.`) with a null-coalescing fallback (`?? 0m`) when reading `order.Discount.Percentage`, so a missing discount defaults to `0%` instead of throwing.
+- Added a new unit test `GetTotal_ReturnsSubtotal_WhenDiscountIsNull` in `OrderServiceTests` that verifies the total equals the subtotal when `Discount` is `null`.
+
+### Requires Manual Database Migration?
+
+No
+
+### Anything Else?
+
+Backwards compatible: orders with a discount still use the configured percentage, and orders with a null discount now default to 0%. No consumer changes required.</p>
+        </section>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Reason</span>
+          <p class="detail-copy detail-reason">All assertions passed</p>
+        </section>
+         
+        <div data-detail-variable-slot></div>
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Token Breakdown</span>
+          <div class="detail-metrics">
+            
+            <div class="detail-metric">
+              <span class="detail-metric-label">Prompt</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+             
+            <div class="detail-metric">
+              <span class="detail-metric-label">Completion</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+            
+          </div>
+        </section>
+        
+      </article>
+    </template>
+                            
+    <template
+      id="result-detail-2-0"
+      data-detail-heading="Result detail - row 3, prompt 1"
+    >
+      <article class="detail-content" data-detail-template>
+        <div class="detail-summary">
+          <span class="status-pill pass"
+            >PASS</span
+          >
+          <span class="score-pill">Score 1.00</span>
+          
+          <span class="named-score-pill"
+            >structure 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >conciseness 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >type-of-change 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >migration-decision 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >grounding 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >why-business 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >how-actionable 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >no-invention 1.00</span
+          >
+          
+        </div>
+
+        <div class="detail-metrics">
+          
+          <div class="detail-metric">
+            <span class="detail-metric-label">Provider</span>
+            <span class="detail-metric-value">Devin SWE-1.7</span>
+          </div>
+           
+          <div class="detail-metric">
+            <span class="detail-metric-label">Latency</span>
+            <span class="detail-metric-value">11203 ms</span>
+          </div>
+            
+          <div class="detail-metric">
+            <span class="detail-metric-label">Tokens</span>
+            <span class="detail-metric-value">0</span>
+          </div>
+          
+        </div>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Test</span>
+          <p class="detail-copy">03 refactoring, no migration — pricing rules extracted from OrderService</p>
+        </section>
+         
+        <section class="detail-section">
+          <span class="detail-section-title">Prompt</span>
+          <p class="detail-copy">## Task
+
+Fill out every PR description field below, in English, using only the User Story and the code diff provided.
+
+If the User Story is missing or empty, ask the user to provide it and output nothing else.
+
+## Context
+
+- The diff below is the only source of truth about the code change. Do not read files from the workspace.
+- Base every statement on the diff. Do not describe changes that are not in the diff.
+- The business reason comes from the User Story, not from the code.
+
+## Input
+
+### User Story
+
+# TECH-91 — Extract pricing rules out of OrderService
+
+## User story
+
+As a developer, I want the pricing rules moved into their own class, so that OrderService stops growing with every pricing change.
+
+## Business context
+
+OrderService is 1,400 lines and every pricing change touches it. Extracting the calculation lets the pricing team change rules without going through order orchestration, and it shortens review time for those changes.
+
+## Acceptance criteria
+
+- The pricing rules live in a dedicated PriceCalculator class.
+- OrderService delegates to that class.
+- No behaviour changes; the existing tests keep passing.
+
+### Code diff
+
+diff --git a/src/Application/Orders/PriceCalculator.cs b/src/Application/Orders/PriceCalculator.cs
+new file mode 100644
+index 0000000..7c1d9e4
+--- /dev/null
++++ b/src/Application/Orders/PriceCalculator.cs
+@@ -0,0 +1,26 @@
++namespace Shop.Application.Orders;
++
++public sealed class PriceCalculator
++{
++    public decimal Subtotal(Order order) =&gt;
++        order.Lines.Sum(line =&gt; line.UnitPrice * line.Quantity);
++
++    public decimal DiscountAmount(Order order)
++    {
++        var subtotal = Subtotal(order);
++        var percentage = order.Discount?.Percentage ?? 0m;
++        return subtotal * percentage / 100m;
++    }
++
++    public decimal Total(Order order) =&gt; Subtotal(order) - DiscountAmount(order);
++}
+diff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs
+index 5b8e011..f0a2b18 100644
+--- a/src/Application/Orders/OrderService.cs
++++ b/src/Application/Orders/OrderService.cs
+@@ -12,6 +12,7 @@ public sealed class OrderService : IOrderService
+ {
+     private readonly IOrderRepository _repository;
++    private readonly PriceCalculator _pricing = new();
+ 
+     public OrderService(IOrderRepository repository)
+     {
+@@ -88,9 +89,7 @@ public sealed class OrderService : IOrderService
+     public decimal GetTotal(Order order)
+     {
+-        var subtotal = order.Lines.Sum(line =&gt; line.UnitPrice * line.Quantity);
+-        var discountPercentage = order.Discount?.Percentage ?? 0m;
+-        return subtotal - (subtotal * discountPercentage / 100m);
++        return _pricing.Total(order);
+     }
+ 
+     public async Task DeleteAsync(int orderId, CancellationToken ct)
+diff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs
+index 1d9f2a0..9e4b7c2 100644
+--- a/tests/Orders/OrderServiceTests.cs
++++ b/tests/Orders/OrderServiceTests.cs
+@@ -1,6 +1,6 @@
+ using Shop.Application.Orders;
+ 
+-public sealed class OrderServiceTests
++public sealed class OrderServiceTests
+ {
+     private readonly OrderService _service = new(new FakeOrderRepository());
+ 
+@@ -22,4 +22,16 @@ public sealed class OrderServiceTests
+         Assert.Equal(90m, total);
+     }
++
++    [Fact]
++    public void GetTotal_MatchesPriceCalculator_ForDiscountedOrder()
++    {
++        var order = new Order
++        {
++            Discount = new Discount { Percentage = 10m },
++            Lines = new List&lt;OrderLine&gt; { new() { UnitPrice = 50m, Quantity = 2 } }
++        };
++
++        Assert.Equal(new PriceCalculator().Total(order), _service.GetTotal(order));
++    }
+ }
+
+## Output
+
+Use exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.
+
+### What is this change?
+
+One or two sentences, maximum 60 words, summarizing what changed and who it is for.
+
+### Type of change?
+
+Select ONLY the relevant options from this list and delete the rest:
+
+- Bug fix (non-breaking change which fixes an issue)
+- New feature (non-breaking change which adds functionality)
+- Refactoring (changes to existing code which neither adds nor changes functionality)
+- Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- Configuration change
+- This change requires a documentation update
+- Other: unit tests only, documentation changes only, etc.
+
+### Why?
+
+Explain the business reason from the User Story. Do not restate the diff.
+
+### How?
+
+List the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.
+
+### Requires Manual Database Migration?
+
+- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.
+- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.
+- If the diff contains no migration, answer No and include no code block.
+
+### Anything Else?
+
+Notes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write &quot;None&quot; if there is nothing.
+
+If the change is a breaking change, state what breaks and what consumers must do.
+
+## Rules
+
+- Do not include file path citations or IDE links inside SQL or code blocks.
+- Keep SQL blocks as plain text only.
+- Every statement must be traceable to the User Story or the diff.
+</p>
+        </section>
+        
+
+        <section class="detail-section">
+          <span class="detail-section-title">Output</span>
+          <p class="detail-copy">### What is this change?
+Extracts order pricing rules from `OrderService` into a dedicated `PriceCalculator` class for the pricing team, simplifying future pricing changes and reducing the size of `OrderService`.
+
+### Type of change?
+- Refactoring (changes to existing code which neither adds nor changes functionality)
+
+### Why?
+`OrderService` has grown to 1,400 lines and every pricing change touches it. Extracting the pricing calculation into its own class lets the pricing team change rules without going through order orchestration, and shortens review time for those changes.
+
+### How?
+- Added a new `PriceCalculator` class in `src/Application/Orders/PriceCalculator.cs` with `Subtotal`, `DiscountAmount`, and `Total` methods.
+- Updated `OrderService` to use a private `PriceCalculator` instance and delegate `GetTotal` to `_pricing.Total(order)`.
+- Added a new unit test `GetTotal_MatchesPriceCalculator_ForDiscountedOrder` verifying that `OrderService.GetTotal` matches `PriceCalculator.Total` for a discounted order.
+
+### Requires Manual Database Migration?
+No
+
+### Anything Else?
+No public API or behavior changes; `PriceCalculator` is an internal implementation detail. The new test confirms `OrderService.GetTotal` still matches `PriceCalculator.Total` for discounted orders, guarding against regressions.</p>
+        </section>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Reason</span>
+          <p class="detail-copy detail-reason">All assertions passed</p>
+        </section>
+         
+        <div data-detail-variable-slot></div>
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Token Breakdown</span>
+          <div class="detail-metrics">
+            
+            <div class="detail-metric">
+              <span class="detail-metric-label">Prompt</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+             
+            <div class="detail-metric">
+              <span class="detail-metric-label">Completion</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+            
+          </div>
+        </section>
+        
+      </article>
+    </template>
+                            
+    <template
+      id="result-detail-3-0"
+      data-detail-heading="Result detail - row 4, prompt 1"
+    >
+      <article class="detail-content" data-detail-template>
+        <div class="detail-summary">
+          <span class="status-pill fail"
+            >FAIL</span
+          >
+          <span class="score-pill">Score 0.94</span>
+          
+          <span class="named-score-pill"
+            >structure 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >conciseness 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >type-of-change 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >migration-decision 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >grounding 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >backwards-compat 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >why-business 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >how-actionable 0.50</span
+          >
+          
+          <span class="named-score-pill"
+            >no-invention 1.00</span
+          >
+          
+        </div>
+
+        <div class="detail-metrics">
+          
+          <div class="detail-metric">
+            <span class="detail-metric-label">Provider</span>
+            <span class="detail-metric-value">Devin SWE-1.7</span>
+          </div>
+           
+          <div class="detail-metric">
+            <span class="detail-metric-label">Latency</span>
+            <span class="detail-metric-value">9051 ms</span>
+          </div>
+            
+          <div class="detail-metric">
+            <span class="detail-metric-label">Tokens</span>
+            <span class="detail-metric-value">0</span>
+          </div>
+          
+        </div>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Test</span>
+          <p class="detail-copy">04 breaking change + migration — customerName renamed to customerFullName</p>
+        </section>
+         
+        <section class="detail-section">
+          <span class="detail-section-title">Prompt</span>
+          <p class="detail-copy">## Task
+
+Fill out every PR description field below, in English, using only the User Story and the code diff provided.
+
+If the User Story is missing or empty, ask the user to provide it and output nothing else.
+
+## Context
+
+- The diff below is the only source of truth about the code change. Do not read files from the workspace.
+- Base every statement on the diff. Do not describe changes that are not in the diff.
+- The business reason comes from the User Story, not from the code.
+
+## Input
+
+### User Story
+
+# US-4190 — Rename customerName to customerFullName in the order API
+
+## User story
+
+As an API consumer, I want the order payload to use customerFullName, so that the field name matches what it actually contains.
+
+## Business context
+
+The field returns the first and last name concatenated, but its name suggests only the first name. Two partner integrations already misread it and displayed the wrong value to their users. Renaming now avoids more bad data downstream.
+
+## Acceptance criteria
+
+- The order API returns customerFullName instead of customerName.
+- The database column is renamed to match.
+- Existing integrations are told the field was renamed.
+
+### Code diff
+
+diff --git a/src/Api/Dtos/OrderDto.cs b/src/Api/Dtos/OrderDto.cs
+index 3c7a1b9..8d2e4f5 100644
+--- a/src/Api/Dtos/OrderDto.cs
++++ b/src/Api/Dtos/OrderDto.cs
+@@ -8,7 +8,7 @@ public sealed record OrderDto(
+     int Id,
+     string Reference,
+     decimal Total,
+-    string CustomerName,
++    string CustomerFullName,
+     string Status);
+diff --git a/src/Application/Orders/OrderMapper.cs b/src/Application/Orders/OrderMapper.cs
+index 2b9c4d1..5e7f3a8 100644
+--- a/src/Application/Orders/OrderMapper.cs
++++ b/src/Application/Orders/OrderMapper.cs
+@@ -6,7 +6,7 @@ public static class OrderMapper
+         Id: order.Id,
+         Reference: order.Reference,
+         Total: order.Total,
+-        CustomerName: order.Customer.FirstName + &quot; &quot; + order.Customer.LastName,
++        CustomerFullName: order.Customer.FirstName + &quot; &quot; + order.Customer.LastName,
+         Status: order.Status);
+ }
+diff --git a/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql
+new file mode 100644
+index 0000000..4d8a1c2
+--- /dev/null
++++ b/src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql
+@@ -0,0 +1,3 @@
++-- src/Infrastructure/Migrations/Scripts/20261103_rename_customer_name.sql
++EXEC sp_rename &#39;Orders.CustomerName&#39;, &#39;CustomerFullName&#39;, &#39;COLUMN&#39;;
++GO
+diff --git a/tests/Orders/OrderMapperTests.cs b/tests/Orders/OrderMapperTests.cs
+index 6f1e2d3..9a8b7c6 100644
+--- a/tests/Orders/OrderMapperTests.cs
++++ b/tests/Orders/OrderMapperTests.cs
+@@ -18,7 +18,7 @@ public sealed class OrderMapperTests
+         var dto = OrderMapper.ToDto(order);
+ 
+         Assert.Equal(&quot;Ada Lovelace&quot;, dto.CustomerFullName);
+     }
+ }
+
+## Output
+
+Use exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.
+
+### What is this change?
+
+One or two sentences, maximum 60 words, summarizing what changed and who it is for.
+
+### Type of change?
+
+Select ONLY the relevant options from this list and delete the rest:
+
+- Bug fix (non-breaking change which fixes an issue)
+- New feature (non-breaking change which adds functionality)
+- Refactoring (changes to existing code which neither adds nor changes functionality)
+- Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- Configuration change
+- This change requires a documentation update
+- Other: unit tests only, documentation changes only, etc.
+
+### Why?
+
+Explain the business reason from the User Story. Do not restate the diff.
+
+### How?
+
+List the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.
+
+### Requires Manual Database Migration?
+
+- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.
+- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.
+- If the diff contains no migration, answer No and include no code block.
+
+### Anything Else?
+
+Notes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write &quot;None&quot; if there is nothing.
+
+If the change is a breaking change, state what breaks and what consumers must do.
+
+## Rules
+
+- Do not include file path citations or IDE links inside SQL or code blocks.
+- Keep SQL blocks as plain text only.
+- Every statement must be traceable to the User Story or the diff.
+</p>
+        </section>
+        
+
+        <section class="detail-section">
+          <span class="detail-section-title">Output</span>
+          <p class="detail-copy">### What is this change?
+
+Renames the order API&#39;s `customerName` field to `customerFullName` and renames the matching database column, making the API contract clearer for consumers.
+
+### Type of change?
+
+- Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- This change requires a documentation update
+
+### Why?
+
+The field returns the customer&#39;s first and last name concatenated, but its current name suggests only the first name. Two partner integrations already misread it and displayed the wrong value to their users; renaming now prevents more bad data downstream.
+
+### How?
+
+- DTO: `OrderDto` parameter `CustomerName` is renamed to `CustomerFullName`.
+- Mapping: `OrderMapper` now maps the full name to `CustomerFullName`.
+- Database: a migration script renames the `Orders.CustomerName` column to `CustomerFullName`.
+- Tests: `OrderMapperTests` assert on `CustomerFullName`.
+- No entity, controller, service, or repository changes are present in the diff.
+
+### Requires Manual Database Migration?
+
+Yes
+
+```
+EXEC sp_rename &#39;Orders.CustomerName&#39;, &#39;CustomerFullName&#39;, &#39;COLUMN&#39;;
+```
+
+### Anything Else?
+
+This is a breaking API and database schema change. Consumers must update integrations to read `customerFullName` instead of `customerName`. Existing integrations have been informed of the rename, and the documentation should be updated to reflect the new field name.</p>
+        </section>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Reason</span>
+          <p class="detail-copy detail-reason">The final &quot;How?&quot; bullet describes an absence of changes rather than a concrete change in the diff, so not every bullet names a present concrete change.</p>
+        </section>
+         
+        <section class="detail-section">
+          <span class="detail-section-title">Error</span>
+          <p class="detail-copy detail-reason">The final &quot;How?&quot; bullet describes an absence of changes rather than a concrete change in the diff, so not every bullet names a present concrete change.</p>
+        </section>
+        
+        <div data-detail-variable-slot></div>
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Token Breakdown</span>
+          <div class="detail-metrics">
+            
+            <div class="detail-metric">
+              <span class="detail-metric-label">Prompt</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+             
+            <div class="detail-metric">
+              <span class="detail-metric-label">Completion</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+            
+          </div>
+        </section>
+        
+      </article>
+    </template>
+                            
+    <template
+      id="result-detail-4-0"
+      data-detail-heading="Result detail - row 5, prompt 1"
+    >
+      <article class="detail-content" data-detail-template>
+        <div class="detail-summary">
+          <span class="status-pill pass"
+            >PASS</span
+          >
+          <span class="score-pill">Score 1.00</span>
+          
+          <span class="named-score-pill"
+            >missing-story 1.00</span
+          >
+          
+          <span class="named-score-pill"
+            >asks-for-story 1.00</span
+          >
+          
+        </div>
+
+        <div class="detail-metrics">
+          
+          <div class="detail-metric">
+            <span class="detail-metric-label">Provider</span>
+            <span class="detail-metric-value">Devin SWE-1.7</span>
+          </div>
+           
+          <div class="detail-metric">
+            <span class="detail-metric-label">Latency</span>
+            <span class="detail-metric-value">8237 ms</span>
+          </div>
+            
+          <div class="detail-metric">
+            <span class="detail-metric-label">Tokens</span>
+            <span class="detail-metric-value">0</span>
+          </div>
+          
+        </div>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Test</span>
+          <p class="detail-copy">05 no User Story — must ask for it, not invent a description</p>
+        </section>
+         
+        <section class="detail-section">
+          <span class="detail-section-title">Prompt</span>
+          <p class="detail-copy">## Task
+
+Fill out every PR description field below, in English, using only the User Story and the code diff provided.
+
+If the User Story is missing or empty, ask the user to provide it and output nothing else.
+
+## Context
+
+- The diff below is the only source of truth about the code change. Do not read files from the workspace.
+- Base every statement on the diff. Do not describe changes that are not in the diff.
+- The business reason comes from the User Story, not from the code.
+
+## Input
+
+### User Story
+
+
+
+### Code diff
+
+diff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs
+index 5b8e011..d1e6a90 100644
+--- a/src/Application/Orders/OrderService.cs
++++ b/src/Application/Orders/OrderService.cs
+@@ -40,9 +40,9 @@ public sealed class OrderService : IOrderService
+         return await _repository.FindByIdAsync(orderId, ct);
+     }
+ 
+-    public async Task CancelAsync(int orderId)
++    public async Task CancelAsync(int orderId, CancellationToken ct = default)
+     {
+-        var order = await _repository.FindByIdAsync(orderId);
++        var order = await _repository.FindByIdAsync(orderId, ct);
+         if (order is null)
+         {
+             return;
+@@ -48,7 +48,7 @@ public sealed class OrderService : IOrderService
+ 
+         order.Status = &quot;Cancelled&quot;;
+-        await _repository.SaveChangesAsync();
++        await _repository.SaveChangesAsync(ct);
+     }
+ }
+diff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs
+index 1d9f2a0..4c8f2b1 100644
+--- a/tests/Orders/OrderServiceTests.cs
++++ b/tests/Orders/OrderServiceTests.cs
+@@ -30,4 +30,13 @@ public sealed class OrderServiceTests
+         Assert.Equal(&quot;Cancelled&quot;, order.Status);
+     }
++
++    [Fact]
++    public async Task CancelAsync_ForwardsCancellationToken()
++    {
++        var repository = new Mock&lt;IOrderRepository&gt;();
++        var service = new OrderService(repository.Object);
++        using var cts = new CancellationTokenSource();
++
++        await service.CancelAsync(3, cts.Token);
++
++        repository.Verify(r =&gt; r.FindByIdAsync(3, cts.Token), Times.Once);
++    }
+ }
+
+## Output
+
+Use exactly these six headings, in this order, each as a level-3 Markdown heading. Start the response with the first heading. Do not add a title, a preamble, a closing summary, or any other section.
+
+### What is this change?
+
+One or two sentences, maximum 60 words, summarizing what changed and who it is for.
+
+### Type of change?
+
+Select ONLY the relevant options from this list and delete the rest:
+
+- Bug fix (non-breaking change which fixes an issue)
+- New feature (non-breaking change which adds functionality)
+- Refactoring (changes to existing code which neither adds nor changes functionality)
+- Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- Configuration change
+- This change requires a documentation update
+- Other: unit tests only, documentation changes only, etc.
+
+### Why?
+
+Explain the business reason from the User Story. Do not restate the diff.
+
+### How?
+
+List the technical changes the diff makes. Cover model/entity changes, DTO changes, migration changes, endpoint changes (controller, service, repository) and test updates, but only the ones present in the diff.
+
+### Requires Manual Database Migration?
+
+- If the diff contains a migration script, answer Yes and include the SQL statements it runs as a plain fenced code block.
+- Reproduce only the SQL statements. Do not copy header comments, file paths, or any other non-SQL text into the block.
+- If the diff contains no migration, answer No and include no code block.
+
+### Anything Else?
+
+Notes for reviewers: backwards compatibility, caveats, optional fields, or anything relevant. Write &quot;None&quot; if there is nothing.
+
+If the change is a breaking change, state what breaks and what consumers must do.
+
+## Rules
+
+- Do not include file path citations or IDE links inside SQL or code blocks.
+- Keep SQL blocks as plain text only.
+- Every statement must be traceable to the User Story or the diff.
+</p>
+        </section>
+        
+
+        <section class="detail-section">
+          <span class="detail-section-title">Output</span>
+          <p class="detail-copy">The User Story is missing. Please provide the User Story so I can complete the PR description.</p>
+        </section>
+
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Reason</span>
+          <p class="detail-copy detail-reason">All assertions passed</p>
+        </section>
+         
+        <div data-detail-variable-slot></div>
+        
+        <section class="detail-section">
+          <span class="detail-section-title">Token Breakdown</span>
+          <div class="detail-metrics">
+            
+            <div class="detail-metric">
+              <span class="detail-metric-label">Prompt</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+             
+            <div class="detail-metric">
+              <span class="detail-metric-label">Completion</span>
+              <span class="detail-metric-value">0</span>
+            </div>
+            
+          </div>
+        </section>
+        
+      </article>
+    </template>
+      
+
+    <script>
+      (() => {
+        const searchInput = document.querySelector('[data-report-search]');
+        const statusFilter = document.querySelector('[data-status-filter]');
+        const visibleCount = document.querySelector('[data-visible-count]');
+        const emptyState = document.querySelector('[data-empty-state]');
+        const rows = Array.from(document.querySelectorAll('[data-result-row]'));
+
+        const getRowStatuses = (row) => {
+          const statuses = Array.from(row.querySelectorAll('td[data-output-cell="true"]')).map(
+            (cell) => cell.getAttribute('data-status') || '',
+          );
+
+          return new Set(statuses.filter(Boolean));
+        };
+
+        const applyFilters = () => {
+          const query = (searchInput?.value || '').trim().toLowerCase();
+          const status = statusFilter?.value || 'all';
+          let shown = 0;
+
+          rows.forEach((row) => {
+            const text = Array.from(row.querySelectorAll('[data-search]'))
+              .map((cell) => cell.getAttribute('data-search') || '')
+              .join('\n')
+              .toLowerCase();
+            const matchesQuery = query.length === 0 || text.includes(query);
+            const rowStatuses = getRowStatuses(row);
+            const matchesStatus =
+              status === 'all' ||
+              (status === 'pass' &&
+                rowStatuses.size > 0 &&
+                [...rowStatuses].every((value) => value === 'pass')) ||
+              rowStatuses.has(status);
+            const visible = matchesQuery && matchesStatus;
+
+            row.hidden = !visible;
+            if (visible) {
+              shown += 1;
+            }
+          });
+
+          if (visibleCount) {
+            visibleCount.textContent = String(shown);
+          }
+          emptyState?.classList.toggle('visible', shown === 0);
+        };
+
+        searchInput?.addEventListener('input', applyFilters);
+        statusFilter?.addEventListener('change', applyFilters);
+        applyFilters();
+
+        const detailDrawer = document.querySelector('[data-detail-drawer]');
+        const detailBackdrop = document.querySelector('[data-detail-backdrop]');
+        const detailBody = document.querySelector('[data-detail-body]');
+        const detailTitle = document.querySelector('[data-detail-title]');
+        const detailClose = document.querySelector('[data-detail-close]');
+        let lastDetailTrigger = null;
+        const getDetailFocusableElements = () =>
+          detailDrawer
+            ? Array.from(
+                detailDrawer.querySelectorAll(
+                  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+                ),
+              )
+            : [];
+        const appendVariableDetails = (trigger) => {
+          if (!detailBody) {
+            return;
+          }
+
+          const slot = detailBody.querySelector('[data-detail-variable-slot]');
+          const row = trigger.closest('[data-result-row]');
+          if (!row) {
+            slot?.remove();
+            return;
+          }
+
+          const variables = Array.from(row.querySelectorAll('[data-variable-name]'))
+            .map((cell) => ({
+              name: cell.getAttribute('data-variable-name') || '',
+              value: cell.textContent?.trim() || '',
+            }))
+            .filter((variable) => variable.name || variable.value);
+          if (variables.length === 0) {
+            slot?.remove();
+            return;
+          }
+
+          const section = document.createElement('section');
+          section.className = 'detail-section';
+
+          const title = document.createElement('span');
+          title.className = 'detail-section-title';
+          title.textContent = 'Variables';
+          section.appendChild(title);
+
+          const list = document.createElement('div');
+          list.className = 'detail-variables';
+          variables.forEach((variable) => {
+            const item = document.createElement('div');
+            item.className = 'detail-variable';
+
+            const name = document.createElement('span');
+            name.className = 'detail-variable-name';
+            name.textContent = variable.name;
+
+            const value = document.createElement('p');
+            value.className = 'detail-variable-value';
+            value.textContent = variable.value;
+
+            item.append(name, value);
+            list.appendChild(item);
+          });
+
+          section.appendChild(list);
+          if (slot) {
+            slot.replaceWith(section);
+          } else {
+            detailBody.appendChild(section);
+          }
+        };
+
+        const closeDetail = () => {
+          if (!detailDrawer || !detailBackdrop || !detailBody) {
+            return;
+          }
+
+          detailDrawer.hidden = true;
+          detailBackdrop.hidden = true;
+          detailBody.textContent = '';
+          document.body.classList.remove('detail-open');
+          lastDetailTrigger?.focus();
+          lastDetailTrigger = null;
+        };
+
+        const openDetail = (trigger) => {
+          if (!detailDrawer || !detailBackdrop || !detailBody || !detailTitle) {
+            return;
+          }
+
+          const templateId = trigger.getAttribute('data-detail-target');
+          const template = templateId ? document.getElementById(templateId) : null;
+          if (!template || template.tagName !== 'TEMPLATE') {
+            return;
+          }
+
+          detailTitle.textContent = template.getAttribute('data-detail-heading') || 'Result detail';
+          detailBody.innerHTML = template.innerHTML.trim();
+          appendVariableDetails(trigger);
+          detailDrawer.hidden = false;
+          detailBackdrop.hidden = false;
+          document.body.classList.add('detail-open');
+          lastDetailTrigger = trigger;
+          detailClose?.focus();
+        };
+
+        document.querySelectorAll('[data-open-detail]').forEach((button) => {
+          button.addEventListener('click', () => openDetail(button));
+        });
+        detailClose?.addEventListener('click', closeDetail);
+        detailBackdrop?.addEventListener('click', closeDetail);
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && detailDrawer && !detailDrawer.hidden) {
+            closeDetail();
+            return;
+          }
+
+          if (event.key === 'Tab' && detailDrawer && !detailDrawer.hidden) {
+            const focusableElements = getDetailFocusableElements();
+            if (focusableElements.length === 0) {
+              event.preventDefault();
+              detailDrawer.focus();
+              return;
+            }
+
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+            const activeElement = document.activeElement;
+
+            if (event.shiftKey && activeElement === firstElement) {
+              event.preventDefault();
+              lastElement.focus();
+            } else if (!event.shiftKey && activeElement === lastElement) {
+              event.preventDefault();
+              firstElement.focus();
+            }
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

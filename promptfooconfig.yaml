@@ -1,0 +1,237 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: Evaluation Driven Development demonstration with promptfoo
+
+# Define prompts to test - template that includes base prompt
+prompts:
+  - "@prompt-under-test.md {{request}}"
+
+# External evaluation script for custom deterministic evaluations
+# This script contains custom assertion functions used in tests
+defaultTest:
+  options:
+    # ========================================
+    # RUBRIC GRADER — NODE.JS (Cross-platform)
+    # ========================================
+    # Combined scripts auto-detect mode: provider vs grader
+    # Grader mode: prompt is JSON array [{role, content}, ...]
+    # Provider mode: prompt is plain text
+    # SPECIFY the Provider by the Label from the providers section.
+    #
+    # Devin CLI grader — ACTIVE
+    provider: 'Devin SWE-1.7'
+    #
+    # GitHub Copilot CLI grader
+    # provider: 'GitHub Haiku'
+    #
+    # Claude Code CLI grader
+    # provider: 'Claude Haiku'
+    #
+    # Kiro CLI grader
+    # provider: 'Kiro Sonnet'
+    #
+    # Google Antigravity (AGY) CLI grader
+    # provider: 'Gemini Flash'
+    #
+    # Ollama Grader
+    # provider: 'Ollama Qwen'
+
+providers:
+  # ========================================
+  # NODE.JS VERSIONS (Cross-platform)
+  # ========================================
+  # Combined scripts auto-detect mode: provider vs grader
+  # Grader mode: prompt is JSON array [{role, content}, ...]
+  # Provider mode: prompt is plain text
+  #
+  # Devin CLI provider
+  - id: 'exec: node ./devin.js'
+    label: 'Devin SWE-1.7'
+    config:
+      model: 'SWE-1.7'
+
+  # Devin CLI provider — file-based (fixes ENAMETOOLONG on Windows for prompts >32k)
+  #- id: 'file://devinProvider.js'
+  #  label: 'Devin SWE-1.7 (file provider)'
+  #  config:
+  #    model: 'SWE-1.7'
+
+  # Devin CLI provider — For Testing a Second Model
+  # MUST Use Label to differentiate providers with same ID (first in wins otherwise)
+  # - id: 'exec: node ./devin.js'
+  #   label: 'Haiku' # MUST provide label when using same provider with different config!
+  #   config:
+  #     model: 'claude-haiku-4.5'
+
+  # GitHub Copilot CLI provider
+  # - id: 'exec: node ./gh_copilot.js'
+  #   label: 'GitHub Haiku'
+  #   config:
+  #     model: 'claude-haiku-4.5'
+
+  # Claude Code CLI provider
+  # - id: 'exec: node ./claude.js'
+  #   label: 'Claude Haiku'
+  #   config:
+  #     model: 'haiku'
+
+  # Google Antigravity (AGY) CLI provider
+  # - id: 'exec: node ./agy.js'
+  #   label: 'Gemini Flash'
+  #   config:
+  #     model: 'gemini-3.5-flash'
+
+  # Kiro CLI provider
+  # - id: 'exec: node ./kiro.js'
+  #   label: 'Kiro Sonnet'
+  #   config:
+  #     model: 'claude-sonnet-4.6'
+
+  # Ollama provider
+  # - id: 'exec: node ./ollama.js'
+  #   label: 'Ollama Qwen'
+  #   config:
+  #     host: localhost # defaults to localhost
+  #     port: 1234 # defaults to 11434
+  #     endpoint: 'api/chat/completions' # defaults to api/v1/chat
+  #     model: 'qwen/qwen3-8b' # defaults to llama2
+  #     documentRoot: './' # optional, if provided ollama.js will replace `@doc.md` with contents of `doc.md.` recursively.
+
+# Test cases with different evaluation types
+tests:
+  # ========================================
+  # DETERMINISTIC EVALUATIONS (contains/equiv)
+  # ========================================
+  - vars:
+      request: 'What is the difference between let and const in JavaScript?'
+    description: 'JavaScript concepts - deterministic eval'
+    assert:
+      - type: contains
+        value: 'let'
+      - type: contains
+        value: 'const'
+      - type: contains
+        value: 'reassign'
+
+  - vars:
+      request: 'How do I reverse a string in Python?'
+    description: 'Python coding - deterministic eval'
+    assert:
+      - type: contains
+        value: 'reverse'
+      - type: contains
+        value: 'python'
+        # Case insensitive
+        ignoreCase: true
+
+  # ========================================
+  # RUBRIC-BASED EVALUATIONS WITH SCORING
+  # ========================================
+  # Each llm-rubric assertion evaluates a single quality dimension independently.
+  # - threshold: minimum score (0.0–1.0) required to pass this assertion
+  # - metric:    named label shown in the promptfoo web UI results table
+  # - weight:    relative importance when computing the overall test score
+  #
+  # This lets you see per-dimension scores, set different pass bars for
+  # critical vs. nice-to-have criteria, and weight what matters most.
+
+  - vars:
+      request: 'Explain the concept of recursion in programming'
+    description: 'Recursion explanation - rubric with per-dimension scoring'
+    assert:
+      # Core definition — highest weight; must score at least 0.7
+      - type: llm-rubric
+        value: The response clearly defines what recursion is in plain language a non-expert could understand
+        threshold: 0.7
+        metric: clarity
+        weight: 2
+
+      # Code example — important for a technical explanation
+      - type: llm-rubric
+        value: The response includes at least one working code example that demonstrates recursion
+        threshold: 0.7
+        metric: code-example
+        weight: 1.5
+
+      # Base/recursive case — critical for correctness; strict threshold
+      - type: llm-rubric
+        value: The response explicitly explains both the base case (stopping condition) and the recursive case
+        threshold: 0.8
+        metric: base-case-explained
+        weight: 2
+
+      # Risks — nice to have; lower threshold and weight
+      - type: llm-rubric
+        value: The response mentions stack overflow or call stack depth as a potential pitfall
+        threshold: 0.4
+        metric: mentions-risks
+        weight: 1
+
+  - vars:
+      request: 'What are the best practices for error handling in JavaScript?'
+    description: 'Error handling best practices - rubric with per-dimension scoring'
+    assert:
+      # try-catch — fundamental pattern; high weight
+      - type: llm-rubric
+        value: The response covers try-catch-finally patterns and explains when to use each clause
+        threshold: 0.7
+        metric: try-catch-coverage
+        weight: 2
+
+      # async — essential in modern JS; moderate threshold
+      - type: llm-rubric
+        value: The response addresses error handling for async/await code
+        threshold: 0.6
+        metric: async-error-handling
+        weight: 1.5
+
+      # Custom errors — good practice; lower threshold (advanced topic)
+      - type: llm-rubric
+        value: The response discusses creating or using custom error types
+        threshold: 0.4
+        metric: custom-error-types
+        weight: 1
+
+      # Actionability — must be practical, not just theory; high weight
+      - type: llm-rubric
+        value: The response gives concrete, actionable guidance a developer can apply immediately
+        threshold: 0.7
+        metric: actionability
+        weight: 1.5
+
+  # ========================================
+  # SCRIPT-BASED DETERMINISTIC EVALUATIONS
+  # ========================================
+  # These evaluations call functions exported from eval-script.js directly.
+  # Syntax: file://path/to/script.js:functionName
+
+  - vars:
+      request: 'Output a function to validate an email address'
+    description: 'Email validation - script-based eval'
+    assert:
+      - type: javascript
+        value: file://eval-script.js:hasCodeFormatting
+      - type: javascript
+        value: file://eval-script.js:explainsWhy
+      - type: javascript
+        value: file://eval-script.js:mentionsBestPractices
+
+  - vars:
+      request: 'Explain the difference between == and === in JavaScript'
+    description: 'Equality operators - script-based eval'
+    assert:
+      - type: javascript
+        value: file://eval-script.js:hasCodeFormatting
+      - type: javascript
+        value: file://eval-script.js:explainsWhy
+      - type: javascript
+        value: file://eval-script.js:isConcise
+
+  # ========================================
+  # You can Create Test Suites in separate files, using all the same features as the main config
+  # Especially useful for large Suites. 
+  # Keep in mind that the file path is relative to the main config file.
+  # ========================================
+  - file://fileBased.testSuite.yaml
+  - file://matchSchema.testSuite.yaml
+# Output configuration
+outputPath: results.html

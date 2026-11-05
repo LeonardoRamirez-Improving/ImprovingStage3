@@ -1,0 +1,11 @@
+# ========================================
+# You can Create Test Suites in separate files, using all the same features as the main config
+# Especially useful for large Suites. 
+# Keep in mind that the file path is relative to the main config file.
+# ========================================
+- vars:
+    request: 'What is the difference between functional and non-functional requirements?'
+  description: 'Functional vs Non-Functional Requirements - Canary Test'
+  assert:
+    - type: contains
+      value: 'Functional'

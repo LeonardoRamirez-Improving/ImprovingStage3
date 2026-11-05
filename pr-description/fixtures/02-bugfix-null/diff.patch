@@ -1,0 +1,37 @@
+diff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs
+index 5b8e011..a2c4f39 100644
+--- a/src/Application/Orders/OrderService.cs
++++ b/src/Application/Orders/OrderService.cs
+@@ -88,9 +88,10 @@ public sealed class OrderService : IOrderService
+     public decimal GetTotal(Order order)
+     {
+         var subtotal = order.Lines.Sum(line => line.UnitPrice * line.Quantity);
+-        var discount = order.Discount.Percentage;
+-        return subtotal - (subtotal * discount / 100m);
++        var discountPercentage = order.Discount?.Percentage ?? 0m;
++        return subtotal - (subtotal * discountPercentage / 100m);
+     }
+ 
+     public async Task DeleteAsync(int orderId, CancellationToken ct)
+diff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs
+index 1d9f2a0..3b7c8e1 100644
+--- a/tests/Orders/OrderServiceTests.cs
++++ b/tests/Orders/OrderServiceTests.cs
+@@ -22,4 +22,16 @@ public sealed class OrderServiceTests
+         Assert.Equal(90m, total);
+     }
++
++    [Fact]
++    public void GetTotal_ReturnsSubtotal_WhenDiscountIsNull()
++    {
++        var order = new Order
++        {
++            Discount = null,
++            Lines = new List<OrderLine> { new() { UnitPrice = 50m, Quantity = 2 } }
++        };
++
++        var total = _service.GetTotal(order);
++
++        Assert.Equal(100m, total);
++    }
+ }

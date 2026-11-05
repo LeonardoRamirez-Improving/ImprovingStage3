@@ -1,0 +1,86 @@
+diff --git a/src/Api/Controllers/OrdersController.cs b/src/Api/Controllers/OrdersController.cs
+index 4a1c9f2..b7e3d10 100644
+--- a/src/Api/Controllers/OrdersController.cs
++++ b/src/Api/Controllers/OrdersController.cs
+@@ -28,6 +28,17 @@ public sealed class OrdersController : ControllerBase
+         return Ok(order);
+     }
+ 
++    [HttpPatch("{id:int}/status")]
++    [Authorize(Roles = "Support")]
++    public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateOrderStatusRequest request)
++    {
++        var updated = await _orderService.UpdateStatusAsync(id, request.Status, HttpContext.RequestAborted);
++        return updated ? NoContent() : NotFound();
++    }
++
+     [HttpDelete("{id:int}")]
+     [Authorize(Roles = "Admin")]
+     public async Task<IActionResult> Delete(int id)
+diff --git a/src/Api/Dtos/UpdateOrderStatusRequest.cs b/src/Api/Dtos/UpdateOrderStatusRequest.cs
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/src/Api/Dtos/UpdateOrderStatusRequest.cs
+@@ -0,0 +1,8 @@
++using System.ComponentModel.DataAnnotations;
++
++namespace Shop.Api.Dtos;
++
++public sealed record UpdateOrderStatusRequest(
++    [Required, RegularExpression("^(Pending|Shipped|Delivered|Cancelled)$")]
++    string Status);
+diff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs
+index 91b2aa4..c4d5e77 100644
+--- a/src/Application/Orders/OrderService.cs
++++ b/src/Application/Orders/OrderService.cs
+@@ -64,6 +64,19 @@ public sealed class OrderService : IOrderService
+         return order;
+     }
+ 
++    public async Task<bool> UpdateStatusAsync(int orderId, string status, CancellationToken ct)
++    {
++        var order = await _repository.FindByIdAsync(orderId, ct);
++        if (order is null)
++        {
++            return false;
++        }
++
++        order.Status = status;
++        order.StatusUpdatedAt = DateTime.UtcNow;
++        await _repository.SaveChangesAsync(ct);
++        return true;
++    }
++
+     public async Task DeleteAsync(int orderId, CancellationToken ct)
+diff --git a/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql
+new file mode 100644
+index 0000000..1f7c2d9
+--- /dev/null
++++ b/src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql
+@@ -0,0 +1,3 @@
++-- src/Infrastructure/Migrations/Scripts/20261101_add_status_updated_at.sql
++ALTER TABLE Orders ADD StatusUpdatedAt datetime2 NULL;
++GO
+diff --git a/tests/Orders/OrdersControllerTests.cs b/tests/Orders/OrdersControllerTests.cs
+index 77c1e2b..2f9a8d4 100644
+--- a/tests/Orders/OrdersControllerTests.cs
++++ b/tests/Orders/OrdersControllerTests.cs
+@@ -41,4 +41,18 @@ public sealed class OrdersControllerTests
+         Assert.IsType<OkObjectResult>(result);
+     }
++
++    [Fact]
++    public async Task UpdateStatus_ReturnsNoContent_WhenOrderExists()
++    {
++        var service = new Mock<IOrderService>();
++        service.Setup(s => s.UpdateStatusAsync(7, "Shipped", It.IsAny<CancellationToken>()))
++               .ReturnsAsync(true);
++        var controller = new OrdersController(service.Object);
++
++        var result = await controller.UpdateStatus(7, new UpdateOrderStatusRequest("Shipped"));
++
++        Assert.IsType<NoContentResult>(result);
++        service.Verify(s => s.UpdateStatusAsync(7, "Shipped", It.IsAny<CancellationToken>()), Times.Once);
++    }
+ }

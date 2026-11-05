@@ -1,0 +1,23 @@
+# Promptfoo outputs
+*results.html
+*results.json
+*results.csv
+*.log
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+
+# Claude Code — ignore ephemeral/machine-local files;
+# keep project config (settings.json, hooks/, commands/, skills/) committable
+.claude/settings.local.json
+.claude/sessions/
+.claude/cache/
+.claude/history.jsonl
+.claude/backups/
+.claude/plans/
+.claude/shell-snapshots/
+.claude/session-env/
+.claude/downloads/

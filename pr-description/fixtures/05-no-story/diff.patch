@@ -1,0 +1,43 @@
+diff --git a/src/Application/Orders/OrderService.cs b/src/Application/Orders/OrderService.cs
+index 5b8e011..d1e6a90 100644
+--- a/src/Application/Orders/OrderService.cs
++++ b/src/Application/Orders/OrderService.cs
+@@ -40,9 +40,9 @@ public sealed class OrderService : IOrderService
+         return await _repository.FindByIdAsync(orderId, ct);
+     }
+ 
+-    public async Task CancelAsync(int orderId)
++    public async Task CancelAsync(int orderId, CancellationToken ct = default)
+     {
+-        var order = await _repository.FindByIdAsync(orderId);
++        var order = await _repository.FindByIdAsync(orderId, ct);
+         if (order is null)
+         {
+             return;
+@@ -48,7 +48,7 @@ public sealed class OrderService : IOrderService
+ 
+         order.Status = "Cancelled";
+-        await _repository.SaveChangesAsync();
++        await _repository.SaveChangesAsync(ct);
+     }
+ }
+diff --git a/tests/Orders/OrderServiceTests.cs b/tests/Orders/OrderServiceTests.cs
+index 1d9f2a0..4c8f2b1 100644
+--- a/tests/Orders/OrderServiceTests.cs
++++ b/tests/Orders/OrderServiceTests.cs
+@@ -30,4 +30,13 @@ public sealed class OrderServiceTests
+         Assert.Equal("Cancelled", order.Status);
+     }
++
++    [Fact]
++    public async Task CancelAsync_ForwardsCancellationToken()
++    {
++        var repository = new Mock<IOrderRepository>();
++        var service = new OrderService(repository.Object);
++        using var cts = new CancellationTokenSource();
++
++        await service.CancelAsync(3, cts.Token);
++
++        repository.Verify(r => r.FindByIdAsync(3, cts.Token), Times.Once);
++    }
+ }

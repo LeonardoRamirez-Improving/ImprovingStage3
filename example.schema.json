@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "prop": {
+      "type": "string",
+      "description": "Prop",
+      "examples": [
+        "value"
+      ]
+    },
+    "anotherProp": {
+      "type": "array",
+      "description": "Another prop",
+      "items": {
+        "type": "string"
+      },
+      "examples": [
+        [
+          "anotherValue"
+        ]
+      ]
+    },
+    "yetAnotherProp": {
+      "type": "integer",
+      "description": "Yet another prop",
+      "examples": [
+        123
+      ]
+    },
+    "nestedObject": {
+      "type": "object",
+      "description": "Nested object",
+      "properties": {
+        "innerProp": {
+          "type": "string",
+          "description": "Inner prop",
+          "examples": [
+            "innerValue"
+          ]
+        }
+      },
+      "required": [
+        "innerProp"
+      ],
+      "examples": [
+        {
+          "innerProp": "innerValue"
+        }
+      ]
+    }
+  },
+  "required": [
+    "prop",
+    "anotherProp",
+    "yetAnotherProp",
+    "nestedObject"
+  ]
+}

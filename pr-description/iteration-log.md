@@ -89,7 +89,9 @@ migration branch, without hurting the grounding the model already has.
 
 ## Iteration 2 — the skill adapted to a standalone prompt (GREEN attempt)
 
-**Change (prompt).** RTCC-style rewrite: task, context, exact six headings, the type menu,
+**Change (prompt).** Structured rewrite in RTCC form — Role, Task, Context, Constraints. The
+Role was removed in iteration 4 as non-load-bearing, so the final prompt keeps Task, Context
+and Constraints. This iteration added: task, context, exact six headings, the type menu,
 the migration branch, the 60-word cap on *What is this change?*, "use only the story and the
 diff, do not read the workspace", and "if the story is missing, ask for it".
 

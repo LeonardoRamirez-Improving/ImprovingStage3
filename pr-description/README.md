@@ -1,7 +1,6 @@
 # My evaluation of the PR description prompt
 
-I used Evaluation-Driven Development to evaluate a prompt that turns a User Story plus a code
-diff into a complete PR description. I adapted it from the `pr-description-generator` skill
+Currently Im using a skill in y current project to create PR's using a pre-difined structure. This skill is evaluated using the EDD framework for the purpose of my stage 3 certification process and try to improve it. The skill I adapted it from is the `pr-description-generator` skill
 (`SKILL.md`: six template fields, a type-of-change menu, a migration branch and three rules).
 
 The question I wanted this suite to answer was not "does the model write nice prose?" but

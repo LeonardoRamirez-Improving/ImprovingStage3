@@ -1,12 +1,12 @@
-# PR Description Generator — prompt evaluation
+# My evaluation of the PR description prompt
 
-Evaluation-Driven Development of a prompt that turns a User Story plus a code diff into a
-complete PR description. Adapted from the `pr-description-generator` skill
+I used Evaluation-Driven Development to evaluate a prompt that turns a User Story plus a code
+diff into a complete PR description. I adapted it from the `pr-description-generator` skill
 (`SKILL.md`: six template fields, a type-of-change menu, a migration branch and three rules).
 
-The question this suite answers is not "does the model write nice prose?" but **"does the
-prompt make the model fill the six fields, pick the right branch, and stay grounded in the
-diff?"**
+The question I wanted this suite to answer was not "does the model write nice prose?" but
+**"does the prompt make the model fill the six fields, pick the right branch, and stay grounded
+in the diff?"**
 
 ## What is evaluated
 
@@ -61,7 +61,7 @@ Model-graded:
 | 4 — refactor (Role removed) | `v4-refactor.md` | 5 + 5 | **5/5**, then **4/5** | a filler bullet ("no other changes") |
 | 5 — final | `v5-final.md` | 15 (×3) | **15/15 (100%)** | — |
 
-`v5-final.md` is the prompt under certification. Full narrative in `iteration-log.md`.
+`v5-final.md` is the final prompt. Full narrative in `iteration-log.md`.
 
 ## Run it
 

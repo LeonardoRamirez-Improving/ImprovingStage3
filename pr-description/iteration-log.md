@@ -144,7 +144,7 @@ the final 15/15 run (which includes it) than by this single run.
 
 **Change (prompt).** `v3` opened with *"You are a senior software engineer writing the PR
 description…"*. No assertion depends on that sentence — the rubrics judge the content, not the
-persona — so it is dead weight by the framework's own definition. `v4` removes it.
+persona — so it is dead weight by the definition I am using. `v4` removes it.
 
 **Measured:** run 1 **5/5**; run 2 **4/5**.
 

@@ -1,5 +1,5 @@
 /**
- * Self-check for eval-script.js. No framework: `node eval-script.test.js`.
+ * Self-check for eval-script.js. Plain Node, no test runner: `node eval-script.test.js`.
  *
  * Two goals:
  *  1. a well-formed PR description passes every assertion

@@ -1,10 +1,10 @@
 # Load-bearing audit — v5-final.md
 
-Every instruction in the prompt under certification, the metric that would fail if the
+Every instruction in the final prompt, the metric that would fail if the
 instruction were removed, and how that was checked.
 
 **Result: 20 of 21 instruction elements are asserted by at least one metric (95%).**
-The framework requires ≥90%. The one exception is listed at the end and is kept deliberately.
+My bar was ≥90%. The one exception is listed at the end and is kept deliberately.
 
 | # | Instruction (v5-final.md) | Metric that fails without it | Verified by |
 |---|---|---|---|

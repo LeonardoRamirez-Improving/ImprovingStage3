@@ -78,12 +78,10 @@ npx promptfoo eval -c pr-description/promptfooconfig.yaml --repeat 3 --no-cache 
 npx promptfoo eval -c pr-description/promptfooconfig.yaml -p pr-description/prompts/v1-baseline.md --no-cache
 ```
 
-Two environment notes:
+One environment note:
 
 - **`ACP_BACKEND`** is inherited from Devin Desktop and makes the spawned `devin` CLI report
   `Not logged in`. Run `unset ACP_BACKEND` (bash) before the eval.
-- **The Claude provider is disabled** in `promptfooconfig.yaml`: the `claude` binary is not
-  installed in this environment. Enable it once Claude Code is available.
 
 Scorer self-check (no model calls):
 
@@ -99,7 +97,6 @@ node pr-description/scripts/summarize.js pr-description/evidence/eval-v5-final-r
 
 ## Limitations
 
-- **One model.** The second provider (Claude Haiku) could not run: no CLI and no API key.
 - **Small n.** Each iteration is 5 fixtures; the final prompt was measured with 3 repeats
   (15 rows). Intermediate iterations were measured once, except where noted.
 - **Grader transport.** The Devin CLI occasionally returns an empty response, which promptfoo

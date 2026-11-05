@@ -23,18 +23,9 @@ providers:
     config:
       model: 'SWE-1.7'
 
-  # Model under test — Claude Code CLI.
-  # Left disabled because the `claude` binary is not installed in this environment
-  # (checked with `command -v claude`). Enable it once Claude Code is installed and
-  # authenticated; no other change is needed.
-  # - id: 'exec: node ../claude.js'
-  #   label: 'Claude Haiku'
-  #   config:
-  #     model: 'haiku'
-
 defaultTest:
   options:
-    # Grader is fixed so rubric scores stay comparable across the models under test.
+    # Grader is fixed so rubric scores stay comparable across runs.
     # ./grader.js retries the Devin CLI when it returns empty stdout, which would
     # otherwise be recorded as a false assertion failure ("No output").
     provider:
